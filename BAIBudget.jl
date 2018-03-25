@@ -6,7 +6,6 @@
 # rec: the recommendation strategy, to be choosen from EBA, EBP and MPA
 
 using Distributions
-using PyPlot
 
 include("Arms.jl")
 include("Utils.jl")
@@ -349,7 +348,7 @@ function SeqHalvingNoRef(mu, budget, rec=eba)
 		end
 		s_r = ceil(s_r/2)
 	end
-	
+
 	for t in (j+1):budget
 		recommendations[t] = rand(arms)
 	end
