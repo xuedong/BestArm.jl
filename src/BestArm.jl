@@ -5,4 +5,6 @@ module BestArm
 
     include("arms.jl")
     include("utils.jl")
+    include("kl_functions.jl")
+    include("view_results.jl")
 end
