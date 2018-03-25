@@ -1,12 +1,12 @@
-function ChernoffTarget(mu,delta,rate,Target=ones(1,length(mu))/length(mu))
-  # sampling rule : choose arm maximizing (Target - empirical proportion)
+function ChernoffPTS(mu,delta,rate,frac,alpha=1,beta=1)
+  # Chernoff stopping rule combined with the PTS sampling rule
   condition = true
   K=length(mu)
   N = zeros(1,K)
   S = zeros(1,K)
   # initialization
   for a in 1:K
-      N[a]=1
+	  N[a]=1
       S[a]=sample_arm(mu[a], type_dist)
   end
   t=K
@@ -28,19 +28,35 @@ function ChernoffTarget(mu,delta,rate,Target=ones(1,length(mu))/length(mu))
             # stop
             condition=false
        elseif (t >1000000)
-            # stop and return (0,0)
             condition=false
             Best=0
             print(N)
             print(S)
             N=zeros(1,K)
        else
-	    I=indmax(Target-N/t)
-	    t+=1
-	    S[I]+=sample_arm(mu[I], type_dist)
-	    N[I]+=1
-	end
-   end
-   recommendation=Best
-   return (recommendation,N)
+            TS=zeros(K)
+            for a=1:K
+				TS[a]=rand(Beta(alpha+S[a], beta+N[a]-S[a]), 1)[1]
+            end
+            I = indmax(TS)
+            if (rand()>frac)
+               	J=I
+               	condition=true
+               	while (I==J)
+                  	TS=zeros(K)
+                  	for a=1:K
+	             		TS[a]=rand(Beta(alpha+S[a], beta+N[a]-S[a]), 1)[1]
+                  	end
+                  	J = indmax(TS)
+               	end
+               	I=J
+            end
+            # draw arm I
+	    	t+=1
+	    	S[I]+=sample_arm(mu[I], type_dist)
+	    	N[I]+=1
+		end
+   	end
+   	recommendation=Best
+   	return (recommendation,N)
 end
