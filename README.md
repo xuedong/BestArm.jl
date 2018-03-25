@@ -1,1 +1,1 @@
-Some state-of-the-art bai algos.
+Some state-of-the-art bai algorithms.
