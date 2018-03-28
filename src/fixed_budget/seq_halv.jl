@@ -1,4 +1,4 @@
-function SeqHalvingNoRef(mu, budget, rec=eba)
+function seq_halving_no_ref(mu::Float64, budget::Integer, rec::Function = eba)
 	K = length(mu)
 	rounds = ceil(log2(K))
 
@@ -43,7 +43,7 @@ function SeqHalvingNoRef(mu, budget, rec=eba)
 end
 
 # Sequential Halving with Refresh
-function SeqHalvingRef(mu, budget, rec=eba)
+function seq_halving_ref(mu::Float64, budget::Integer, rec::Function = eba)
 	K = length(mu)
 	rounds = ceil(log2(K))
 

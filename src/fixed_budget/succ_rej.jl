@@ -1,4 +1,4 @@
-function SuccReject(mu, budget, rec=eba)
+function succ_reject(mu::Float64, budget::Integer, rec::Function = eba)
 	K = length(mu)
 	log_bar = compute_log_bar(K)
 

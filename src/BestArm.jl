@@ -2,8 +2,9 @@ module BestArm
     using Distributions
     using PyPlot
 
-    export SeqHalvingRef, SeqHalvingNoRef
-    export SuccReject
+    export edp, eba, mpa
+    export seq_halving_ref, seq_halving_no_ref
+    export succ_reject
 
     include("arms.jl")
     include("utils.jl")

@@ -2,7 +2,7 @@ using PyPlot
 using BestArm
 
 # Problem setting
-type_dist = "Bernoulli"
+const type_dist = "Bernoulli"
 
 mu = ones(1, 20)
 mu /= 10
