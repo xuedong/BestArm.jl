@@ -42,6 +42,7 @@ function seq_halving_no_ref(mu::Array, budget::Integer, dist::String, rec::Funct
 	return(recommendation, N, means, recommendations)
 end
 
+
 # Sequential Halving with Refresh
 function seq_halving_ref(mu::Array, budget::Integer, dist::String, rec::Function = eba)
 	K = length(mu)

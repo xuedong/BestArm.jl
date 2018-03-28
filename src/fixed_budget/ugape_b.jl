@@ -60,6 +60,7 @@ function ugape_b(mu::Array, budget::Integer, dist::String, alpha::Real = 1)
 	return (recommendation, N, means, recommendations)
 end
 
+
 # Adaptive UGapE
 function ugape_b_adaptive(mu::Array, budget::Integer, dist::String, c::Real = 1)
 	K = length(mu)

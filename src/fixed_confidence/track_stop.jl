@@ -59,6 +59,7 @@ function track_stop(mu::Array, delta::Real, rate::Function)
     return (recommendation,N)
 end
 
+
 function track_stop2(mu::Array, delta::Real, rate::Function)
     # Uses a Tracking of the cummulated sum
     condition = true

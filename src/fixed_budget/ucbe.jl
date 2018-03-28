@@ -30,6 +30,7 @@ function ucbe(mu::Array, budget::Integer, dist::String, rec::Function = eba, alp
 	return (recommendations[budget], N, means, recommendations)
 end
 
+
 # Adaptive UCB-E
 function ucbe_adaptive(mu::Array, budget::Integer, dist::String, rec::Function = eba, c::Real = 1)
 	K = length(mu)

@@ -52,6 +52,7 @@ function chernoff_kl_lucb(mu::Array, delta::Real, rate::Function)
     return (recommendation,N)
 end
 
+
 # KL-LUCB [Kaufmann and Kalyanakrishnan 2013]
 function kl_lucb(mu::Array, delta::Real, rate::Function)
     condition = true

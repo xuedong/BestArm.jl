@@ -66,6 +66,7 @@ function chernoff_bc(mu::Array, delta::Real, rate::Function)
     return (recommendation,N)
 end
 
+
 function chernoff_bc2(mu::Array, delta::Real, rate::Function)
     # Chernoff stopping rule + alternative choice between the empirical best and its "challenger"
     # Faster, requires no computation of Optimal Weights

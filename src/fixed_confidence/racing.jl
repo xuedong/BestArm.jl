@@ -44,6 +44,7 @@ function chernoff_racing(mu::Array, delta::Real, rate::Function)
     return (recommendation,N)
 end
 
+
 function kl_racing(mu::Array, delta::Real, rate::Function)
     condition = true
     K=length(mu)

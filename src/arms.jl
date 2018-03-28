@@ -10,6 +10,7 @@ function d(p, q, dist)
 	end
 end
 
+
 function dup(p, level, dist)
 	if dist == "Bernoulli"
 		return dupBernoulli(p, level)
@@ -21,6 +22,7 @@ function dup(p, level, dist)
 		return dupGaussian(p, level)
 	end
 end
+
 
 function dlow(p, level, dist)
 	if dist == "Bernoulli"
@@ -34,6 +36,7 @@ function dlow(p, level, dist)
 	end
 end
 
+
 function sample_arm(mu, dist)
 	if dist == "Bernoulli"
 		return (rand() < mu)
@@ -46,6 +49,7 @@ function sample_arm(mu, dist)
 	end
 end
 
+
 function bdot(theta, dist)
 	if dist == "Bernoulli"
 		return exp(theta)/(1+exp(theta))
@@ -57,6 +61,7 @@ function bdot(theta, dist)
 		return sigma^2*theta
 	end
 end
+
 
 function bdotinv(mu, dist)
 	if dist == "Bernoulli"
