@@ -1,7 +1,3 @@
-using Distributions
-
-include("KLFunctions.jl")
-
 function d(p, q, type_dist)
 	if type_dist == "Bernoulli"
 		return dBernoulli(p, q)

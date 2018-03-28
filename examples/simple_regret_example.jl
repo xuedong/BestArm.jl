@@ -1,7 +1,5 @@
 using PyPlot
-
-include("../BAIBudget.jl")
-include("../Utils.jl")
+using BestArm
 
 # Problem setting
 type_dist = "Bernoulli"
@@ -15,10 +13,10 @@ mu[20] = 0.9
 budget = 200
 mcmc = 1000
 
-#policies = [SuccReject, SeqHalvingNoRef]
-#names = ["Successive Reject", "Sequential Halving without Refresh"]
-policies = [UniformSampling, UCBE, UCBEAdaptive, SuccReject, UGapEB, UGapEBAdaptive, SeqHalvingNoRef, SeqHalvingRef]
-names = ["Uniform Sampling", "UCB-E", "Adaptive UCB-E", "Successive Reject", "UGapEB", "Adaptive UGapEB", "Sequential Halving without Refresh", "Sequential Halving with Refresh"]
+policies = [SuccReject, SeqHalvingNoRef]
+names = ["Successive Reject", "Sequential Halving without Refresh"]
+#policies = [UniformSampling, UCBE, UCBEAdaptive, SuccReject, UGapEB, UGapEBAdaptive, SeqHalvingNoRef, SeqHalvingRef]
+#names = ["Uniform Sampling", "UCB-E", "Adaptive UCB-E", "Successive Reject", "UGapEB", "Adaptive UGapEB", "Sequential Halving without Refresh", "Sequential Halving with Refresh"]
 lp = length(policies)
 
 # Options

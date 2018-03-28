@@ -1,7 +1,3 @@
-# Some helper functions
-
-using Distributions
-
 # Compute simple regrets
 function compute_regrets(mu, recommendations, budget)
 	maxmu = findmax(mu)[1]
