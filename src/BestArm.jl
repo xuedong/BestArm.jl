@@ -36,4 +36,8 @@ module BestArm
     include("fixed_confidence/ttps_c.jl")
     include("fixed_confidence/track_stop.jl")
     include("fixed_confidence/ugape_c.jl")
+
+    include("anytime/ttps.jl")
+    include("anytime/ttts.jl")
+    include("anytime/ttvs.jl")
 end
