@@ -1,4 +1,4 @@
-function UGapEB(mu, budget, alpha=1)
+function ugape_b(mu::Array, budget::Integer, dist::String, alpha::Real = 1)
 	K = length(mu)
 
 	# Initialization
@@ -61,7 +61,7 @@ function UGapEB(mu, budget, alpha=1)
 end
 
 # Adaptive UGapE
-function UGapEBAdaptive(mu, budget, c=1)
+function ugape_b_adaptive(mu::Array, budget::Integer, dist::String, c::Real = 1)
 	K = length(mu)
 
 	# Initialization

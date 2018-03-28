@@ -1,4 +1,4 @@
-function UniformSampling(mu, budget, rec=eba)
+function uniform(mu::Array, budget::Integer, dist::String, rec::Function = eba)
 	K = length(mu)
 
 	if (budget % K != 0 || budget < 0)

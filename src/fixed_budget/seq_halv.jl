@@ -1,4 +1,4 @@
-function seq_halving_no_ref(mu::Array{Float64,2}, budget::Integer, dist::String, rec::Function = eba)
+function seq_halving_no_ref(mu::Array, budget::Integer, dist::String, rec::Function = eba)
 	K = length(mu)
 	rounds = ceil(log2(K))
 
@@ -43,7 +43,7 @@ function seq_halving_no_ref(mu::Array{Float64,2}, budget::Integer, dist::String,
 end
 
 # Sequential Halving with Refresh
-function seq_halving_ref(mu::Array{Float64,2}, budget::Integer, dist::String, rec::Function = eba)
+function seq_halving_ref(mu::Array, budget::Integer, dist::String, rec::Function = eba)
 	K = length(mu)
 	rounds = ceil(log2(K))
 

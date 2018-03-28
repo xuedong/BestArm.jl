@@ -1,4 +1,4 @@
-function UCBE(mu, budget, rec=eba, alpha=1)
+function ucbe(mu::Array, budget::Integer, dist::String, rec::Function = eba, alpha::Real = 1)
 	K = length(mu)
 
 	# Initialization
@@ -31,7 +31,7 @@ function UCBE(mu, budget, rec=eba, alpha=1)
 end
 
 # Adaptive UCB-E
-function UCBEAdaptive(mu, budget, rec=eba, c=1)
+function ucbe_adaptive(mu::Array, budget::Integer, dist::String, rec::Function = eba, c::Real = 1)
 	K = length(mu)
 	log_bar = compute_log_bar(K)
 

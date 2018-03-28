@@ -6,6 +6,9 @@ module BestArm
     export compute_regrets
     export seq_halving_ref, seq_halving_no_ref
     export succ_reject
+    export uniform
+    export ucbe, ucbe_adaptive
+    export ugape_b, ugape_b_adaptive
 
     include("arms.jl")
     include("utils.jl")

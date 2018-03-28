@@ -1,4 +1,4 @@
-function succ_reject(mu::Array{Float64,2}, budget::Integer, dist::String, rec::Function = eba)
+function succ_reject(mu::Array, budget::Integer, dist::String, rec::Function = eba)
 	K = length(mu)
 	log_bar = compute_log_bar(K)
 
