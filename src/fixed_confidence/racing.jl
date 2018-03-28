@@ -6,7 +6,7 @@ function ChernoffRacing(mu,delta,rate)
   # initialization
   for a in 1:K
       N[a]=1
-      S[a]=sample_arm(mu[a], type_dist)
+      S[a]=sample_arm(mu[a], dist)
   end
   round=1
   t=K
@@ -15,7 +15,7 @@ function ChernoffRacing(mu,delta,rate)
   while (length(Remaining)>1)
        # Drawn all remaining arms
        for a in Remaining
-	  S[a]+=sample_arm(mu[a], type_dist)
+	  S[a]+=sample_arm(mu[a], dist)
 	  N[a]+=1
        end
        round+=1
@@ -30,7 +30,7 @@ function ChernoffRacing(mu,delta,rate)
        MuWorst=minimum(MuR)
        IndWorst=find(MuR.==MuWorst)[1]
        IndWorst=IndWorst[floor(Int,rand()*length(IndWorst))+1]
-       if (round*(d(MuBest, (MuBest+MuWorst)/2, type_dist)+d(MuWorst, (MuBest+MuWorst)/2, type_dist)) > rate(t, 0, delta))
+       if (round*(d(MuBest, (MuBest+MuWorst)/2, dist)+d(MuWorst, (MuBest+MuWorst)/2, dist)) > rate(t, 0, delta))
           # remove Worst arm
           splice!(Remaining,IndWorst)
        end
@@ -54,7 +54,7 @@ function KLRacing(mu,delta,rate)
   # initialization
   for a in 1:K
       N[a]=1
-      S[a]=sample_arm(mu[a], type_dist)
+      S[a]=sample_arm(mu[a], dist)
   end
   round=1
   t=K
@@ -63,7 +63,7 @@ function KLRacing(mu,delta,rate)
   while (length(Remaining)>1)
        # Drawn all remaining arms
        for a in Remaining
-	  S[a]+=sample_arm(mu[a], type_dist)
+	  S[a]+=sample_arm(mu[a], dist)
 	  N[a]+=1
        end
        round+=1
@@ -78,7 +78,7 @@ function KLRacing(mu,delta,rate)
        MuWorst=minimum(MuR)
        IndWorst=find(MuR.==MuWorst)[1]
        IndWorst=IndWorst[floor(Int,rand()*length(IndWorst))+1]
-       if (dlow(MuBest, rate(t,round,delta)/round, type_dist) > dup(MuWorst, rate(t,round,delta)/round, type_dist))
+       if (dlow(MuBest, rate(t,round,delta)/round, dist) > dup(MuWorst, rate(t,round,delta)/round, dist))
           # remove Worst arm
           splice!(Remaining,IndWorst)
        end

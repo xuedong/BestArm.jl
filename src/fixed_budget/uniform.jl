@@ -12,7 +12,7 @@ function UniformSampling(mu, budget, rec=eba)
 	recommendations = zeros(1, budget)
 	for a in 1:K
 		N[a] = 1
-		S[a] = sample_arm(mu[a], type_dist)
+		S[a] = sample_arm(mu[a], dist)
 		means[a] = S[a]
 		recommendations[a] = rec(N, S)
 	end
@@ -25,7 +25,7 @@ function UniformSampling(mu, budget, rec=eba)
 			a = K
 		end
 		# Update
-		S[a] += sample_arm(mu[a], type_dist)
+		S[a] += sample_arm(mu[a], dist)
 		N[a] += 1
 		means[a] = S[a]/N[a]
 		recommendations[t] = rec(N, S)

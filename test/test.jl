@@ -3,7 +3,7 @@
 # Random seed
 #srand(4)
 
-type_dist = "Bernoulli"
+dist = "Bernoulli"
 include("BAIBudget.jl")
 
 mu = [0.3, 0.25, 0.2, 0.1]

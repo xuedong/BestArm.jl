@@ -1,4 +1,4 @@
-function succ_reject(mu::Float64, budget::Integer, rec::Function = eba)
+function succ_reject(mu::Array{Float64,2}, budget::Integer, dist::String, rec::Function = eba)
 	K = length(mu)
 	log_bar = compute_log_bar(K)
 
@@ -18,7 +18,7 @@ function succ_reject(mu::Float64, budget::Integer, rec::Function = eba)
 		#j = 0
 		for a in arms
 			for i in 1:n_k
-				new_sample = sample_arm(mu[a], type_dist)
+				new_sample = sample_arm(mu[a], dist)
 				append!(rewards[a], new_sample)
 				S[a] += new_sample
 				N[a] += 1

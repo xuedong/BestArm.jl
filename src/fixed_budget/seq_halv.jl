@@ -1,4 +1,4 @@
-function seq_halving_no_ref(mu::Float64, budget::Integer, rec::Function = eba)
+function seq_halving_no_ref(mu::Array{Float64,2}, budget::Integer, dist::String, rec::Function = eba)
 	K = length(mu)
 	rounds = ceil(log2(K))
 
@@ -16,7 +16,7 @@ function seq_halving_no_ref(mu::Float64, budget::Integer, rec::Function = eba)
 		for a in arms
 			t_r = tr(budget, K, r)
 			for i in 1:t_r
-				new_sample = sample_arm(mu[a], type_dist)
+				new_sample = sample_arm(mu[a], dist)
 				append!(rewards[a], new_sample)
 				S[a] += new_sample
 				N[a] += 1
@@ -43,7 +43,7 @@ function seq_halving_no_ref(mu::Float64, budget::Integer, rec::Function = eba)
 end
 
 # Sequential Halving with Refresh
-function seq_halving_ref(mu::Float64, budget::Integer, rec::Function = eba)
+function seq_halving_ref(mu::Array{Float64,2}, budget::Integer, dist::String, rec::Function = eba)
 	K = length(mu)
 	rounds = ceil(log2(K))
 
@@ -62,7 +62,7 @@ function seq_halving_ref(mu::Float64, budget::Integer, rec::Function = eba)
 		t_r = tr(budget, K, r)
 		for a in arms
 			for i in 1:t_r
-				new_sample = sample_arm(mu[a], type_dist)
+				new_sample = sample_arm(mu[a], dist)
 				append!(rewards[a], new_sample)
 				S[a] += new_sample
 				N[a] += 1

@@ -32,7 +32,7 @@ end
 #        return 0
 #     else
 #         mid=alpha*mu1 + (1-alpha)*mu2
-#         return alpha*d(mu1, mid, type_dist) + (1-alpha)*d(mu2, mid, type_dist)
+#         return alpha*d(mu1, mid, dist) + (1-alpha)*d(mu2, mid, dist)
 #     end
 # end
 #
@@ -62,18 +62,18 @@ end
 #   	K = length(mu)
 #   	x = [xkofy(y, k, mu) for k in 2:K]
 #   	m = [muddle(mu[1], mu[k], 1, x[k-1]) for k in 2:K]
-#   	return (sum([d(mu[1], m[k-1], type_dist)/(d(mu[k], m[k-1], type_dist)) for k in 2:K])-1)
+#   	return (sum([d(mu[1], m[k-1], dist)/(d(mu[k], m[k-1], dist)) for k in 2:K])-1)
 # end
 #
 # function oneStepOpt(mu, delta = 1e-11)
 #   	yMax=0.5
-#   	if d(mu[1], mu[2], type_dist)==Inf
+#   	if d(mu[1], mu[2], dist)==Inf
 #     	# find yMax such that aux(yMax,mu)>0
 #      	while aux(yMax,mu)<0
 # 			yMax=yMax*2
 #      	end
 #   	else
-#     	yMax=d(mu[1] , mu[2], type_dist)
+#     	yMax=d(mu[1] , mu[2], dist)
 #   	end
 #   	y = dicoSolve(y->aux(y, mu), 0, yMax, delta)
 #   	x =[xkofy(y, k, mu, delta) for k in 2:length(mu)]

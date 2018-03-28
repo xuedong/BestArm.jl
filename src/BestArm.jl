@@ -3,6 +3,7 @@ module BestArm
     using PyPlot
 
     export edp, eba, mpa
+    export compute_regrets
     export seq_halving_ref, seq_halving_no_ref
     export succ_reject
 

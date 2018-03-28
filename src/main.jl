@@ -7,7 +7,7 @@ typeExp = "Save"
 #typeExp = "NoSave"
 
 # TYPE OF DISTRIBUTION
-type_dist="Bernoulli"
+dist="Bernoulli"
 include("BAIConfidence.jl")
 include("BAIBudget.jl")
 include("Arms.jl")

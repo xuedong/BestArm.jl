@@ -2,7 +2,7 @@ using PyPlot
 using BestArm
 
 # Problem setting
-const type_dist = "Bernoulli"
+dist = "Bernoulli"
 
 mu = ones(1, 20)
 mu /= 10
@@ -13,7 +13,7 @@ mu[20] = 0.9
 budget = 200
 mcmc = 1000
 
-policies = [SuccReject, SeqHalvingNoRef]
+policies = [succ_reject, seq_halving_no_ref]
 names = ["Successive Reject", "Sequential Halving without Refresh"]
 #policies = [UniformSampling, UCBE, UCBEAdaptive, SuccReject, UGapEB, UGapEBAdaptive, SeqHalvingNoRef, SeqHalvingRef]
 #names = ["Uniform Sampling", "UCB-E", "Adaptive UCB-E", "Successive Reject", "UGapEB", "Adaptive UGapEB", "Sequential Halving without Refresh", "Sequential Halving with Refresh"]
@@ -28,7 +28,7 @@ for imeth in 1:lp
 	policy = policies[imeth]
 	regrets = zeros(1, budget)
 	for k in 1:mcmc
-		_, _, _, recs = policy(mu, budget)
+		_, _, _, recs = policy(mu, budget, dist)
 		regrets_current = compute_regrets(mu, recs, budget)
 		regrets += regrets_current
 		if VERBOSE

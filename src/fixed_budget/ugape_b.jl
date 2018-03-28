@@ -9,7 +9,7 @@ function UGapEB(mu, budget, alpha=1)
 	# Pull each arm once
 	for a in 1:K
 		N[a] = 1
-		new_sample = sample_arm(mu[a], type_dist)
+		new_sample = sample_arm(mu[a], dist)
 		S[a] = new_sample
 		append!(rewards[a], new_sample)
 		recommendations[a] = rand(1:K)
@@ -36,7 +36,7 @@ function UGapEB(mu, budget, alpha=1)
 		It = [lt, ut][findmax([betas[i] for i in [lt, ut]])[2]]
 
 		# Update
-		new_sample = sample_arm(mu[It], type_dist)
+		new_sample = sample_arm(mu[It], dist)
 		append!(rewards[It], new_sample)
 		S[It] += new_sample
 		N[It] += 1
@@ -72,7 +72,7 @@ function UGapEBAdaptive(mu, budget, c=1)
 	# Pull each arm once
 	for a in 1:K
 		N[a] = 1
-		new_sample = sample_arm(mu[a], type_dist)
+		new_sample = sample_arm(mu[a], dist)
 		S[a] = new_sample
 		append!(rewards[a], new_sample)
 		recommendations[a] = rand(1:K)
@@ -104,7 +104,7 @@ function UGapEBAdaptive(mu, budget, c=1)
 		It = [lt, ut][findmax([betas[i] for i in [lt, ut]])[2]]
 
 		# Update
-		new_sample = sample_arm(mu[It], type_dist)
+		new_sample = sample_arm(mu[It], dist)
 		append!(rewards[It], new_sample)
 		S[It] += new_sample
 		N[It] += 1

@@ -4,7 +4,7 @@ include("../BAIBudget.jl")
 include("../Utils.jl")
 
 # Problem setting
-type_dist = "Bernoulli"
+dist = "Bernoulli"
 
 mu = ones(1, 20)
 mu /= 10

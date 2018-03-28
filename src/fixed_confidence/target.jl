@@ -7,7 +7,7 @@ function ChernoffTarget(mu,delta,rate,Target=ones(1,length(mu))/length(mu))
   # initialization
   for a in 1:K
       N[a]=1
-      S[a]=sample_arm(mu[a], type_dist)
+      S[a]=sample_arm(mu[a], dist)
   end
   t=K
   Best=1
@@ -23,7 +23,7 @@ function ChernoffTarget(mu,delta,rate,Target=ones(1,length(mu))/length(mu))
        MuMid=(SB+S)./(NB+N)
        Index=collect(1:K)
        splice!(Index,Best)
-       Score=minimum([NB*d(muB, MuMid[i], type_dist)+N[i]*d(Mu[i], MuMid[i], type_dist) for i in Index])
+       Score=minimum([NB*d(muB, MuMid[i], dist)+N[i]*d(Mu[i], MuMid[i], dist) for i in Index])
        if (Score > rate(t,0,delta))
             # stop
             condition=false
@@ -37,7 +37,7 @@ function ChernoffTarget(mu,delta,rate,Target=ones(1,length(mu))/length(mu))
        else
 	    I=indmax(Target-N/t)
 	    t+=1
-	    S[I]+=sample_arm(mu[I], type_dist)
+	    S[I]+=sample_arm(mu[I], dist)
 	    N[I]+=1
 	end
    end

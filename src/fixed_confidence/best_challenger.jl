@@ -8,7 +8,7 @@ function ChernoffBC(mu,delta,rate)
   # initialization
   for a in 1:K
       N[a]=1
-      S[a]=sample_arm(mu[a], type_dist)
+      S[a]=sample_arm(mu[a], dist)
   end
   t=K
   Best=1
@@ -27,7 +27,7 @@ function ChernoffBC(mu,delta,rate)
        Score=Inf
        for i=1:K
 	  if i!=Best
-             score=NB*d(MuB, MuMid[i], type_dist)+N[i]*d(Mu[i], MuMid[i], type_dist)
+             score=NB*d(MuB, MuMid[i], dist)+N[i]*d(Mu[i], MuMid[i], dist)
 	     if (score<Score)
 		 Challenger=i
 		 Score=score
@@ -53,13 +53,13 @@ function ChernoffBC(mu,delta,rate)
              else
                # choose between the arm and its Challenger
                I=(NB/(NB+N[Challenger]) < Dist[Best]/(Dist[Best]+Dist[Challenger]))?Best:Challenger
-               #I=(d(MuB, MuMid[Challenger], type_dist)>d(Mu[Challenger], MuMid[Challenger], type_dist))?Best:Challenger
+               #I=(d(MuB, MuMid[Challenger], dist)>d(Mu[Challenger], MuMid[Challenger], dist))?Best:Challenger
                #I=(N[Best]<N[Challenger])?Best:Challenger
             end
        end
        # draw the arm
        t+=1
-       S[I]+=sample_arm(mu[I], type_dist)
+       S[I]+=sample_arm(mu[I], dist)
        N[I]+=1
    end
    recommendation=Best
@@ -78,7 +78,7 @@ function ChernoffBC2(mu,delta,rate)
   # initialization
   for a in 1:K
       N[a]=1
-      S[a]=sample_arm(mu[a], type_dist)
+      S[a]=sample_arm(mu[a], dist)
   end
   t=K
   Best=1
@@ -97,7 +97,7 @@ function ChernoffBC2(mu,delta,rate)
        Score=Inf
        for i=1:K
 	  if i!=Best
-             score=NB*d(MuB, MuMid[i], type_dist)+N[i]*d(Mu[i], MuMid[i], type_dist)
+             score=NB*d(MuB, MuMid[i], dist)+N[i]*d(Mu[i], MuMid[i], dist)
 	     if (score<Score)
 		 Challenger=i
 		 Score=score
@@ -122,12 +122,12 @@ function ChernoffBC2(mu,delta,rate)
              else
                # choose between the arm and its Challenger
                I=(N[Best]<N[Challenger])?Best:Challenger
-               #I=(d(MuB, MuMid[Challenger], type_dist)>d(Mu[Challenger], MuMid[Challenger], type_dist))?Best:Challenger
+               #I=(d(MuB, MuMid[Challenger], dist)>d(Mu[Challenger], MuMid[Challenger], dist))?Best:Challenger
             end
        end
        # draw the arm
        t+=1
-       S[I]+=sample_arm(mu[I], type_dist)
+       S[I]+=sample_arm(mu[I], dist)
        N[I]+=1
    end
    recommendation=Best

@@ -8,7 +8,7 @@ function UCBE(mu, budget, rec=eba, alpha=1)
 	recommendations = zeros(1, budget)
 	for a in 1:K
 		N[a] = 1
-		S[a] = sample_arm(mu[a], type_dist)
+		S[a] = sample_arm(mu[a], dist)
 		means[a] = S[a]
 		recommendations[a] = rec(N, S)
 	end
@@ -19,7 +19,7 @@ function UCBE(mu, budget, rec=eba, alpha=1)
 		ucbes = [compute_ucbe(means[a], alpha, N[a]) for a in 1:K]
 		_, maxindx = findmax(ucbes)
 		# Update
-		S[maxindx] += sample_arm(mu[maxindx], type_dist)
+		S[maxindx] += sample_arm(mu[maxindx], dist)
 		N[maxindx] += 1
 		means[maxindx] = S[maxindx]/N[maxindx]
 		recommendations[t] = rec(N, S)
@@ -61,7 +61,7 @@ function UCBEAdaptive(mu, budget, rec=eba, c=1)
 			# Pick an arm based on the B-value
 			_, maxindx = findmax(ucbes)
 			# Update
-			new_sample = sample_arm(mu[maxindx], type_dist)
+			new_sample = sample_arm(mu[maxindx], dist)
 			#println(new_sample)
 			append!(rewards[maxindx], new_sample)
 			S[maxindx] += new_sample

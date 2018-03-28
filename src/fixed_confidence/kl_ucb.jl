@@ -7,7 +7,7 @@ function ChernoffKLLUCB(mu,delta,rate)
   # initialization
   for a in 1:K
       N[a]=1
-      S[a]=sample_arm(mu[a], type_dist)
+      S[a]=sample_arm(mu[a], dist)
   end
   t=K
   Best=1
@@ -23,22 +23,22 @@ function ChernoffKLLUCB(mu,delta,rate)
        MuMid=(SB+S)./(NB+N)
        Index=collect(1:K)
        splice!(Index,Best)
-       Score=minimum([NB*d(muB, MuMid[i], type_dist)+N[i]*d(Mu[i], MuMid[i], type_dist) for i in Index])
+       Score=minimum([NB*d(muB, MuMid[i], dist)+N[i]*d(Mu[i], MuMid[i], dist) for i in Index])
        # Find the challenger
        UCB=zeros(1,K)
-       LCB=dlow(Mu[Best], rate(t,0,delta)/N[Best], type_dist)
+       LCB=dlow(Mu[Best], rate(t,0,delta)/N[Best], dist)
        for a in 1:K
 	  if a!=Best
-	     UCB[a]=dup(Mu[a], rate(t,0,delta)/N[a], type_dist)
+	     UCB[a]=dup(Mu[a], rate(t,0,delta)/N[a], dist)
           end
        end
        Ind=find(UCB.==maximum(UCB))
        Challenger=Ind[round(Int,floor(length(Ind)*rand())+1)]
        # draw both arms
        t=t+2
-       S[Best]+=sample_arm(mu[Best], type_dist)
+       S[Best]+=sample_arm(mu[Best], dist)
        N[Best]+=1
-       S[Challenger]+=sample_arm(mu[Challenger], type_dist)
+       S[Challenger]+=sample_arm(mu[Challenger], dist)
        N[Challenger]+=1
        # check stopping condition
        condition=(Score <= rate(t,0,delta))
@@ -66,7 +66,7 @@ function KLLUCB(mu,delta,rate)
   # initialization
   for a in 1:K
       N[a]=1
-      S[a]=sample_arm(mu[a], type_dist)
+      S[a]=sample_arm(mu[a], dist)
   end
   t=K
   Best=1
@@ -77,19 +77,19 @@ function KLLUCB(mu,delta,rate)
        Best=Ind[round(Int,floor(length(Ind)*rand())+1)]
        # Find the challenger
        UCB=zeros(1,K)
-       LCB=dlow(Mu[Best], rate(t,N[Best],delta)/N[Best], type_dist)
+       LCB=dlow(Mu[Best], rate(t,N[Best],delta)/N[Best], dist)
        for a in 1:K
 	  if a!=Best
-	     UCB[a]=dup(Mu[a], rate(t,N[a],delta)/N[a], type_dist)
+	     UCB[a]=dup(Mu[a], rate(t,N[a],delta)/N[a], dist)
           end
        end
        Ind=find(UCB.==maximum(UCB))
        Challenger=Ind[round(Int,floor(length(Ind)*rand())+1)]
        # draw both arms
        t=t+2
-       S[Best]+=sample_arm(mu[Best], type_dist)
+       S[Best]+=sample_arm(mu[Best], dist)
        N[Best]+=1
-       S[Challenger]+=sample_arm(mu[Challenger], type_dist)
+       S[Challenger]+=sample_arm(mu[Challenger], dist)
        N[Challenger]+=1
        # check stopping condition
        condition=(LCB < UCB[Challenger])
