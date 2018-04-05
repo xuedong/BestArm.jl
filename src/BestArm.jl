@@ -12,7 +12,7 @@ module BestArm
     export ugape_b, ugape_b_adaptive
 
     export chernoff_bc, chernoff_bc2
-    export chernoff_ttps
+    export chernoff_ttts
     export chernoff_racing, kl_racing
     export chernoff_target
     export chernoff_kl_lucb, kl_lucb
@@ -33,7 +33,7 @@ module BestArm
     include("fixed_confidence/racing.jl")
     include("fixed_confidence/target.jl")
     include("fixed_confidence/best_challenger.jl")
-    include("fixed_confidence/ttps_c.jl")
+    include("fixed_confidence/ttts_c.jl")
     include("fixed_confidence/track_stop.jl")
     include("fixed_confidence/ugape_c.jl")
 
