@@ -11,12 +11,12 @@ mu[20] = 0.9
 #println(mu)
 
 budget = 200
-mcmc = 1
+mcmc = 100
 
-policies = [ttps]
-names = ["Top-Two Probability Sampling"]
-#policies = [uniform, ucbe, ucbe_adaptive, succ_reject, ugape_b, ugape_b_adaptive, seq_halving_ref, seq_halving_no_ref, ttts]
-#names = ["Uniform Sampling", "UCB-E", "Adaptive UCB-E", "Successive Reject", "UGapEB", "Adaptive UGapEB", "Sequential Halving without Refresh", "Sequential Halving with Refresh", "Top-Two Thompson Sampling"]
+#policies = [ttps]
+#names = ["Top-Two Probability Sampling"]
+policies = [uniform, ucbe, succ_reject, ugape_b, seq_halving_ref, seq_halving_no_ref, ttts, ttps]
+names = ["Uniform Sampling", "UCB-E", "Successive Reject", "UGapEB", "Sequential Halving without Refresh", "Sequential Halving with Refresh", "Top-Two Thompson Sampling", "Top-Two Probability Sampling"]
 lp = length(policies)
 
 # Options
