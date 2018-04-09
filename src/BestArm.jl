@@ -19,6 +19,8 @@ module BestArm
     export track_stop, track_stop2
     export ugape_c
 
+    export tttss
+
     include("arms.jl")
     include("utils.jl")
     include("kl_functions.jl")
