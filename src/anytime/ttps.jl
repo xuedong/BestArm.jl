@@ -22,22 +22,27 @@ function ttps(mu::Array, budget::Integer, dist::String, frac::Real = 0.5)
 
         for a in 1:K
             if dist == "Bernoulli"
-                alpha = 0.5
-                beta = 0.5
+                alpha = 1
+                beta = 1
                 function f(x)
-                    prod::Real = pdf(Beta(alpha + S[a], beta + N[a] - S[a]), x)
+                    prod = pdf.(Beta(alpha + S[a], beta + N[a] - S[a]), x)[1]
+                    # println(prod)
                     for i in 1:K
                         if i != a
-                            prod *= cdf(Beta(alpha + S[i], beta + N[i] - S[i]), x)
+                            prod *= cdf.(Beta(alpha + S[i], beta + N[i] - S[i]), x)[1]
+                            # println(prod)
                         end
                     end
+                    return prod
                 end
-                probs[a] = hcubature(f, 0.0, 1.0)
+                val, _ = hcubature(f, 0.0, 1.0)
+                probs[a] = val
             end
         end
         I = indmax(probs)
         if (rand() > frac)
             I = indmax(vcat(probs[1:(I-1)], probs[(I+1):end]))
+            println(vcat(probs[1:(I-1)], probs[(I+1):end]))
         end
         # draw arm I
         S[I] += sample_arm(mu[I], dist)

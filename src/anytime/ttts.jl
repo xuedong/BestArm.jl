@@ -36,8 +36,8 @@ function ttts(mu::Array, budget::Integer, dist::String, frac::Real = 0.5)
             while (I == J)
                 TS = zeros(K)
                 if dist == "Bernoulli"
-                    alpha = 0.5
-                    beta = 0.5
+                    alpha = 1
+                    beta = 1
                     for a = 1:K
                         TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1]
 					end
