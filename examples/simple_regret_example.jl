@@ -11,10 +11,10 @@ mu[20] = 0.9
 #println(mu)
 
 budget = 200
-mcmc = 1000
+mcmc = 1
 
-policies = [ttts, ttps]
-names = ["Top-Two Thompson Sampling", "Top-Two Probability Sampling"]
+policies = [ttps]
+names = ["Top-Two Probability Sampling"]
 #policies = [uniform, ucbe, ucbe_adaptive, succ_reject, ugape_b, ugape_b_adaptive, seq_halving_ref, seq_halving_no_ref, ttts]
 #names = ["Uniform Sampling", "UCB-E", "Adaptive UCB-E", "Successive Reject", "UGapEB", "Adaptive UGapEB", "Sequential Halving without Refresh", "Sequential Halving with Refresh", "Top-Two Thompson Sampling"]
 lp = length(policies)
@@ -32,9 +32,7 @@ for imeth in 1:lp
 		regrets_current = compute_regrets(mu, recs, budget)
 		regrets += regrets_current
 		if VERBOSE
-			if k % 10 == 0
-				println(k*100/mcmc, "%")
-			end
+			println(k*100/mcmc, "%")
 		end
 	end
 	#println(regrets/mcmc)

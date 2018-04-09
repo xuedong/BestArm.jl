@@ -14,7 +14,7 @@ function ttps(mu::Array, budget::Integer, dist::String, frac::Real = 0.5)
     end
 
     best = 1
-    for t in (K+1):budget
+    @showprogress 1 "Computing..." for t in (K+1):budget
         idx = find(probs .== maximum(probs))
         # Empirical best arm
         best = idx[floor(Int, length(idx) * rand()) + 1]
@@ -51,5 +51,5 @@ function ttps(mu::Array, budget::Integer, dist::String, frac::Real = 0.5)
     recommendation = best
     recommendations = Int.(recommendations)
 
-    return (recommendation, N, means, recommendations)
+    return (recommendation, N, probs, recommendations)
 end

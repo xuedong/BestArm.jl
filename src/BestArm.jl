@@ -2,6 +2,7 @@ module BestArm
     using Distributions
     using PyPlot
     using Cubature
+    using ProgressMeter
 
     export edp, eba, mpa
     export compute_regrets
