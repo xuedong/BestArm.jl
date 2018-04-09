@@ -42,7 +42,6 @@ function ttps(mu::Array, budget::Integer, dist::String, frac::Real = 0.5)
         I = indmax(probs)
         if (rand() > frac)
             I = indmax(vcat(probs[1:(I-1)], probs[(I+1):end]))
-            println(vcat(probs[1:(I-1)], probs[(I+1):end]))
         end
         # draw arm I
         S[I] += sample_arm(mu[I], dist)
