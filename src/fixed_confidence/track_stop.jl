@@ -1,4 +1,4 @@
-function track_stop(mu::Array, delta::Real, rate::Function)
+function track_stop(mu::Array, delta::Real, rate::Function, dist::String)
     condition = true
     K=length(mu)
     N = zeros(1,K)
@@ -60,7 +60,7 @@ function track_stop(mu::Array, delta::Real, rate::Function)
 end
 
 
-function track_stop2(mu::Array, delta::Real, rate::Function)
+function track_stop2(mu::Array, delta::Real, rate::Function, dist::String)
     # Uses a Tracking of the cummulated sum
     condition = true
     K=length(mu)

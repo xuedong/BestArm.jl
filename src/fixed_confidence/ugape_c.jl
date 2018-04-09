@@ -1,4 +1,4 @@
-function ugape_c(mu::Array, delta::Real, rate::Function)
+function ugape_c(mu::Array, delta::Real, rate::Function, dist::String)
     condition = true
     K=length(mu)
     N = zeros(1,K)

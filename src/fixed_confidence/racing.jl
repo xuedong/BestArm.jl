@@ -1,4 +1,4 @@
-function chernoff_racing(mu::Array, delta::Real, rate::Function)
+function chernoff_racing(mu::Array, delta::Real, rate::Function, dist::String)
     condition = true
     K=length(mu)
     N = zeros(1,K)
@@ -45,7 +45,7 @@ function chernoff_racing(mu::Array, delta::Real, rate::Function)
 end
 
 
-function kl_racing(mu::Array, delta::Real, rate::Function)
+function kl_racing(mu::Array, delta::Real, rate::Function, dist::String)
     condition = true
     K=length(mu)
     N = zeros(1,K)

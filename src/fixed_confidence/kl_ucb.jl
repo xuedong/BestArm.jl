@@ -1,4 +1,4 @@
-function chernoff_kl_lucb(mu::Array, delta::Real, rate::Function)
+function chernoff_kl_lucb(mu::Array, delta::Real, rate::Function, dist::String)
     # Chernoff stopping rule, KL-LUCB sampling rule
     condition = true
     K=length(mu)
@@ -54,7 +54,7 @@ end
 
 
 # KL-LUCB [Kaufmann and Kalyanakrishnan 2013]
-function kl_lucb(mu::Array, delta::Real, rate::Function)
+function kl_lucb(mu::Array, delta::Real, rate::Function, dist::String)
     condition = true
     K=length(mu)
     N = zeros(1,K)

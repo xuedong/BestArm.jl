@@ -1,4 +1,5 @@
-function chernoff_target(mu::Array, delta::Real, rate::Function, target::Array = ones(1,length(mu))/length(mu))
+function chernoff_target(mu::Array, delta::Real, rate::Function, dist::String,
+    target::Array = ones(1,length(mu))/length(mu))
     # sampling rule : choose arm maximizing (target - empirical proportion)
     condition = true
     K = length(mu)
