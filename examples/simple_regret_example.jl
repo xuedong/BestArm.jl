@@ -4,14 +4,14 @@ using BestArm
 # Problem setting
 dist = "Bernoulli"
 
-mu = ones(1, 20)
+mu = ones(1, 10)
 mu /= 10
-mu[19] = 0.2
-mu[20] = 0.25
+mu[9] = 0.2
+mu[10] = 0.25
 #println(mu)
 
-budget = 2000
-mcmc = 10
+budget = 1000
+mcmc = 100
 
 #policies = [ttps]
 #names = ["Top-Two Probability Sampling"]
