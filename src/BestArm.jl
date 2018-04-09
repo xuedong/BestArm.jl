@@ -1,6 +1,7 @@
 module BestArm
     using Distributions
     using PyPlot
+    using Cubature
 
     export edp, eba, mpa
     export compute_regrets
@@ -20,6 +21,7 @@ module BestArm
     export ugape_c
 
     export ttts
+    export ttps
 
     include("arms.jl")
     include("utils.jl")
