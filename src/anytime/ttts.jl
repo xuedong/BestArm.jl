@@ -26,7 +26,9 @@ function ttts(mu::Array, budget::Integer, dist::String, frac::Real = 0.5)
                 alpha = 0.5
                 beta = 0.5
                 TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1]
-            end
+			elseif dist == "Gaussian"
+				TS[a] = rand(Gaussian(S[a] / N[a], 1.0 / N[a]), 1)[1]
+			end
         end
         I = indmax(TS)
         if (rand() > frac)
@@ -38,7 +40,11 @@ function ttts(mu::Array, budget::Integer, dist::String, frac::Real = 0.5)
                     beta = 0.5
                     for a = 1:K
                         TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1]
-                    end
+					end
+				elseif dist == "Gaussian"
+					for a = 1:K
+						TS[a] = rand(Gaussian(S[a] / N[a], 1.0 / N[a]), 1)[1]
+					end
                 end
                 J = indmax(TS)
             end

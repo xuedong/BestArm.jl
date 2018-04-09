@@ -158,16 +158,16 @@ end
 
 
 # Gaussian distributions
-function dGaussian(p::Float64, q::Float64)
+function dGaussian(p::Float64, q::Float64, sigma::Float64 = 1.0)
     (p - q)^2 / (2 * sigma^2)
 end
 
 
-function dupGaussian(p::Float64, level::Float64)
+function dupGaussian(p::Float64, level::Float64, sigma::Float64 = 1.0)
     p + sigma * sqrt(2 * level)
 end
 
 
-function dlowGaussian(p::Float64, level::Float64)
+function dlowGaussian(p::Float64, level::Float64, sigma::Float64 = 1.0)
     p - sigma * sqrt(2 * level)
 end
