@@ -22,15 +22,23 @@ function ttts(mu::Array, budget::Integer, dist::String, frac::Real = 0.5)
 
         TS = zeros(K)
         for a in 1:K
-            TS[a] = rand(Beta(alpha+S[a], beta+N[a]-S[a]), 1)[1]
+            if dist == "Bernouilli"
+                alpha = 0.5
+                beta = 0.5
+                TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1]
+            end
         end
         I = indmax(TS)
         if (rand() > frac)
             J = I
             while (I == J)
                 TS = zeros(K)
-                for a = 1:K
-                    TS[a] = rand(Beta(alpha+S[a], beta+N[a]-S[a]), 1)[1]
+                if dist == "Bernoulli"
+                    alpha = 0.5
+                    beta = 0.5
+                    for a = 1:K
+                        TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1]
+                    end
                 end
                 J = indmax(TS)
             end
@@ -42,5 +50,7 @@ function ttts(mu::Array, budget::Integer, dist::String, frac::Real = 0.5)
     end
 
     recommendation = best
+    recommendations = Int.(recommendations)
+
     return (recommendation, N, means, recommendations)
 end

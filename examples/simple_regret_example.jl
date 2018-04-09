@@ -13,10 +13,10 @@ mu[20] = 0.9
 budget = 200
 mcmc = 1000
 
-#policies = [succ_reject, seq_halving_no_ref]
-#names = ["Successive Reject", "Sequential Halving without Refresh"]
-policies = [uniform, ucbe, ucbe_adaptive, succ_reject, ugape_b, ugape_b_adaptive, seq_halving_ref, seq_halving_no_ref, ttts]
-names = ["Uniform Sampling", "UCB-E", "Adaptive UCB-E", "Successive Reject", "UGapEB", "Adaptive UGapEB", "Sequential Halving without Refresh", "Sequential Halving with Refresh", "Top-Two Thompson Sampling"]
+policies = [ttts]
+names = ["Top-Two Thompson Sampling"]
+#policies = [uniform, ucbe, ucbe_adaptive, succ_reject, ugape_b, ugape_b_adaptive, seq_halving_ref, seq_halving_no_ref, ttts]
+#names = ["Uniform Sampling", "UCB-E", "Adaptive UCB-E", "Successive Reject", "UGapEB", "Adaptive UGapEB", "Sequential Halving without Refresh", "Sequential Halving with Refresh", "Top-Two Thompson Sampling"]
 lp = length(policies)
 
 # Options
@@ -49,6 +49,6 @@ xlabel("Allocation budget")
 ylabel("Expectation of the simple regret")
 ax = axes()
 grid("on")
-legend(bbox_to_anchor=[1.05,1], loc=2, borderaxespad=0)
-ax[:set_position]([0.06,0.06,0.71,0.91])
+legend(bbox_to_anchor=[1.05, 1], loc=2, borderaxespad=0)
+ax[:set_position]([0.06, 0.06, 0.71, 0.91])
 show()
