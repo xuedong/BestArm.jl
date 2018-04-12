@@ -261,3 +261,9 @@ function tr(budget, n, r)
 	t_r = round(budget/(s_r*ceil(log2(n))))
 	return t_r
 end
+
+
+# Helper function for AT-LUCB
+function compute_deviation(n::Integer, u::Array, t::Integer, delta::Real, k1::Real = 1.25)
+	return sqrt.(log.(k1*n*(t^4)/delta)./(2*u))
+end

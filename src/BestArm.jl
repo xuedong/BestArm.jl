@@ -23,6 +23,7 @@ module BestArm
 
     export ttts
     export ttps
+    export at_lucb
 
     include("arms.jl")
     include("utils.jl")
@@ -45,4 +46,5 @@ module BestArm
     include("anytime/ttps.jl")
     include("anytime/ttts.jl")
     include("anytime/ttvs.jl")
+    include("anytime/at_lucb.jl")
 end

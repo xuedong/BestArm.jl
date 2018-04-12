@@ -4,19 +4,16 @@ using BestArm
 # Problem setting
 dist = "Bernoulli"
 
-mu = ones(1, 10)
-mu /= 10
-mu[9] = 0.2
-mu[10] = 0.25
+mu = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.11, 0.5]
 #println(mu)
 
-budget = 200
+budget = 1000
 mcmc = 100
 
-#policies = [ttps]
-#names = ["Top-Two Probability Sampling"]
-policies = [uniform, ucbe, succ_reject, ugape_b, seq_halving_ref, seq_halving_no_ref, ttts, ttps]
-names = ["Uniform Sampling", "UCB-E", "Successive Reject", "UGapEB", "Sequential Halving without Refresh", "Sequential Halving with Refresh", "Top-Two Thompson Sampling", "Top-Two Probability Sampling"]
+policies = [at_lucb]
+names = ["AT-LUCB"]
+#policies = [uniform, ucbe, succ_reject, ugape_b, seq_halving_ref, seq_halving_no_ref, ttts]
+#names = ["Uniform Sampling", "UCB-E", "Successive Reject", "UGapEB", "Sequential Halving without Refresh", "Sequential Halving with Refresh", "Top-Two Thompson Sampling"]
 lp = length(policies)
 
 # Options
