@@ -21,6 +21,7 @@ module BestArm
     export track_stop, track_stop2
     export ugape_c
 
+    export ts
     export ttts
     export ttps
     export at_lucb
@@ -46,5 +47,6 @@ module BestArm
     include("anytime/ttps.jl")
     include("anytime/ttts.jl")
     include("anytime/ttvs.jl")
+    include("anytime/ts.jl")
     include("anytime/at_lucb.jl")
 end

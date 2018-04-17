@@ -23,8 +23,8 @@ function ttts(mu::Array, budget::Integer, dist::String, frac::Real = 0.5)
         TS = zeros(K)
         for a in 1:K
             if dist == "Bernouilli"
-                alpha = 0.5
-                beta = 0.5
+                alpha = 1
+                beta = 1
                 TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1]
 			elseif dist == "Gaussian"
 				TS[a] = rand(Normal(S[a] / N[a], 1.0 / N[a]), 1)[1]
