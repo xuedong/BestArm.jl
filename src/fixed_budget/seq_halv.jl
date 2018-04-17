@@ -10,12 +10,17 @@ function seq_halving_no_ref(mu::Array, budget::Integer, dist::String, rec::Funct
 	s_r = K
 	recommendations = zeros(1, budget)
 
+	for a in 1:K
+		N[a] = 1
+		S[a] = sample_arm(mu[a], dist)
+	end
+
 	# Elimination loop
 	j = 0
 	for r in 1:rounds
-		for a in arms
-			t_r = tr(budget, K, r)
-			for i in 1:t_r
+		t_r = tr(budget, K, r)
+		for i in 1:t_r
+			for a in arms
 				new_sample = sample_arm(mu[a], dist)
 				append!(rewards[a], new_sample)
 				S[a] += new_sample
@@ -57,12 +62,17 @@ function seq_halving_ref(mu::Array, budget::Integer, dist::String, rec::Function
 	total_picks = 0
 	recommendations = zeros(1, budget)
 
+	for a in 1:K
+		N[a] = 1
+		S[a] = sample_arm(mu[a], dist)
+	end
+
 	# Elimination loop
 	j = 0
 	for r in 1:rounds
 		t_r = tr(budget, K, r)
-		for a in arms
-			for i in 1:t_r
+		for i in 1:t_r
+			for a in arms
 				new_sample = sample_arm(mu[a], dist)
 				append!(rewards[a], new_sample)
 				S[a] += new_sample

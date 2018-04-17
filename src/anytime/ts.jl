@@ -9,7 +9,7 @@ function ts(mu::Array, budget::Integer, dist::String)
     for a in 1:K
         N[a] = 1
         S[a] = sample_arm(mu[a], dist)
-        recommendations[a] = mpa(N, S)
+        recommendations[a] = rand(1:K)
     end
 
     for t in (K+1):budget

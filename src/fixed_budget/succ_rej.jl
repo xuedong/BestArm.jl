@@ -10,14 +10,19 @@ function succ_reject(mu::Array, budget::Integer, dist::String, rec::Function = e
 	recommendations = zeros(1, budget)
 	s_k = 0
 
+	for a in 1:K
+		N[a] = 1
+		S[a] = sample_arm(mu[a], dist)
+	end
+
 	# Elimination loop
 	j = 0
 	for k in 1:(K-1)
 		n_k = compute_nk(budget, K, k, log_bar) - compute_nk(budget, K, k-1, log_bar)
 		#println(n_k)
 		#j = 0
-		for a in arms
-			for i in 1:n_k
+		for i in 1:n_k
+			for a in arms
 				new_sample = sample_arm(mu[a], dist)
 				append!(rewards[a], new_sample)
 				S[a] += new_sample

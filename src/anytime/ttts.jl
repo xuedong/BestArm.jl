@@ -10,7 +10,7 @@ function ttts(mu::Array, budget::Integer, dist::String, frac::Real = 0.5)
     for a in 1:K
         N[a] = 1
         S[a] = sample_arm(mu[a], dist)
-        recommendations[a] = eba(N, S)
+        recommendations[a] = rand(1:K)
     end
 
     best = 1

@@ -14,7 +14,7 @@ function uniform(mu::Array, budget::Integer, dist::String, rec::Function = eba)
 		N[a] = 1
 		S[a] = sample_arm(mu[a], dist)
 		means[a] = S[a]
-		recommendations[a] = rec(N, S)
+		recommendations[a] = rand(1:K)
 	end
 
 	# Exploration
