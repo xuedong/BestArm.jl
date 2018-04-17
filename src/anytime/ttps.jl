@@ -2,7 +2,7 @@ function ttps(mu::Array, budget::Integer, dist::String, frac::Real = 0.5)
     K = length(mu)
     N = zeros(1, K)
     S = zeros(1, K)
-    probs = zeros(1, K)
+    probs = ones(1, K) / K
     recommendations = zeros(1, budget)
 
     # initialization
@@ -10,13 +10,11 @@ function ttps(mu::Array, budget::Integer, dist::String, frac::Real = 0.5)
         N[a] = 1
         S[a] = sample_arm(mu[a], dist)
         recommendations[a] = eba(N, S)
-        probs[a] = 1.0 / K
     end
 
     best = 1
     @showprogress 1 "Computing..." for t in (K+1):budget
         idx = find(probs .== maximum(probs))
-        # Empirical best arm
         best = idx[floor(Int, length(idx) * rand()) + 1]
         recommendations[t] = best
 

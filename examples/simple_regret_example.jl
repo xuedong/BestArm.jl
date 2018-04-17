@@ -4,9 +4,11 @@ using BestArm
 # Problem setting
 dist = "Bernoulli"
 
-mu = ones(20)
-mu = mu * 0.4
-mu[20] = 0.5
+mu = zeros(4)
+mu[1] = 0.5
+mu[2] = 0.5 - 0.37
+mu[3] = 0.5 - 0.37^2
+mu[4] = 0.5 - 0.37^4
 #println(mu)
 
 budget = 500

@@ -3,6 +3,7 @@ function ttts(mu::Array, budget::Integer, dist::String, frac::Real = 0.5)
     N = zeros(1, K)
     S = zeros(1, K)
     means = zeros(1, K)
+    probs = ones(1, K) / K
     recommendations = zeros(1, budget)
 
     # initialization

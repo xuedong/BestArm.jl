@@ -132,15 +132,18 @@ end
 # EBA: Empirical best arm
 function eba(N, S)
 	K = length(N)
-	maxval, maxindx = findmax([S[i]/N[i] for i in 1:K])
-	return maxindx
+	means = S ./ N
+	idx = find(means .== maximum(means))
+	best = idx[floor(Int, length(idx) * rand()) + 1]
+	return best
 end
 
 
 # MPA: Most played arm
 function mpa(N, S)
-	maxval, maxindx = findmax(N)
-	return maxindx
+	idx = find(N .== maximum(N))
+	best = idx[floor(Int, length(idx) * rand()) + 1]
+	return best
 end
 
 
