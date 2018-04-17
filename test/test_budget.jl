@@ -4,10 +4,10 @@ using BestArm
 # Problem setting
 dist = "Bernoulli"
 
-mu = [0.3, 0.25, 0.2, 0.1]
+mu = [0.25, 0.3, 0.2, 0.1]
 
 budget = 100
-mcmc = 10
+mcmc = 100
 
 policies = [uniform, ucbe, succ_reject, ugape_b, seq_halving_ref, ttts, ttps, ts, at_lucb]
 names = ["Uniform Sampling", "UCB-E", "Successive Reject", "UGapEB", "Sequential Halving with Refresh", "Top-Two Thompson Sampling", "Top-Two Probability Sampling", "Thompson Sampling", "AT-LUCB"]
