@@ -40,7 +40,7 @@ for imeth in 1:lp
 	#if imeth == 4 || imeth == 7 || imeth == 8
 	#	plot(X, transpose(regrets/mcmc), linestyle="-.", label=names[imeth])
 	#else
-	plot(X, transpose(regrets/mcmc), label=names[imeth])
+	plot(X, transpose(regrets/mcmc), label = names[imeth])
 	#end
 end
 
