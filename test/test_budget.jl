@@ -4,25 +4,20 @@ using BestArm
 # Problem setting
 dist = "Bernoulli"
 
-mu = ones(30)*0.38
-mu[7:20] = 0.43
-mu[2:6] = 0.45
-mu[1] = 0.5
-#println(mu)
+mu = [0.3, 0.25, 0.2, 0.1]
 
-budget = 2000
-mcmc = 1000
+budget = 100
+mcmc = 10
 
-#policies = [at_lucb]
-#names = ["AT-LUCB"]
-policies = [uniform, ucbe, succ_reject, ugape_b, seq_halving_ref, ttts, at_lucb, ts]
-names = ["Uniform Sampling", "UCB-E", "Successive Reject", "UGapEB", "Sequential Halving with Refresh", "Top-Two Thompson Sampling", "AT-LUCB", "Thompson Sampling"]
+policies = [uniform, ucbe, succ_reject, ugape_b, seq_halving_ref, ttts, ttps, ts, at_lucb]
+names = ["Uniform Sampling", "UCB-E", "Successive Reject", "UGapEB", "Sequential Halving with Refresh", "Top-Two Thompson Sampling", "Top-Two Probability Sampling", "Thompson Sampling", "AT-LUCB"]
 lp = length(policies)
 
 # Options
 VERBOSE = true
 
 # Tests
+fig = figure()
 X = 1:budget
 for imeth in 1:lp
 	policy = policies[imeth]
@@ -45,8 +40,7 @@ end
 
 xlabel("Allocation budget")
 ylabel("Expectation of the simple regret")
-ax = axes()
 grid("on")
-legend(bbox_to_anchor=[1.05, 1], loc=2, borderaxespad=0)
-ax[:set_position]([0.06, 0.06, 0.71, 0.91])
-show()
+legend(loc=1)
+savefig("results/exp_0.pdf")
+close(fig)
