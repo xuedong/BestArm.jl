@@ -19,7 +19,7 @@ function ts(mu::Array, budget::Integer, dist::String)
 
         TS = zeros(K)
         for a in 1:K
-            if dist == "Bernouilli"
+            if dist == "Bernoulli"
                 alpha = 1
                 beta = 1
                 TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1]
