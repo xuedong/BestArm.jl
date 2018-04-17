@@ -4,14 +4,12 @@ using BestArm
 # Problem setting
 dist = "Bernoulli"
 
-mu = zeros(4)
-mu[1] = 0.5
-mu[2] = 0.5 - 0.37
-mu[3] = 0.5 - 0.37^2
-mu[4] = 0.5 - 0.37^4
+mu = ones(20)*0.5
+mu[2:6] = 0.42
+mu[7:20] = 0.38
 #println(mu)
 
-budget = 500
+budget = 900
 mcmc = 1000
 
 #policies = [at_lucb]
@@ -40,7 +38,7 @@ for imeth in 1:lp
 	#if imeth == 4 || imeth == 7 || imeth == 8
 	#	plot(X, transpose(regrets/mcmc), linestyle="-.", label=names[imeth])
 	#else
-	plot(X, transpose(regrets/mcmc), label = names[imeth])
+	loglog(X, transpose(regrets/mcmc), label = names[imeth])
 	#end
 end
 
