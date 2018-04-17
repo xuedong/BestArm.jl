@@ -1,5 +1,5 @@
 # Run Experiments, display results (and possibly save data) on a Bandit Problem to be specified
-
+using BestArm
 using HDF5
 
 # DO YOU WANT TO SAVE RESULTS?
@@ -7,25 +7,21 @@ typeExp = "Save"
 #typeExp = "NoSave"
 
 # TYPE OF DISTRIBUTION
-dist="Bernoulli"
-include("BAIConfidence.jl")
-include("BAIBudget.jl")
-include("Arms.jl")
-include("Utils.jl")
+dist = "Bernoulli"
 
 # CHANGE NAME (save mode)
 fname="results/Experiment4arms"
 
 # BANDIT PROBLEM
-mu=vec([0.3 0.25 0.2 0.1])
-best=find(mu.==maximum(mu))[1]
-K=length(mu)
+mu = vec([0.3 0.25 0.2 0.1])
+best = find(mu.==maximum(mu))[1]
+K = length(mu)
 
 # RISK LEVEL
-delta=0.1
+delta = 0.1
 
 # NUMBER OF SIMULATIONS
-N=5
+N = 5
 
 
 # OPTIMAL SOLUTION
