@@ -1,6 +1,6 @@
 using PyPlot
 
-addprocs(1)
+addprocs(2)
 @everywhere include("/Users/xuedong/Programming/PhD/BestArm.jl/src/BestArm.jl")
 @everywhere using BestArm
 @everywhere using DistributedArrays
