@@ -1,7 +1,11 @@
 using PyPlot
 
-addprocs(2)
-@everywhere include("/Users/xuedong/Programming/PhD/BestArm.jl/src/BestArm.jl")
+addprocs()
+if Sys.KERNEL == :Darwin
+	@everywhere include("/Users/xuedong/Programming/PhD/BestArm.jl/src/BestArm.jl")
+elseif Sys.KERNEL == :Linux
+	@everywhere include("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/src/BestArm.jl")
+end
 @everywhere using BestArm
 @everywhere using DistributedArrays
 
@@ -9,8 +13,8 @@ addprocs(2)
 # Problem setting
 dist = "Bernoulli"
 mu = [0.25, 0.3, 0.2, 0.1]
-budget = 100
-mcmc = 10
+budget = 1000
+mcmc = 1000
 
 policies = [uniform, ucbe, succ_reject, ugape_b, seq_halving_ref, ttts, ttps, ts, at_lucb]
 names = ["Uniform Sampling", "UCB-E", "Successive Reject", "UGapEB", "Sequential Halving with Refresh", "Top-Two Thompson Sampling", "Top-Two Probability Sampling", "Thompson Sampling", "AT-LUCB"]
