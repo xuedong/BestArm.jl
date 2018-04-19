@@ -83,3 +83,10 @@ function ttts(mu::Array, budget::Integer, dist::String, frac::Real = 0.5)
 
     return (recommendation, N, means, recommendations)
 end
+
+
+function parallel_ttts(mu::Array, budget::Integer, dist::String)
+	_, _, _, recs = ttts(mu, budget, dist)
+	regrets = compute_regrets(mu, recs, budget)
+	return regrets
+end

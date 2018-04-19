@@ -22,8 +22,8 @@ module BestArm
     export ugape_c
 
     export ts
-    export ttts
-    export ttps
+    export ttts, parallel_ttts
+    export ttps, parallel_ttps
     export at_lucb
 
     include("arms.jl")

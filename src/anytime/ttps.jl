@@ -51,3 +51,10 @@ function ttps(mu::Array, budget::Integer, dist::String, frac::Real = 0.5)
 
     return (recommendation, N, probs, recommendations)
 end
+
+
+function parallel_ttps(mu::Array, budget::Integer, dist::String)
+	_, _, _, recs = ttps(mu, budget, dist)
+	regrets = compute_regrets(mu, recs, budget)
+	return regrets
+end
