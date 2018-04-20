@@ -1,6 +1,6 @@
 using PyPlot
 
-addprocs()
+addprocs(1)
 if Sys.KERNEL == :Darwin
 	@everywhere include("/Users/xuedong/Programming/PhD/BestArm.jl/src/BestArm.jl")
 elseif Sys.KERNEL == :Linux
@@ -13,8 +13,8 @@ end
 # Problem setting
 dist = "Bernoulli"
 mu = [0.25, 0.3, 0.2, 0.1]
-budget = 1000
-mcmc = 1000
+budget = 10
+mcmc = 1
 
 policies = [uniform, ucbe, succ_reject, ugape_b, seq_halving_ref, ttts, ttps, ts, at_lucb]
 names = ["Uniform Sampling", "UCB-E", "Successive Reject", "UGapEB", "Sequential Halving with Refresh", "Top-Two Thompson Sampling", "Top-Two Probability Sampling", "Thompson Sampling", "AT-LUCB"]
@@ -51,17 +51,12 @@ for imeth in 1:lp
 			end
 		end
 	end
-	#println(regrets/mcmc)
-	#if imeth == 4 || imeth == 7 || imeth == 8
-	#	plot(X, transpose(regrets/mcmc), linestyle="-.", label=names[imeth])
-	#else
 	plot(X, transpose(regrets/mcmc), label = names[imeth])
-	#end
 end
 
 xlabel("Allocation budget")
 ylabel("Expectation of the simple regret")
 grid("on")
 legend(loc=1)
-savefig("results/exp_0.pdf")
+savefig("../results/exp_0.pdf")
 close(fig)
