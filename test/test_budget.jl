@@ -1,6 +1,6 @@
 using PyPlot
 
-addprocs(1)
+addprocs()
 if Sys.KERNEL == :Darwin
 	@everywhere include("/Users/xuedong/Programming/PhD/BestArm.jl/src/BestArm.jl")
 elseif Sys.KERNEL == :Linux
@@ -13,8 +13,8 @@ end
 # Problem setting
 dist = "Bernoulli"
 mu = [0.25, 0.3, 0.2, 0.1]
-budget = 10
-mcmc = 1
+budget = 1000
+mcmc = 1000
 
 policies = [uniform, ucbe, succ_reject, ugape_b, seq_halving_ref, ttts, ttps, ts, at_lucb]
 names = ["Uniform Sampling", "UCB-E", "Successive Reject", "UGapEB", "Sequential Halving with Refresh", "Top-Two Thompson Sampling", "Top-Two Probability Sampling", "Thompson Sampling", "AT-LUCB"]
