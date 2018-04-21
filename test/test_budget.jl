@@ -13,8 +13,8 @@ end
 # Problem setting
 dist = "Bernoulli"
 mu = [0.25, 0.3, 0.2, 0.1]
-budget = 1000
-mcmc = 1000
+budget = 10000
+mcmc = 10000
 
 policies = [uniform, ucbe, succ_reject, ugape_b, seq_halving_ref, ttts, ttps, ts, at_lucb]
 names = ["Uniform Sampling", "UCB-E", "Successive Reject", "UGapEB", "Sequential Halving with Refresh", "Top-Two Thompson Sampling", "Top-Two Probability Sampling", "Thompson Sampling", "AT-LUCB"]
@@ -58,4 +58,3 @@ xlabel("Allocation budget")
 ylabel("Expectation of the simple regret")
 grid("on")
 legend(loc=1)
-close(fig)
