@@ -16,7 +16,7 @@ lp = length(policies)
 
 
 # Tests
-for setting in settings
+for setting in settings[1:2]
 	# load experimental setting from .ini file
 	dist = retrieve(conf, setting, "distribution")
 	dist = String(dist)
@@ -34,7 +34,7 @@ for setting in settings
 	for imeth in 1:lp
 		policy = policies[imeth]
 		regrets = zeros(1, budget)
-		@showprogress 1 "Computing..." for k in 1:mcmc
+		@showprogress 1 string("Computing ", names[imeth], "...") for k in 1:mcmc
 			_, _, _, recs = policy(mu, budget, dist)
 			regrets_current = compute_regrets(mu, recs, budget)
 			regrets += regrets_current
@@ -46,4 +46,6 @@ for setting in settings
 	ylabel("Expectation of the simple regret")
 	grid("on")
 	legend(loc=1)
+	savefig(string("/Users/xuedong/Programming/PhD/BestArm.jl/results/ts_mpa/", setting, ".png"))
+	close(fig)
 end
