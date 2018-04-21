@@ -1,6 +1,5 @@
 module BestArm
     using Distributions
-    using PyPlot
     using Cubature
     using ProgressMeter
 

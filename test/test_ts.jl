@@ -17,13 +17,10 @@ budget = parse(Int, budget)
 mcmc = retrieve(conf, "problem0", "mcmc")
 mcmc = parse(Int, mcmc)
 
+settings = 
 policies = [uniform, ucbe, succ_reject, ugape_b, seq_halving_ref, ts, at_lucb]
 names = ["Uniform Sampling", "UCB-E", "Successive Reject", "UGapEB", "Sequential Halving with Refresh", "Thompson Sampling", "AT-LUCB"]
 lp = length(policies)
-
-
-# Options
-VERBOSE = true
 
 
 # Tests
@@ -32,13 +29,10 @@ X = 1:budget
 for imeth in 1:lp
 	policy = policies[imeth]
 	regrets = zeros(1, budget)
-	for k in 1:mcmc
+	@showprogress 1 "Computing..." for k in 1:mcmc
 		_, _, _, recs = policy(mu, budget, dist)
 		regrets_current = compute_regrets(mu, recs, budget)
 		regrets += regrets_current
-		if VERBOSE
-			println(k*100/mcmc, "%")
-		end
 	end
 	plot(X, transpose(regrets/mcmc), label = names[imeth])
 end
