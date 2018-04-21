@@ -16,7 +16,7 @@ lp = length(policies)
 
 
 # Tests
-for setting in settings[1:2]
+for setting in settings
 	# load experimental setting from .ini file
 	dist = retrieve(conf, setting, "distribution")
 	dist = String(dist)

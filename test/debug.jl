@@ -1,18 +1,14 @@
-# Test scripts for different algos
-
-# Random seed
-#srand(4)
-
+include("/Users/xuedong/Programming/PhD/BestArm.jl/src/BestArm.jl")
 using BestArm
 
 dist = "Bernoulli"
 
-mu = [0.25, 0.9, 0.2, 0.1]
+mu = [0.5, 0.45, 0.425, 0.4, 0.375, 0.35, 0.325, 0.3, 0.275, 0.25, 0.225, 0.2, 0.175, 0.15, 0.125]
 
-budget = 100
+budget = 500
 mc = 20
-policies = [ttts]
-names = ["Thompson Sampling"]
+policies = [succ_reject]
+names = ["Successive Reject"]
 lp = length(policies)
 
 for imeth in 1:lp
@@ -26,5 +22,5 @@ for imeth in 1:lp
 	println(rec)
 	println(N)
 	println(means)
-	println(recs)
+	# println(recs)
 end

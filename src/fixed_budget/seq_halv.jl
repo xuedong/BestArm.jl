@@ -26,7 +26,11 @@ function seq_halving_no_ref(mu::Array, budget::Integer, dist::String, rec::Funct
 				S[a] += new_sample
 				N[a] += 1
 				j += 1
-				recommendations[j] = arms[rec(N[arms], S[arms])]
+				if j > budget
+					continue
+				else
+					recommendations[j] = arms[rec(N[arms], S[arms])]
+				end
 			end
 		end
 		for i in 1:(s_r-ceil(s_r/2))
@@ -78,7 +82,11 @@ function seq_halving_ref(mu::Array, budget::Integer, dist::String, rec::Function
 				S[a] += new_sample
 				N[a] += 1
 				j += 1
-				recommendations[j] = arms[rec(N[arms], S[arms])]
+				if j > budget
+					continue
+				else
+					recommendations[j] = arms[rec(N[arms], S[arms])]
+				end
 			end
 		end
 		for i in 1:(s_r-ceil(s_r/2))

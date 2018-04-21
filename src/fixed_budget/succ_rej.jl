@@ -28,7 +28,11 @@ function succ_reject(mu::Array, budget::Integer, dist::String, rec::Function = e
 				S[a] += new_sample
 				N[a] += 1
 				j += 1
-				recommendations[j] = arms[rec(N[arms], S[arms])]
+				if j > budget
+					continue
+				else
+					recommendations[j] = arms[rec(N[arms], S[arms])]
+				end
 			end
 			#j += 1
 		end
