@@ -14,7 +14,7 @@ function ttts(mu::Array, budget::Integer, dist::String, frac::Real = 0.5)
     end
 
     best = 1
-    @showprogress 1 "Computing..." for t in (K+1):budget
+    for t in (K+1):budget
         means = S ./ N
         # idx = find(means .== maximum(means))
         # best = idx[floor(Int, length(idx) * rand()) + 1]
@@ -88,5 +88,6 @@ end
 function parallel_ttts(mu::Array, budget::Integer, dist::String)
 	_, _, _, recs = ttts(mu, budget, dist)
 	regrets = compute_regrets(mu, recs, budget)
+    println("Created $(memuse())")
 	return regrets
 end

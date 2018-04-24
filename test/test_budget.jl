@@ -1,6 +1,7 @@
 using PyPlot
+using ProgressMeter
 
-addprocs()
+addprocs(6)
 if Sys.KERNEL == :Darwin
 	@everywhere include("/Users/xuedong/Programming/PhD/BestArm.jl/src/BestArm.jl")
 elseif Sys.KERNEL == :Linux
@@ -9,12 +10,11 @@ end
 @everywhere using BestArm
 @everywhere using DistributedArrays
 
-
 # Problem setting
 dist = "Bernoulli"
-mu = [0.25, 0.3, 0.2, 0.1]
-budget = 10000
-mcmc = 10000
+mu = [0.4, 0.5, 0.35, 0.3]
+budget = 1000
+mcmc = 100
 
 policies = [uniform, ucbe, succ_reject, ugape_b, seq_halving_ref, ttts, ttps, ts, at_lucb]
 names = ["Uniform Sampling", "UCB-E", "Successive Reject", "UGapEB", "Sequential Halving with Refresh", "Top-Two Thompson Sampling", "Top-Two Probability Sampling", "Thompson Sampling", "AT-LUCB"]
@@ -42,13 +42,10 @@ for imeth in 1:lp
 			regrets += regrets_array[i]
 		end
 	else
-		for k in 1:mcmc
+		@showprogress 1 string("Computing ", names[imeth], "...") for k in 1:mcmc
 			_, _, _, recs = policy(mu, budget, dist)
 			regrets_current = compute_regrets(mu, recs, budget)
 			regrets += regrets_current
-			if VERBOSE
-				println(k*100/mcmc, "%")
-			end
 		end
 	end
 	plot(X, transpose(regrets/mcmc), label = names[imeth])

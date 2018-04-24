@@ -270,3 +270,9 @@ end
 function compute_deviation(n::Integer, u::Array, t::Integer, delta::Real, k1::Real = 1.25)
 	return sqrt.(log.(k1*n*(t^4)/delta)./(2*u))
 end
+
+
+# Memory usage check
+function memuse()
+  return string(round(Int, parse(Int, readall(`ps -p 29563 -o rss=`))/1024), "M")
+end
