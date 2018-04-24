@@ -13,7 +13,7 @@ function ttps(mu::Array, budget::Integer, dist::String, frac::Real = 0.5)
     end
 
     best = 1
-    @showprogress 1 "Computing..." for t in (K+1):budget
+    for t in (K+1):budget
         idx = find(probs .== maximum(probs))
         best = idx[floor(Int, length(idx) * rand()) + 1]
         recommendations[t] = best
