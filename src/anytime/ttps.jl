@@ -56,5 +56,6 @@ end
 function parallel_ttps(mu::Array, budget::Integer, dist::String)
 	_, _, _, recs = ttps(mu, budget, dist)
 	regrets = compute_regrets(mu, recs, budget)
+    gc()
 	return regrets
 end

@@ -5,7 +5,7 @@ module BestArm
 
     export edp, eba, mpa
     export compute_regrets
-    export memuse
+    # export memuse
 
     export seq_halving_ref, seq_halving_no_ref
     export succ_reject

@@ -88,6 +88,6 @@ end
 function parallel_ttts(mu::Array, budget::Integer, dist::String)
 	_, _, _, recs = ttts(mu, budget, dist)
 	regrets = compute_regrets(mu, recs, budget)
-    println("Created $(memuse())")
+    gc()
 	return regrets
 end

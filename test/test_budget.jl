@@ -1,7 +1,7 @@
 using PyPlot
 using ProgressMeter
 
-addprocs(6)
+addprocs(3)
 if Sys.KERNEL == :Darwin
 	@everywhere include("/Users/xuedong/Programming/PhD/BestArm.jl/src/BestArm.jl")
 elseif Sys.KERNEL == :Linux
