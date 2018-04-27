@@ -14,7 +14,7 @@ end
 dist = "Bernoulli"
 mu = [0.4, 0.5, 0.35, 0.3]
 budget = 1000
-mcmc = 100
+mcmc = 10000
 
 policies = [uniform, ucbe, succ_reject, ugape_b, seq_halving_ref, ttts, ttps, ts, at_lucb]
 names = ["Uniform Sampling", "UCB-E", "Successive Reject", "UGapEB", "Sequential Halving with Refresh", "Top-Two Thompson Sampling", "Top-Two Probability Sampling", "Thompson Sampling", "AT-LUCB"]
