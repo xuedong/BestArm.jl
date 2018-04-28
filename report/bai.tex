@@ -198,6 +198,14 @@ TODO: log-scale figures.
 \paragraph{\bfseries{Top-Two Thompson Sampling and Top-Two Probability Sampling}}
 For TTTS and TTPS, we now need to compute the optimal action probabilities. Actually, in the original TTTS algorithm, we don't need to compute these probabilities since we can always use the parameter sampling from the posterior trick. However, since we are now in a best arm identification setting, and a plausible recommendation strategy for TTTS and TTPS would be recommending at each time step the arm with the largest optimal action probability. Thus in both cases, we need to compute these probabilities. And in practice, we use the Cubature package of Julia to complete this task.
 
+For the moment, all the plots in this part are averaged on 1000 trials.
+
+\begin{figure}[ht]
+    	\centering\includegraphics[width=\textwidth]{../results/ttts/setting0.png}
+    	\caption{Problem Setting 8}
+	\label{ttts_0}
+\end{figure}
+
 \section{Comparison of Different Recommendation Strategies}
 
 TODO
