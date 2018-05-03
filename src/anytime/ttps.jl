@@ -33,13 +33,18 @@ function ttps(mu::Array, budget::Integer, dist::String, frac::Real = 0.5)
                     end
                     return prod
                 end
-                val, _ = hcubature(f, 0.0, 1.0)
+                val, _ = hquadrature(f, 0.0, 1.0)
                 probs[a] = val
             end
         end
         I = indmax(probs)
         if (rand() > frac)
-            I = indmax(vcat(probs[1:(I-1)], probs[(I+1):end]))
+            J = indmax(vcat(probs[1:(I-1)], probs[(I+1):end]))
+            if J >= I
+                I = J + 1
+            else
+                I = J
+            end
         end
         # draw arm I
         S[I] += sample_arm(mu[I], dist)
