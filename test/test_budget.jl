@@ -12,8 +12,8 @@ end
 
 # Problem setting
 dist = "Bernoulli"
-mu = [0.4, 0.5, 0.35, 0.3]
-budget = 1000
+mu = [0.5, 0.42, 0.4, 0.4, 0.35, 0.35]
+budget = 600
 mcmc = 10000
 
 policies = [uniform, ucbe, succ_reject, ugape_b, seq_halving_ref, ttts, ttps, ts, at_lucb]
