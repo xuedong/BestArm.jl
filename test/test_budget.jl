@@ -12,12 +12,12 @@ end
 
 # Problem setting
 dist = "Bernoulli"
-mu = [0.5, 0.42, 0.4, 0.4, 0.35, 0.35]
-budget = 600
-mcmc = 10000
+mu = [0.4, 0.5, 0.35, 0.3]
+budget = 1000
+mcmc = 100
 
-policies = [uniform, ucbe, succ_reject, ugape_b, seq_halving_ref, ttts, ttps, ts, at_lucb]
-names = ["Uniform Sampling", "UCB-E", "Successive Reject", "UGapEB", "Sequential Halving with Refresh", "Top-Two Thompson Sampling", "Top-Two Probability Sampling", "Thompson Sampling", "AT-LUCB"]
+policies = [uniform, succ_reject, ugape_b, seq_halving_ref, ttts, ts, at_lucb]
+names = ["Uniform Sampling", "Successive Reject", "UGapEB", "Sequential Halving with Refresh", "Top-Two Thompson Sampling", "Thompson Sampling", "AT-LUCB"]
 lp = length(policies)
 
 
@@ -48,7 +48,7 @@ for imeth in 1:lp
 			regrets += regrets_current
 		end
 	end
-	plot(X, transpose(regrets/mcmc), label = names[imeth])
+	plot(log10.(X), -log10.(transpose(regrets/mcmc)./X), label = names[imeth])
 end
 
 xlabel("Allocation budget")
