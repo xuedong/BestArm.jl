@@ -1,6 +1,8 @@
 using PyPlot
 using ConfParser
 using ProgressMeter
+using HDF5
+
 addprocs(3)
 if Sys.KERNEL == :Darwin
 	@everywhere include("/Users/xuedong/Programming/PhD/BestArm.jl/src/BestArm.jl")
@@ -19,8 +21,9 @@ end
 parse_conf!(conf)
 
 settings = ["setting0", "setting1", "setting2", "setting3", "setting4", "setting5", "setting6", "setting7", "setting8"]
-policies = [uniform, ucbe, succ_reject, ugape_b, seq_halving_ref, ttts, ts, at_lucb]
-names = ["Uniform Sampling", "UCB-E", "Successive Reject", "UGapEB", "Sequential Halving with Refresh", "Top-Two Thompson Sampling", "Thompson Sampling", "AT-LUCB"]
+policies = [uniform, ucbe, succ_reject, seq_halving_ref, ttts, ts, at_lucb]
+names = ["Uniform Sampling", "UCB-E", "Successive Reject", "Sequential Halving with Refresh", "Top-Two Thompson Sampling", "Thompson Sampling", "AT-LUCB"]
+abrevs = ["uniform", "ucbe", "succ_reject", "seq_halving_ref", "ttts", "ts", "at_lucb"]
 lp = length(policies)
 
 
@@ -60,16 +63,25 @@ for setting in settings
 				regrets += regrets_current
 			end
 		end
-		subplot(211)
+
+		h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/log/ttts/", setting, "_", abrevs[imeth], ".h5"), "w") do file
+    		write(file, abrevs[imeth], regrets)
+		end
+
+		subplot(121)
 		plot(X, transpose(regrets/mcmc), label = names[imeth])
-		subplot(212)
+		subplot(122)
 		plot(log10.(X), -log10.(transpose(regrets/mcmc) ./ X), label = names[imeth])
 	end
 
 	xlabel("Allocation budget")
 	ylabel("Expectation of the simple regret")
 	grid("on")
-	legend(loc=1)
-	savefig(string("/Users/xuedong/Programming/PhD/BestArm.jl/results/ttts/", setting, ".png"))
+	legend(loc=2)
+	if Sys.KERNEL == :Darwin
+		savefig(string("/Users/xuedong/Programming/PhD/BestArm.jl/results/ttts/", setting, ".png"))
+	elseif Sys.KERNEL == :Linux
+		savefig(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/results/ttts/", setting, ".png"))
+	end
 	close(fig)
 end
