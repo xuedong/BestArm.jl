@@ -3,7 +3,7 @@ using ConfParser
 using ProgressMeter
 using HDF5
 
-addprocs(3)
+addprocs(5)
 if Sys.KERNEL == :Darwin
 	@everywhere include("/Users/xuedong/Programming/PhD/BestArm.jl/src/BestArm.jl")
 elseif Sys.KERNEL == :Linux
