@@ -30,6 +30,7 @@
 \usepackage{dsfont}
 \usepackage{booktabs}
 \usepackage{caption}
+\usepackage{subfig}
 %\usepackage{subcaption}
 %\captionsetup{compatibility=false}
 
@@ -198,13 +199,80 @@ TODO: log-scale figures.
 \paragraph{\bfseries{Top-Two Thompson Sampling and Top-Two Probability Sampling}}
 For TTTS and TTPS, we now need to compute the optimal action probabilities. Actually, in the original TTTS algorithm, we don't need to compute these probabilities since we can always use the parameter sampling from the posterior trick. However, since we are now in a best arm identification setting, and a plausible recommendation strategy for TTTS and TTPS would be recommending at each time step the arm with the largest optimal action probability. Thus in both cases, we need to compute these probabilities. And in practice, we use the Cubature package of Julia to complete this task.
 
-For the moment, all the plots in this part are averaged on 1000 trials.
-
-\begin{figure}[ht]
-    	\centering\includegraphics[width=\textwidth]{../results/ttts/setting0.png}
-    	\caption{Problem Setting 8}
-	\label{ttts_0}
+\begin{figure}%
+    \centering
+    \subfloat[linear scale]{{\includegraphics[width=5cm]{../results/ttts/setting0.png} }}%
+    \qquad
+    \subfloat[log scale]{{\includegraphics[width=5cm]{../results/ttts/setting0_log.png} }}%
+    \caption{Problem Setting 0}%
+    \label{ttts_0}%
 \end{figure}
+\begin{figure}%
+    \centering
+    \subfloat[linear scale]{{\includegraphics[width=5cm]{../results/ttts/setting1.png} }}%
+    \qquad
+    \subfloat[log scale]{{\includegraphics[width=5cm]{../results/ttts/setting1_log.png} }}%
+    \caption{Problem Setting 1}%
+    \label{ttts_1}%
+\end{figure}
+\begin{figure}%
+    \centering
+    \subfloat[linear scale]{{\includegraphics[width=5cm]{../results/ttts/setting2.png} }}%
+    \qquad
+    \subfloat[log scale]{{\includegraphics[width=5cm]{../results/ttts/setting2_log.png} }}%
+    \caption{Problem Setting 2}%
+    \label{ttts_2}%
+\end{figure}
+\begin{figure}%
+    \centering
+    \subfloat[linear scale]{{\includegraphics[width=5cm]{../results/ttts/setting3.png} }}%
+    \qquad
+    \subfloat[log scale]{{\includegraphics[width=5cm]{../results/ttts/setting3_log.png} }}%
+    \caption{Problem Setting 3}%
+    \label{ttts_3}%
+\end{figure}
+\begin{figure}%
+    \centering
+    \subfloat[linear scale]{{\includegraphics[width=5cm]{../results/ttts/setting4.png} }}%
+    \qquad
+    \subfloat[log scale]{{\includegraphics[width=5cm]{../results/ttts/setting4_log.png} }}%
+    \caption{Problem Setting 4}%
+    \label{ttts_4}%
+\end{figure}
+\begin{figure}%
+    \centering
+    \subfloat[linear scale]{{\includegraphics[width=5cm]{../results/ttts/setting5.png} }}%
+    \qquad
+    \subfloat[log scale]{{\includegraphics[width=5cm]{../results/ttts/setting5_log.png} }}%
+    \caption{Problem Setting 5}%
+    \label{ttts_5}%
+\end{figure}
+\begin{figure}%
+    \centering
+    \subfloat[linear scale]{{\includegraphics[width=5cm]{../results/ttts/setting6.png} }}%
+    \qquad
+    \subfloat[log scale]{{\includegraphics[width=5cm]{../results/ttts/setting6_log.png} }}%
+    \caption{Problem Setting 6}%
+    \label{ttts_6}%
+\end{figure}
+\begin{figure}%
+    \centering
+    \subfloat[linear scale]{{\includegraphics[width=5cm]{../results/ttts/setting7.png} }}%
+    \qquad
+    \subfloat[log scale]{{\includegraphics[width=5cm]{../results/ttts/setting7_log.png} }}%
+    \caption{Problem Setting 7}%
+    \label{ttts_7}%
+\end{figure}
+\begin{figure}%
+    \centering
+    \subfloat[linear scale]{{\includegraphics[width=5cm]{../results/ttts/setting8.png} }}%
+    \qquad
+    \subfloat[log scale]{{\includegraphics[width=5cm]{../results/ttts/setting8_log.png} }}%
+    \caption{Problem Setting 8}%
+    \label{ttts_8}%
+\end{figure}
+
+For the moment, all the plots in this part are averaged on 10000 trials. From Fig.~\ref{ttts_0} to~\ref{ttts_8} we can see that Top-Two Thompson Sampling performs almost always the best (except the cheating UCB-E).
 
 \section{Comparison of Different Recommendation Strategies}
 
