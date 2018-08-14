@@ -1,6 +1,7 @@
 using PyPlot
 using ProgressMeter
 using Distributed
+using LinearAlgebra
 
 addprocs(3)
 if Sys.KERNEL == :Darwin
@@ -49,7 +50,7 @@ for imeth in 1:lp
 			regrets += regrets_current
 		end
 	end
-	plot(X, transpose(regrets/mcmc), label = policy_names[imeth])
+	plot(X, reshape(regrets/mcmc, budget, 1), label = policy_names[imeth])
 end
 
 xlabel("Allocation budget")
