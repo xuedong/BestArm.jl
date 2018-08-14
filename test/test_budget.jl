@@ -1,7 +1,6 @@
 using PyPlot
 using ProgressMeter
 using Distributed
-using LinearAlgebra
 
 addprocs(3)
 if Sys.KERNEL == :Darwin
