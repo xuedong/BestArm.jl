@@ -1,5 +1,6 @@
 using PyPlot
 using ProgressMeter
+using Distributed
 
 addprocs(3)
 if Sys.KERNEL == :Darwin
@@ -7,17 +8,17 @@ if Sys.KERNEL == :Darwin
 elseif Sys.KERNEL == :Linux
 	@everywhere include("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/src/BestArm.jl")
 end
-@everywhere using BestArm
+# @everywhere using BestArm
 @everywhere using DistributedArrays
 
 # Problem setting
 dist = "Bernoulli"
 mu = [0.4, 0.5, 0.35, 0.3]
 budget = 1000
-mcmc = 100
+mcmc = 1
 
-policies = [uniform, succ_reject, ugape_b, seq_halving_ref, ttts, ts, at_lucb]
-names = ["Uniform Sampling", "Successive Reject", "UGapEB", "Sequential Halving with Refresh", "Top-Two Thompson Sampling", "Thompson Sampling", "AT-LUCB"]
+policies = [BestArm.uniform, BestArm.succ_reject, BestArm.ugape_b, BestArm.seq_halving_ref, BestArm.ttts, BestArm.ts, BestArm.at_lucb]
+policy_names = ["Uniform Sampling", "Successive Reject", "UGapEB", "Sequential Halving with Refresh", "Top-Two Thompson Sampling", "Thompson Sampling", "AT-LUCB"]
 lp = length(policies)
 
 
@@ -31,24 +32,24 @@ X = 1:budget
 for imeth in 1:lp
 	policy = policies[imeth]
 	regrets = zeros(1, budget)
-	if names[imeth] == "Top-Two Thompson Sampling"
-		regrets_array = @DArray [parallel_ttts(mu, budget, dist) for i = 1:mcmc]
+	if policy_names[imeth] == "Top-Two Thompson Sampling"
+		regrets_array = @DArray [BestArm.parallel_ttts(mu, budget, dist) for i = 1:mcmc]
 		for i in 1:mcmc
 			regrets += regrets_array[i]
 		end
-	elseif names[imeth] == "Top-Two Probability Sampling"
-		regrets_array = @DArray [parallel_ttps(mu, budget, dist) for i = 1:mcmc]
+	elseif policy_names[imeth] == "Top-Two Probability Sampling"
+		regrets_array = @DArray [BestArm.parallel_ttps(mu, budget, dist) for i = 1:mcmc]
 		for i in 1:mcmc
 			regrets += regrets_array[i]
 		end
 	else
-		@showprogress 1 string("Computing ", names[imeth], "...") for k in 1:mcmc
+		@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 			_, _, _, recs = policy(mu, budget, dist)
-			regrets_current = compute_regrets(mu, recs, budget)
+			regrets_current = BestArm.compute_regrets(mu, recs, budget)
 			regrets += regrets_current
 		end
 	end
-	plot(log10.(X), -log10.(transpose(regrets/mcmc)./X), label = names[imeth])
+	plot(log10.(X), -log10.(transpose(regrets/mcmc)./X), label = policy_names[imeth])
 end
 
 xlabel("Allocation budget")

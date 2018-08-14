@@ -47,7 +47,7 @@ function ucbe_adaptive(mu::Array, budget::Integer, dist::String, rec::Function =
 		if k == 0
 			H_k = K
 		else
-			means = [(length(rewards[i])>0)?(mean(rewards[i])):0 for i in 1:K]
+			means = [(length(rewards[i])>0) ? (mean(rewards[i])) : 0 for i in 1:K]
 			max_mean, _ = findmax(means)
 			gaps = [max_mean - means[i] for i in 1:K]
 			sorted_gaps = sort(gaps)
@@ -57,7 +57,7 @@ function ucbe_adaptive(mu::Array, budget::Integer, dist::String, rec::Function =
 		start_point = compute_tk(budget, K, k, log_bar) + 1
 		end_point = compute_tk(budget, K, k+1, log_bar)
 		for t in start_point:end_point
-			means = [(length(rewards[i])>0)?(mean(rewards[i])):0 for i in 1:K]
+			means = [(length(rewards[i])>0) ? (mean(rewards[i])) : 0 for i in 1:K]
 			ucbes = [compute_ucbe(means[i], c*budget/H_k, N[i]) for i in 1:K]
 			# Pick an arm based on the B-value
 			_, maxindx = findmax(ucbes)

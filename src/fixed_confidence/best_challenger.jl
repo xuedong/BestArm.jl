@@ -52,7 +52,7 @@ function chernoff_bc(mu::Array, delta::Real, rate::Function, dist::String)
                 I=indmin(N)
             else
                 # choose between the arm and its Challenger
-                I=(NB/(NB+N[Challenger]) < Dist[Best]/(Dist[Best]+Dist[Challenger]))?Best:Challenger
+                I=(NB/(NB+N[Challenger]) < Dist[Best]/(Dist[Best]+Dist[Challenger])) ? Best : Challenger
                 #I=(d(MuB, MuMid[Challenger], dist)>d(Mu[Challenger], MuMid[Challenger], dist))?Best:Challenger
                 #I=(N[Best]<N[Challenger])?Best:Challenger
             end
@@ -84,35 +84,35 @@ function chernoff_bc2(mu::Array, delta::Real, rate::Function, dist::String)
     while (condition)
         Mu=S./N
         # Empirical best arm
-        IndMax=find(Mu.==maximum(Mu))
-        Best=IndMax[floor(Int,length(IndMax)*rand())+1]
-        I=1
+        IndMax = find(Mu .== maximum(Mu))
+        Best = IndMax[floor(Int, length(IndMax)*rand())+1]
+        I = 1
         # Compute the stopping statistic
-        NB=N[Best]
-        SB=S[Best]
-        MuB=SB/NB
-        MuMid=(SB+S)./(NB+N)
-        Challenger=1
-        Score=Inf
-        for i=1:K
-            if i!=Best
-                score=NB*d(MuB, MuMid[i], dist)+N[i]*d(Mu[i], MuMid[i], dist)
-                if (score<Score)
-                    Challenger=i
-                    Score=score
+        NB = N[Best]
+        SB = S[Best]
+        MuB = SB/NB
+        MuMid = (SB+S)./(NB+N)
+        Challenger = 1
+        Score = Inf
+        for i = 1:K
+            if i != Best
+                score = NB * d(MuB, MuMid[i], dist) + N[i] * d(Mu[i], MuMid[i], dist)
+                if (score < Score)
+                    Challenger = i
+                    Score = score
                 end
             end
         end
-        if (Score > rate(t,0,delta))
+        if (Score > rate(t, 0, delta))
             # stop
             condition=false
-        elseif (t >1000000)
+        elseif (t > 1000000)
             # stop and return (0,0)
-            condition=false
-            Best=0
+            condition = false
+            Best = 0
             print(N)
             print(S)
-            N=zeros(1,K)
+            N = zeros(1,K)
         else
             # continue and sample an arm
             if (minimum(N) <= max(sqrt(t) - K/2,0))
@@ -120,7 +120,7 @@ function chernoff_bc2(mu::Array, delta::Real, rate::Function, dist::String)
                 I=indmin(N)
             else
                 # choose between the arm and its Challenger
-                I=(N[Best]<N[Challenger])?Best:Challenger
+                I = (N[Best]<N[Challenger]) ? Best : Challenger
                 #I=(d(MuB, MuMid[Challenger], dist)>d(Mu[Challenger], MuMid[Challenger], dist))?Best:Challenger
             end
         end

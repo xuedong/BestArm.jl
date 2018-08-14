@@ -34,7 +34,7 @@ function ugape_c(mu::Array, delta::Real, rate::Function, dist::String)
         Challenger=indmax(UCB)
         # choose which arm to draw
         t=t+1
-        I=(N[Best]<N[Challenger])?Best:Challenger
+        I=(N[Best]<N[Challenger]) ? Best : Challenger
         S[I]+=sample_arm(mu[I], dist)
         N[I]+=1
         # check stopping condition
