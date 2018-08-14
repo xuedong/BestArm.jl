@@ -17,7 +17,7 @@ function ttts(mu::Array, budget::Integer, dist::String, frac::Real = 0.5, defaul
     for t in (K+1):budget
         means = S ./ N
         if default
-            idx = find(means .== maximum(means))
+            idx = (LinearIndices(means .== maximum(means)))[findall(means .== maximum(means))]
             best = idx[floor(Int, length(idx) * rand()) + 1]
             recommendations[t] = best
         else
@@ -56,7 +56,7 @@ function ttts(mu::Array, budget::Integer, dist::String, frac::Real = 0.5, defaul
 				TS[a] = rand(Normal(S[a] / N[a], 1.0 / N[a]), 1)[1]
 			end
         end
-        I = indmax(TS)
+        I = argmax(TS)
         if (rand() > frac)
             J = I
             while (I == J)
@@ -72,7 +72,7 @@ function ttts(mu::Array, budget::Integer, dist::String, frac::Real = 0.5, defaul
 						TS[a] = rand(Normal(S[a] / N[a], 1.0 / N[a]), 1)[1]
 					end
                 end
-                J = indmax(TS)
+                J = argmax(TS)
             end
             I = J
         end
@@ -91,6 +91,6 @@ end
 function parallel_ttts(mu::Array, budget::Integer, dist::String)
 	_, _, _, recs = ttts(mu, budget, dist)
 	regrets = compute_regrets(mu, recs, budget)
-    gc()
+    # gc()
 	return regrets
 end

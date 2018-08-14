@@ -27,7 +27,7 @@ function ts(mu::Array, budget::Integer, dist::String)
 				TS[a] = rand(Normal(S[a] / N[a], 1.0 / N[a]), 1)[1]
 			end
         end
-        I = indmax(TS)
+        I = argmax(TS)
         # draw arm I
         S[I] += sample_arm(mu[I], dist)
         N[I] += 1

@@ -28,10 +28,10 @@ function at_lucb(mu::Array, budget::Integer, dist::String, delta_1::Real = 0.01,
             end
         else
             if s == 1
-                if isdefined(:best)
+                if @isdefined best
                     J = best
                 else
-                    J = indmax(means)
+                    J = argmax(means)[2]
                 end
             end
         end
@@ -45,7 +45,7 @@ function at_lucb(mu::Array, budget::Integer, dist::String, delta_1::Real = 0.01,
         ucbs[best] = -Inf
         lcbs = means - bonus
 
-        l = indmax(ucbs)
+        l = argmax(ucbs)[2]
         first_sample = sample_arm(mu[l], dist)
         N[l] += 1
         S[l] += first_sample
@@ -61,7 +61,7 @@ function at_lucb(mu::Array, budget::Integer, dist::String, delta_1::Real = 0.01,
         recommendations[t+1] = J
         t += 2
 
-        best = indmax(means)
+        best = argmax(means)[2]
 
         bonus = compute_deviation(K, N, t, delta_s)
         ucbs = means + bonus
@@ -72,6 +72,6 @@ function at_lucb(mu::Array, budget::Integer, dist::String, delta_1::Real = 0.01,
     end
 
     recommendations = Int.(recommendations)
-    
+
     return(best, N, means, recommendations)
 end

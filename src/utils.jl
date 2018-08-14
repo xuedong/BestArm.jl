@@ -133,7 +133,7 @@ end
 function eba(N, S)
 	K = length(N)
 	means = S ./ N
-	idx = find(means .== maximum(means))
+	idx = (LinearIndices(means .== maximum(means)))[findall(means .== maximum(means))]
 	best = idx[floor(Int, length(idx) * rand()) + 1]
 	return best
 end
@@ -141,7 +141,7 @@ end
 
 # MPA: Most played arm
 function mpa(N, S)
-	idx = find(N .== maximum(N))
+	idx = (LinearIndices(N .== maximum(N)))[findall(N .== maximum(N))]
 	best = idx[floor(Int, length(idx) * rand()) + 1]
 	return best
 end

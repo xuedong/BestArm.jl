@@ -49,7 +49,7 @@ for imeth in 1:lp
 			regrets += regrets_current
 		end
 	end
-	plot(log10.(X), -log10.(transpose(regrets/mcmc)./X), label = policy_names[imeth])
+	plot(X, transpose(regrets/mcmc), label = policy_names[imeth])
 end
 
 xlabel("Allocation budget")
