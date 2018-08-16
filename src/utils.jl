@@ -1,6 +1,6 @@
 # Compute simple regrets
-function compute_regrets(mu, recommendations, budget)
-	maxmu = findmax(mu)[1]
+function compute_regrets(mu::AbstractArray{<:Real}, recommendations::AbstractArray{<:Integer}, budget::Integer)
+	maxmu = argmax(mu)[1]
 	regrets = zeros(1, budget)
 	for i in 1:budget
 		regrets[i] = maxmu - mu[recommendations[i]]
@@ -10,13 +10,13 @@ function compute_regrets(mu, recommendations, budget)
 end
 
 
-# Computing the Optimal Weights
-function dico_solve(f, xMin, xMax, delta=1e-11)
+# Computing the optimal weights
+function dico_solve(f, x_min, x_max, delta = 1e-11)
 	# find m such that f(m)=0 using dichotomix search
-	l = xMin
-	u = xMax
-	sgn = f(xMin)
-	while (u-l) > delta
+	lower = x_min
+	upper = x_max
+	sgn = f(x_min)
+	while (u - l) > delta
 		m = (u+l)/2
 		if f(m) * sgn > 0
 			l = m
