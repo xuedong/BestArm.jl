@@ -15,10 +15,12 @@ end
 dist = "Bernoulli"
 mu = [0.4, 0.5, 0.35, 0.3]
 budget = 1000
-mcmc = 1
+mcmc = 10
 
-policies = [BestArm.uniform, BestArm.succ_reject, BestArm.ugape_b, BestArm.seq_halving_ref, BestArm.ttts, BestArm.ts, BestArm.at_lucb]
-policy_names = ["Uniform Sampling", "Successive Reject", "UGapEB", "Sequential Halving with Refresh", "Top-Two Thompson Sampling", "Thompson Sampling", "AT-LUCB"]
+policies = [BestArm.seq_halving_ref, BestArm.ttts]
+policy_names = ["Sequential Halving", "Top-Two Thompson Sampling"]
+# policies = [BestArm.uniform, BestArm.succ_reject, BestArm.ugape_b, BestArm.seq_halving_ref, BestArm.ttts, BestArm.ts, BestArm.at_lucb]
+# policy_names = ["Uniform Sampling", "Successive Reject", "UGapEB", "Sequential Halving with Refresh", "Top-Two Thompson Sampling", "Thompson Sampling", "AT-LUCB"]
 lp = length(policies)
 
 
