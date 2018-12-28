@@ -8,7 +8,7 @@ module BestArm
     # export memuse
     export optimal_weights
 
-    export seq_halving_ref, seq_halving_no_ref
+    export seq_halving_ref, seq_halving_no_ref, seq_halving_infinite
     export succ_reject
     export uniform
     export ucbe, ucbe_adaptive
@@ -30,6 +30,7 @@ module BestArm
     include("arms.jl")
     include("utils.jl")
     include("kl_functions.jl")
+    include("reservoirs.jl")
 
     include("fixed_budget/ucbe.jl")
     include("fixed_budget/seq_halv.jl")
