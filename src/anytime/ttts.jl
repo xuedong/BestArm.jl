@@ -199,6 +199,7 @@ function ttts_dynamic(reservoir::String, num::Integer, budget::Integer,
     means = [-Inf for _ in 1:num]
     probs = [1/num for _ in 1:num]
     recommendations = zeros(1, budget)
+	dynamic_num = num
 
     # initialization
     #for a in 1:num
@@ -209,7 +210,12 @@ function ttts_dynamic(reservoir::String, num::Integer, budget::Integer,
 
     best = 1
     for t in 1:budget
-        means = [N[i] == 0 ? -Inf : S[i]/N[i] for i in 1:num]
+		new = sample_reservoir(reservoir, theta1, theta2)
+		push!(N, 0)
+		push!(S, 0)
+		push!(mu, new)
+		dynamic_num += 1
+        means = [N[i] == 0 ? -Inf : S[i]/N[i] for i in 1:dynamic_num]
         if default
             idx = (LinearIndices(means .== maximum(means)))[findall(means .== maximum(means))]
             best = idx[floor(Int, length(idx) * rand()) + 1]
@@ -240,8 +246,8 @@ function ttts_dynamic(reservoir::String, num::Integer, budget::Integer,
             end
         end
 
-        TS = zeros(num)
-        for a in 1:num
+        TS = zeros(dynamic_num)
+        for a in 1:dynamic_num
             if dist == "Bernoulli"
                 alpha = 1
                 beta = 1
@@ -253,20 +259,22 @@ function ttts_dynamic(reservoir::String, num::Integer, budget::Integer,
         I = argmax(TS)
         if (rand() > frac)
             J = I
-            while (I == J)
-                TS = zeros(num)
+			count = 1
+            while (I == J) && (count < 10000)
+                TS = zeros(dynamic_num)
                 if dist == "Bernoulli"
                     alpha = 1
                     beta = 1
-                    for a = 1:num
+                    for a = 1:dynamic_num
                         TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1]
 					end
 				elseif dist == "Gaussian"
-					for a = 1:num
+					for a = 1:dynamic_num
 						TS[a] = rand(Normal(S[a] / N[a], 1.0 / N[a]), 1)[1]
 					end
                 end
                 J = argmax(TS)
+				count += 1
             end
             I = J
         end

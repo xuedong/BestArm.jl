@@ -23,7 +23,7 @@ module BestArm
     export ugape_c
 
     export ts
-    export ttts, parallel_ttts, ttts_infinite
+    export ttts, parallel_ttts, ttts_infinite, ttts_dynamic
     export ttps, parallel_ttps
     export at_lucb
 
