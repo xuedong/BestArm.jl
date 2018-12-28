@@ -10,6 +10,18 @@ function compute_regrets(mu::AbstractArray{<:Real}, recommendations::AbstractArr
 end
 
 
+# Compute simple regrets for a normalized reservoir
+function compute_regrets_reservoir(mu::AbstractArray{<:Real}, recommendations::AbstractArray{<:Integer}, budget::Integer)
+	maxmu = 1.0
+	regrets = zeros(1, budget)
+	for i in 1:budget
+		regrets[i] = maxmu - mu[recommendations[i]]
+	end
+
+	return regrets
+end
+
+
 # Computing the optimal weights
 function dico_solve(f, x_min, x_max, delta = 1e-11)
 	# find m such that f(m)=0 using dichotomix search
