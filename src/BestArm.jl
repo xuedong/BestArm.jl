@@ -4,7 +4,7 @@ module BestArm
     using ProgressMeter
 
     export edp, eba, mpa
-    export compute_regrets
+    export compute_regrets, compute_regrets_reservoir
     # export memuse
     export optimal_weights
 

@@ -45,7 +45,7 @@ for imeth in 1:lp
 	else
 		@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 			_, _, _, recs, mu = policy(reservoir, num, budget, dist, BestArm.eba, alpha, beta)
-			regrets_current = BestArm.compute_regrets(mu, recs, budget)
+			regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
 			regrets += regrets_current
 		end
 	end
