@@ -197,7 +197,6 @@ function ttts_dynamic(reservoir::String, num::Integer, budget::Integer,
     N = [0 for _ in 1:num]
     S = [0 for _ in 1:num]
     means = [-Inf for _ in 1:num]
-    probs = [1/num for _ in 1:num]
     recommendations = zeros(1, budget)
 	dynamic_num = num
 
@@ -221,18 +220,15 @@ function ttts_dynamic(reservoir::String, num::Integer, budget::Integer,
             best = idx[floor(Int, length(idx) * rand()) + 1]
             recommendations[t] = best
         else
-            idx = find(probs .== maximum(probs))
-            best = idx[floor(Int, length(idx) * rand()) + 1]
-            recommendations[t] = best
-
-            for a in 1:num
+			probs = [1/dynamic_num for _ in 1:dynamic_num]
+            for a in 1:dynamic_num
                 if dist == "Bernoulli"
                     alpha = 1
                     beta = 1
                     function f(x)
                         prod = pdf.(Beta(alpha + S[a], beta + N[a] - S[a]), x)[1]
                         # println(prod)
-                        for i in 1:num
+                        for i in 1:dynamic_num
                             if i != a
                                 prod *= cdf.(Beta(alpha + S[i], beta + N[i] - S[i]), x)[1]
                                 # println(prod)
@@ -244,6 +240,10 @@ function ttts_dynamic(reservoir::String, num::Integer, budget::Integer,
                     probs[a] = val
                 end
             end
+
+			idx = (LinearIndices(probs .== maximum(probs)))[findall(probs .== maximum(probs))]
+            best = idx[floor(Int, length(idx) * rand()) + 1]
+            recommendations[t] = best
         end
 
         TS = zeros(dynamic_num)
