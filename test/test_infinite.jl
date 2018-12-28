@@ -13,8 +13,10 @@ end
 
 # Problem setting
 reservoir = "Beta"
+dist = "Bernoulli"
 alpha = 3.0
 beta = 1.0
+num = 4
 budget = 100
 mcmc = 1
 
@@ -42,7 +44,7 @@ for imeth in 1:lp
 		end
 	else
 		@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-			_, _, _, recs = policy(mu, budget, dist, alpha=alpha, beta=beta)
+			_, _, _, recs = policy(reservoir, num, budget, dist, eba, alpha, beta)
 			regrets_current = BestArm.compute_regrets(mu, recs, budget)
 			regrets += regrets_current
 		end
