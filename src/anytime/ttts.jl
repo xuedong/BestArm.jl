@@ -106,13 +106,6 @@ function ttts_infinite(reservoir::String, num::Integer, budget::Integer,
     probs = ones(1, num) / num
     recommendations = zeros(1, budget)
 
-    # initialization
-    #for a in 1:num
-    #    N[a] = 1
-    #    S[a] = sample_arm(mu[a], dist)
-    #    recommendations[a] = rand(1:num)
-    #end
-
     best = 1
     for t in 1:budget
         means = [N[i] == 0 ? -Inf : S[i]/N[i] for i in 1:num]
@@ -191,21 +184,14 @@ end
 
 
 function ttts_dynamic(reservoir::String, num::Integer, budget::Integer,
-	dist::String, frac::Real = 0.5, default::Bool = true,
+	dist::String, frac::Real = 0.5,
 	theta1::Float64 = 1.0, theta2::Float64 = 1.0)
 	mu = [sample_reservoir(reservoir, theta1, theta2) for _ in 1:num]
     N = [0 for _ in 1:num]
     S = [0 for _ in 1:num]
-    means = [-Inf for _ in 1:num]
+    # means = [-Inf for _ in 1:num]
     recommendations = zeros(1, budget)
 	dynamic_num = num
-
-    # initialization
-    #for a in 1:num
-    #    N[a] = 1
-    #    S[a] = sample_arm(mu[a], dist)
-    #    recommendations[a] = rand(1:num)
-    #end
 
     best = 1
     for t in 1:budget
@@ -214,37 +200,31 @@ function ttts_dynamic(reservoir::String, num::Integer, budget::Integer,
 		push!(S, 0)
 		push!(mu, new)
 		dynamic_num += 1
-        means = [N[i] == 0 ? -Inf : S[i]/N[i] for i in 1:dynamic_num]
-        if default
-            idx = (LinearIndices(means .== maximum(means)))[findall(means .== maximum(means))]
-            best = idx[floor(Int, length(idx) * rand()) + 1]
-            recommendations[t] = best
-        else
-			probs = [1/dynamic_num for _ in 1:dynamic_num]
-            for a in 1:dynamic_num
-                if dist == "Bernoulli"
-                    alpha = 1
-                    beta = 1
-                    function f(x)
-                        prod = pdf.(Beta(alpha + S[a], beta + N[a] - S[a]), x)[1]
-                        # println(prod)
-                        for i in 1:dynamic_num
-                            if i != a
-                                prod *= cdf.(Beta(alpha + S[i], beta + N[i] - S[i]), x)[1]
-                                # println(prod)
-                            end
+        # means = [N[i] == 0 ? -Inf : S[i]/N[i] for i in 1:dynamic_num]
+		probs = [1/dynamic_num for _ in 1:dynamic_num]
+        for a in 1:dynamic_num
+            if dist == "Bernoulli"
+                alpha = 1
+                beta = 1
+                function f(x)
+                    prod = pdf.(Beta(alpha + S[a], beta + N[a] - S[a]), x)[1]
+                    # println(prod)
+                    for i in 1:dynamic_num
+                        if i != a
+                            prod *= cdf.(Beta(alpha + S[i], beta + N[i] - S[i]), x)[1]
+                            # println(prod)
                         end
-                        return prod
                     end
-                    val, _ = hquadrature(f, 0.0, 1.0)
-                    probs[a] = val
+                    return prod
                 end
+                val, _ = hquadrature(f, 0.0, 1.0)
+                probs[a] = val
             end
+		end
 
-			idx = (LinearIndices(probs .== maximum(probs)))[findall(probs .== maximum(probs))]
-            best = idx[floor(Int, length(idx) * rand()) + 1]
-            recommendations[t] = best
-        end
+		idx = (LinearIndices(probs .== maximum(probs)))[findall(probs .== maximum(probs))]
+        best = idx[floor(Int, length(idx) * rand()) + 1]
+        recommendations[t] = best
 
         TS = zeros(dynamic_num)
         for a in 1:dynamic_num

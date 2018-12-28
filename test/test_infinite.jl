@@ -20,8 +20,8 @@ num = 20
 budget = 100
 mcmc = 10
 
-policies = [BestArm.seq_halving_infinite, BestArm.ttts_dynamic]
-policy_names = ["Sequential Halving", "Dynamic TTTS"]
+policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite]
+policy_names = ["Sequential Halving", "TTTS"]
 lp = length(policies)
 
 
@@ -66,8 +66,8 @@ ylabel("Expectation of the simple regret")
 grid("on")
 legend(loc=1)
 if Sys.KERNEL == :Darwin
-	savefig(string("/Users/xuedong/Programming/PhD/BestArm.jl/test/test_infinite.pdf"))
+	savefig(string("/Users/xuedong/Programming/PhD/BestArm.jl/test/test_infinite_bis.pdf"))
 elseif Sys.KERNEL == :Linux
-	savefig(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/test/test_infinite.pdf"))
+	savefig(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/test/test_infinite_bis.pdf"))
 end
 close(fig)
