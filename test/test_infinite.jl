@@ -16,8 +16,8 @@ reservoir = "Beta"
 dist = "Bernoulli"
 alpha = 1.0
 beta = 3.0
-num = 4
-budget = 1000
+num = 64
+budget = 1024
 mcmc = 100
 
 policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite]
