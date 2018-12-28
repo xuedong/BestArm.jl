@@ -1,13 +1,13 @@
-function sample_resevoir(reservoir::String, mu::Float64, sigma::Float64 = 1.0)
-	if dist == "Bernoulli"
+function sample_reservoir(reservoir::String, mu::Float64, sigma::Float64 = 1.0)
+	if reservoir == "Bernoulli"
 		return (rand() < mu)
-	elseif dist == "Beta"
+	elseif reservoir == "Beta"
 		return rand(Beta(mu, sigma))
-	elseif dist == "Poisson"
+	elseif reservoir == "Poisson"
 		return rand(Poisson(mu))
-	elseif dist == "Exponential"
+	elseif reservoir == "Exponential"
 		return - mu * log(rand())
-	elseif dist == "Gaussian"
+	elseif reservoir == "Gaussian"
 		return mu + sigma * randn()
 	end
 end
