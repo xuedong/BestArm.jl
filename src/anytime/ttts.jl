@@ -99,22 +99,22 @@ end
 function ttts_infinite(reservoir::String, num::Integer, budget::Integer,
 	dist::String, frac::Real = 0.5, default::Bool = true,
 	theta1::Float64 = 1.0, theta2::Float64 = 1.0)
-    K = length(mu)
-    N = zeros(1, K)
-    S = zeros(1, K)
-    means = zeros(1, K)
-    probs = ones(1, K) / K
+	mu = [sample_reservoir(reservoir, theta1, theta2) for _ in 1:num]
+    N = zeros(1, num)
+    S = zeros(1, num)
+    means = zeros(1, num)
+    probs = ones(1, num) / num
     recommendations = zeros(1, budget)
 
     # initialization
-    for a in 1:K
+    for a in 1:num
         N[a] = 1
         S[a] = sample_arm(mu[a], dist)
-        recommendations[a] = rand(1:K)
+        recommendations[a] = rand(1:num)
     end
 
     best = 1
-    for t in (K+1):budget
+    for t in (num+1):budget
         means = S ./ N
         if default
             idx = (LinearIndices(means .== maximum(means)))[findall(means .== maximum(means))]
@@ -125,14 +125,14 @@ function ttts_infinite(reservoir::String, num::Integer, budget::Integer,
             best = idx[floor(Int, length(idx) * rand()) + 1]
             recommendations[t] = best
 
-            for a in 1:K
+            for a in 1:num
                 if dist == "Bernoulli"
                     alpha = 1
                     beta = 1
                     function f(x)
                         prod = pdf.(Beta(alpha + S[a], beta + N[a] - S[a]), x)[1]
                         # println(prod)
-                        for i in 1:K
+                        for i in 1:num
                             if i != a
                                 prod *= cdf.(Beta(alpha + S[i], beta + N[i] - S[i]), x)[1]
                                 # println(prod)
@@ -146,8 +146,8 @@ function ttts_infinite(reservoir::String, num::Integer, budget::Integer,
             end
         end
 
-        TS = zeros(K)
-        for a in 1:K
+        TS = zeros(num)
+        for a in 1:num
             if dist == "Bernoulli"
                 alpha = 1
                 beta = 1
@@ -160,15 +160,15 @@ function ttts_infinite(reservoir::String, num::Integer, budget::Integer,
         if (rand() > frac)
             J = I
             while (I == J)
-                TS = zeros(K)
+                TS = zeros(num)
                 if dist == "Bernoulli"
                     alpha = 1
                     beta = 1
-                    for a = 1:K
+                    for a = 1:num
                         TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1]
 					end
 				elseif dist == "Gaussian"
-					for a = 1:K
+					for a = 1:num
 						TS[a] = rand(Normal(S[a] / N[a], 1.0 / N[a]), 1)[1]
 					end
                 end
@@ -184,5 +184,5 @@ function ttts_infinite(reservoir::String, num::Integer, budget::Integer,
     recommendation = best
     recommendations = Int.(recommendations)
 
-    return (recommendation, N, means, recommendations)
+    return (recommendation, N, means, recommendations, mu)
 end
