@@ -114,7 +114,7 @@ end
 function seq_halving_infinite(reservoir::String, num::Integer,
 	budget::Integer, dist::String, rec::Function = eba,
 	alpha::Float64 = 1.0, beta::Float64 = 1.0)
-	mu = [sample_resevoir(alpha, beta, reservoir) for _ in 1:num]
+	mu = [sample_resevoir(reservoir, alpha, beta) for _ in 1:num]
 	rounds = ceil(log2(num))
 
 	# Initialization
