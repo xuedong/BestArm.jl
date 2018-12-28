@@ -16,9 +16,9 @@ reservoir = "Beta"
 dist = "Bernoulli"
 alpha = 1.0
 beta = 3.0
-num = 10
-budget = 100
-mcmc = 10
+num = 64
+budget = 512
+mcmc = 100
 
 policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic]
 policy_names = ["Sequential Halving", "TTTS", "Dynamic TTTS"]
