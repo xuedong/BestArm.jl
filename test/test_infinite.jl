@@ -17,8 +17,8 @@ dist = "Bernoulli"
 alpha = 3.0
 beta = 1.0
 num = 4
-budget = 100
-mcmc = 1
+budget = 1000
+mcmc = 10
 
 policies = [BestArm.seq_halving_infinite]
 policy_names = ["Sequential Halving"]
