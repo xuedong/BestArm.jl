@@ -20,8 +20,8 @@ num = 4
 budget = 1000
 mcmc = 100
 
-policies = [BestArm.seq_halving_infinite]
-policy_names = ["Sequential Halving"]
+policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite]
+policy_names = ["Sequential Halving", "Top-Two Thompson Sampling"]
 # policies = [BestArm.uniform, BestArm.succ_reject, BestArm.ugape_b, BestArm.seq_halving_ref, BestArm.ttts, BestArm.ts, BestArm.at_lucb]
 # policy_names = ["Uniform Sampling", "Successive Reject", "UGapEB", "Sequential Halving with Refresh", "Top-Two Thompson Sampling", "Thompson Sampling", "AT-LUCB"]
 lp = length(policies)
@@ -38,9 +38,14 @@ for imeth in 1:lp
 	policy = policies[imeth]
 	regrets = zeros(1, budget)
 	if policy_names[imeth] == "Top-Two Thompson Sampling"
-		regrets_array = @DArray [BestArm.parallel_ttts(mu, budget, dist) for i = 1:mcmc]
-		for i in 1:mcmc
-			regrets += regrets_array[i]
+	  	#regrets_array = @DArray [BestArm.parallel_ttts(mu, budget, dist) for i = 1:mcmc]
+		#for i in 1:mcmc
+		#	regrets += regrets_array[i]
+		#end
+		@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
+			_, _, _, recs, mu = policy(reservoir, num, budget, dist, 0.5, true, alpha, beta)
+			regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
+			regrets += regrets_current
 		end
 	else
 		@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
