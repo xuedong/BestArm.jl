@@ -1,4 +1,4 @@
-function sample(reservoir::String, mu::Float64, sigma::Float64 = 1.0)
+function sample_resevoir(reservoir::String, mu::Float64, sigma::Float64 = 1.0)
 	if dist == "Bernoulli"
 		return (rand() < mu)
 	elseif dist == "Beta"
