@@ -14,11 +14,11 @@ end
 # Problem setting
 reservoir = "Beta"
 dist = "Bernoulli"
-alpha = 3.0
-beta = 1.0
+alpha = 1.0
+beta = 3.0
 num = 4
 budget = 1000
-mcmc = 10
+mcmc = 100
 
 policies = [BestArm.seq_halving_infinite]
 policy_names = ["Sequential Halving"]

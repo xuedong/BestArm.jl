@@ -1,13 +1,13 @@
-function sample_reservoir(reservoir::String, mu::Float64, sigma::Float64 = 1.0)
+function sample_reservoir(reservoir::String, theta1::Float64, theta2::Float64 = 1.0)
 	if reservoir == "Bernoulli"
-		return (rand() < mu)
+		return (rand() < theta1)
 	elseif reservoir == "Beta"
-		return rand(Beta(mu, sigma))
+		return rand(Beta(theta1, theta2))
 	elseif reservoir == "Poisson"
-		return rand(Poisson(mu))
+		return rand(Poisson(theta1))
 	elseif reservoir == "Exponential"
-		return - mu * log(rand())
+		return - theta1 * log(rand())
 	elseif reservoir == "Gaussian"
-		return mu + sigma * randn()
+		return theta1 + theta2 * randn()
 	end
 end
