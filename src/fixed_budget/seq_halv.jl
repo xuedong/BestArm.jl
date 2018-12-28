@@ -111,21 +111,21 @@ end
 
 
 # Sequential Halving for Infinitely-Many Armed Bandits
-function seq_halving_infinite(reservoir::String, K::Integer,
+function seq_halving_infinite(reservoir::String, num::Integer,
 	budget::Integer, dist::String, rec::Function = eba,
 	alpha::Float64 = 1.0, beta::Float64 = 1.0)
-	mu = [sample_resevoir(alpha, beta, reservoir) for _ in 1:K]
-	rounds = ceil(log2(K))
+	mu = [sample_resevoir(alpha, beta, reservoir) for _ in 1:num]
+	rounds = ceil(log2(num))
 
 	# Initialization
-	arms = [i for i in 1:K]
-	N = Int.(zeros(1, K))
-	S = zeros(1, K)
-	rewards = [[] for i in 1:K]
-	s_r = K
+	arms = [i for i in 1:num]
+	N = Int.(zeros(1, num))
+	S = zeros(1, num)
+	rewards = [[] for i in 1:num]
+	s_r = num
 	recommendations = zeros(1, budget)
 
-	for a in 1:K
+	for a in 1:num
 		N[a] = 1
 		S[a] = sample_arm(mu[a], dist)
 	end
@@ -133,7 +133,7 @@ function seq_halving_infinite(reservoir::String, K::Integer,
 	# Elimination loop
 	j = 0
 	for r in 1:rounds
-		t_r = tr(budget, K, r)
+		t_r = tr(budget, num, r)
 		for i in 1:t_r
 			for a in arms
 				new_sample = sample_arm(mu[a], dist)
@@ -159,7 +159,7 @@ function seq_halving_infinite(reservoir::String, K::Integer,
 		recommendations[t] = rand(arms)
 	end
 
-	means = [mean(rewards[i]) for i in 1:K]
+	means = [mean(rewards[i]) for i in 1:num]
 	recommendation = rand(arms)
 	recommendations = Int.(recommendations)
 

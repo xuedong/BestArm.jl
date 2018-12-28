@@ -12,13 +12,14 @@ end
 @everywhere using DistributedArrays
 
 # Problem setting
-dist = "Bernoulli"
-mu = [0.4, 0.5, 0.35, 0.3]
-budget = 1000
-mcmc = 10
+reservoir = "Beta"
+alpha = 3.0
+beta = 1.0
+budget = 100
+mcmc = 1
 
-policies = [BestArm.seq_halving_ref, BestArm.ttts]
-policy_names = ["Sequential Halving", "Top-Two Thompson Sampling"]
+policies = [BestArm.seq_halving_infinite]
+policy_names = ["Sequential Halving"]
 # policies = [BestArm.uniform, BestArm.succ_reject, BestArm.ugape_b, BestArm.seq_halving_ref, BestArm.ttts, BestArm.ts, BestArm.at_lucb]
 # policy_names = ["Uniform Sampling", "Successive Reject", "UGapEB", "Sequential Halving with Refresh", "Top-Two Thompson Sampling", "Thompson Sampling", "AT-LUCB"]
 lp = length(policies)
@@ -41,7 +42,7 @@ for imeth in 1:lp
 		end
 	else
 		@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-			_, _, _, recs = policy(mu, budget, dist)
+			_, _, _, recs = policy(mu, budget, dist, alpha=alpha, beta=beta)
 			regrets_current = BestArm.compute_regrets(mu, recs, budget)
 			regrets += regrets_current
 		end
