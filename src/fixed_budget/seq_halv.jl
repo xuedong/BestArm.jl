@@ -163,5 +163,5 @@ function seq_halving_infinite(reservoir::String, num::Integer,
 	recommendation = rand(arms)
 	recommendations = Int.(recommendations)
 
-	return(recommendation, N, means, recommendations)
+	return(recommendation, N, means, recommendations, mu)
 end
