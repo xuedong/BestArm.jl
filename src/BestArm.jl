@@ -1,5 +1,6 @@
 module BestArm
     using Distributions
+    using HCubature
     # using Cubature
     using ProgressMeter
 
