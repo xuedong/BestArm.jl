@@ -16,12 +16,12 @@ reservoir = "Beta"
 dist = "Bernoulli"
 alpha = 1.0
 beta = 3.0
-num = 20
+num = 10
 budget = 100
 mcmc = 10
 
-policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite]
-policy_names = ["Sequential Halving", "TTTS"]
+policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic]
+policy_names = ["Sequential Halving", "TTTS", "Dynamic TTTS"]
 lp = length(policies)
 
 
@@ -47,7 +47,7 @@ for imeth in 1:lp
 		end
 	elseif policy_names[imeth] == "Dynamic TTTS"
 		@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-			_, _, _, recs, mu = policy(reservoir, 10, budget, dist, 0.5, false, alpha, beta)
+			_, _, recs, mu = policy(reservoir, 5, budget, dist, 0.5, alpha, beta)
 			regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
 			regrets += regrets_current
 		end

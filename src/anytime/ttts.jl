@@ -266,5 +266,15 @@ function ttts_dynamic(reservoir::String, num::Integer, budget::Integer,
     recommendation = best
     recommendations = Int.(recommendations)
 
-    return (recommendation, N, means, recommendations, mu)
+    return (recommendation, N, recommendations, mu)
+end
+
+
+function parallel_ttts_dynamic(reservoir::String, num::Integer, budget::Integer,
+	dist::String, frac::Real = 0.5,
+	theta1::Float64 = 1.0, theta2::Float64 = 1.0)
+	_, _, _, recs = ttts_dynamic(mu, budget, dist)
+	regrets = compute_regrets(mu, recs, budget)
+    # gc()
+	return regrets
 end
