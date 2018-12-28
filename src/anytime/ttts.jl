@@ -102,20 +102,20 @@ function ttts_infinite(reservoir::String, num::Integer, budget::Integer,
 	mu = [sample_reservoir(reservoir, theta1, theta2) for _ in 1:num]
     N = zeros(1, num)
     S = zeros(1, num)
-    means = zeros(1, num)
+    means = ones(1, num) * -Inf
     probs = ones(1, num) / num
     recommendations = zeros(1, budget)
 
     # initialization
-    for a in 1:num
-        N[a] = 1
-        S[a] = sample_arm(mu[a], dist)
-        recommendations[a] = rand(1:num)
-    end
+    #for a in 1:num
+    #    N[a] = 1
+    #    S[a] = sample_arm(mu[a], dist)
+    #    recommendations[a] = rand(1:num)
+    #end
 
     best = 1
-    for t in (num+1):budget
-        means = S ./ N
+    for t in 1:budget
+        means = [N[i] == 0 ? -Inf : S[i]/N[i] for i in 1:num]
         if default
             idx = (LinearIndices(means .== maximum(means)))[findall(means .== maximum(means))]
             best = idx[floor(Int, length(idx) * rand()) + 1]
@@ -194,19 +194,19 @@ function ttts_dynamic(reservoir::String, num::Integer, budget::Integer,
 	mu = [sample_reservoir(reservoir, theta1, theta2) for _ in 1:num]
     N = zeros(1, num)
     S = zeros(1, num)
-    means = zeros(1, num)
+    means = ones(1, num) * -Inf
     probs = ones(1, num) / num
     recommendations = zeros(1, budget)
 
     # initialization
-    for a in 1:num
-        N[a] = 1
-        S[a] = sample_arm(mu[a], dist)
-        recommendations[a] = rand(1:num)
-    end
+    #for a in 1:num
+    #    N[a] = 1
+    #    S[a] = sample_arm(mu[a], dist)
+    #    recommendations[a] = rand(1:num)
+    #end
 
     best = 1
-    for t in (num+1):budget
+    for t in 1:budget
         means = S ./ N
         if default
             idx = (LinearIndices(means .== maximum(means)))[findall(means .== maximum(means))]
