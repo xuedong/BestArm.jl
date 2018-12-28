@@ -192,10 +192,10 @@ function ttts_dynamic(reservoir::String, num::Integer, budget::Integer,
 	dist::String, frac::Real = 0.5, default::Bool = true,
 	theta1::Float64 = 1.0, theta2::Float64 = 1.0)
 	mu = [sample_reservoir(reservoir, theta1, theta2) for _ in 1:num]
-    N = zeros(1, num)
-    S = zeros(1, num)
-    means = ones(1, num) * -Inf
-    probs = ones(1, num) / num
+    N = [0 for _ in 1:num]
+    S = [0 for _ in 1:num]
+    means = [-Inf for _ in 1:num]
+    probs = [1/num for _ in 1:num]
     recommendations = zeros(1, budget)
 
     # initialization
@@ -207,7 +207,7 @@ function ttts_dynamic(reservoir::String, num::Integer, budget::Integer,
 
     best = 1
     for t in 1:budget
-        means = S ./ N
+        means = [N[i] == 0 ? -Inf : S[i]/N[i] for i in 1:num]
         if default
             idx = (LinearIndices(means .== maximum(means)))[findall(means .== maximum(means))]
             best = idx[floor(Int, length(idx) * rand()) + 1]
