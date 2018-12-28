@@ -61,3 +61,9 @@ xlabel("Allocation budget")
 ylabel("Expectation of the simple regret")
 grid("on")
 legend(loc=1)
+if Sys.KERNEL == :Darwin
+	savefig(string("/Users/xuedong/Programming/PhD/BestArm.jl/test/test_infinite.pdf"))
+elseif Sys.KERNEL == :Linux
+	savefig(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/test/test_infinite.pdf"))
+end
+close(fig)

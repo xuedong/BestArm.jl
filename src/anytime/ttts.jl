@@ -159,7 +159,8 @@ function ttts_infinite(reservoir::String, num::Integer, budget::Integer,
         I = argmax(TS)
         if (rand() > frac)
             J = I
-            while (I == J)
+			count = 1
+            while (I == J) && count < 10000
                 TS = zeros(num)
                 if dist == "Bernoulli"
                     alpha = 1
@@ -173,6 +174,7 @@ function ttts_infinite(reservoir::String, num::Integer, budget::Integer,
 					end
                 end
                 J = argmax(TS)
+				count += 1
             end
             I = J
         end
