@@ -14,8 +14,10 @@ end
 # Problem setting
 reservoir = "Beta"
 dist = "Bernoulli"
-alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0]
-betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0]
+alphas = [1.0, 0.5, 5.0]
+betas = [1.0, 0.5, 2.0]
+# alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0]
+# betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0]
 num = 64
 budget = 384
 mcmc = 100
