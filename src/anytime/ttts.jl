@@ -153,7 +153,7 @@ function ttts_infinite(reservoir::String, num::Integer, budget::Integer,
         if (rand() > frac)
             J = I
 			count = 1
-            while (I == J) && count < 10000
+            while (I == J) && (count < 10000)
                 TS = zeros(num)
                 if dist == "Bernoulli"
                     alpha = 1

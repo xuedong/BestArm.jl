@@ -17,11 +17,11 @@ dist = "Bernoulli"
 alpha = 1.0
 beta = 3.0
 num = 64
-budget = 512
-mcmc = 100
+budget = 384
+mcmc = 1000
 
-policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic]
-policy_names = ["Sequential Halving", "TTTS", "Dynamic TTTS"]
+policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite]
+policy_names = ["ISHA", "TTTS"]
 lp = length(policies)
 
 
@@ -40,25 +40,31 @@ for imeth in 1:lp
 		#for i in 1:mcmc
 		#	regrets += regrets_array[i]
 		#end
-		@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-			_, _, _, recs, mu = policy(reservoir, num, budget, dist, 0.5, true, alpha, beta)
-			regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
-			regrets += regrets_current
+		for i in 4:7
+			@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
+				_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, 0.5, true, alpha, beta)
+				regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
+				regrets += regrets_current
+			end
+			plot(X, reshape(regrets/mcmc, budget, 1), linestyle="--", label=string(policy_names[imeth],2^i))
 		end
 	elseif policy_names[imeth] == "Dynamic TTTS"
 		@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-			_, _, recs, mu = policy(reservoir, 5, budget, dist, 0.5, alpha, beta)
+			_, _, recs, mu = policy(reservoir, 1, budget, dist, 0.5, alpha, beta)
 			regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
 			regrets += regrets_current
 		end
+		plot(X, reshape(regrets/mcmc, budget, 1), label = policy_names[imeth])
 	else
-		@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-			_, _, _, recs, mu = policy(reservoir, num, budget, dist, BestArm.eba, alpha, beta)
-			regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
-			regrets += regrets_current
+		for i in 3:6
+			@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
+				_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, BestArm.eba, alpha, beta)
+				regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
+				regrets += regrets_current
+			end
+			plot(X, reshape(regrets/mcmc, budget, 1), label=string(policy_names[imeth],2^i))
 		end
 	end
-	plot(X, reshape(regrets/mcmc, budget, 1), label = policy_names[imeth])
 end
 
 xlabel("Allocation budget")
@@ -66,8 +72,8 @@ ylabel("Expectation of the simple regret")
 grid("on")
 legend(loc=1)
 if Sys.KERNEL == :Darwin
-	savefig(string("/Users/xuedong/Programming/PhD/BestArm.jl/test/test_infinite_bis.pdf"))
+	savefig(string("/Users/xuedong/Programming/PhD/BestArm.jl/test/", reservoir, "()", alpha, ",", beta, ")", "_", budget, ".pdf"))
 elseif Sys.KERNEL == :Linux
-	savefig(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/test/test_infinite_bis.pdf"))
+	savefig(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/test/", reservoir, "()", alpha, ",", beta, ")", "_", budget, ".pdf"))
 end
 close(fig)
