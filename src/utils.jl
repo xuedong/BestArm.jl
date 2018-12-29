@@ -288,3 +288,6 @@ end
 # function memuse()
 #   return string(round(Int, parse(Int, readstring(`ps -p 29563 -o rss=`))/1024), "M")
 # end
+
+
+# Helper function for SiRI
