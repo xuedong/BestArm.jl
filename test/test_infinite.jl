@@ -16,8 +16,8 @@ reservoir = "Beta"
 dist = "Bernoulli"
 alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0]
 betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0]
-num = 16
-budget = 64
+num = 64
+budget = 384
 mcmc = 1000
 
 policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic]
