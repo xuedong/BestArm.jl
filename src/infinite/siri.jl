@@ -2,7 +2,7 @@ function siri(reservoir::String, budget::Integer,
 	delta::Real = 0.01, c::Real = 1.0, beta::Real = 2.0
 	dist::String, rec::Function = mpa,
 	theta1::Float64 = 1.0, theta2::Float64 = 1.0)
-	K = compute_tbeta(budget)
+	K = compute_tbeta(budget, beta)
 	mu = [sample_reservoir(reservoir, theta1, theta2) for _ in 1:K]
 
 	# Initialization
@@ -21,8 +21,8 @@ function siri(reservoir::String, budget::Integer,
 	t = K
 	while t <= budget
 		# Pick an arm based on the B-value
-		ucbs = [compute_ucb(means[a], alpha, N[a]) for a in 1:K]
-		_, maxindx = findmax(ucbes)
+		ucbs = [compute_b_value_siri(means[a], delta, c, beta, N[a], K) for a in 1:K]
+		_, maxindx = findmax(ucbs)
 		# Update
 		for i in 1:N[maxindx]
 			S[maxindx] += sample_arm(mu[maxindx], dist)
