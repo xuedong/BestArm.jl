@@ -201,6 +201,7 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
 		push!(mu, new)
 		if dynamic_num < limit
 			dynamic_num += 1
+		end
         # means = [N[i] == 0 ? -Inf : S[i]/N[i] for i in 1:dynamic_num]
 		probs = [1/dynamic_num for _ in 1:dynamic_num]
         for a in 1:dynamic_num

@@ -16,12 +16,12 @@ reservoir = "Beta"
 dist = "Bernoulli"
 alpha = 1.0
 beta = 1.0
-num = 64
-budget = 384
+num = 16
+budget = 64
 mcmc = 1000
 
-policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite]
-policy_names = ["ISHA", "TTTS"]
+policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic]
+policy_names = ["ISHA", "TTTS", "Dynamic TTTS"]
 lp = length(policies)
 
 
@@ -39,7 +39,7 @@ for imeth in 1:lp
 		#for i in 1:mcmc
 		#	regrets += regrets_array[i]
 		#end
-		for i in 4:7
+		for i in 2:4
 			regrets = zeros(1, budget)
 			@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 				_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, 0.5, true, alpha, beta)
@@ -57,7 +57,7 @@ for imeth in 1:lp
 		end
 		plot(X, reshape(regrets/mcmc, budget, 1), label = policy_names[imeth])
 	else
-		for i in 3:6
+		for i in 2:4
 			regrets = zeros(1, budget)
 			@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 				_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, BestArm.eba, alpha, beta)
