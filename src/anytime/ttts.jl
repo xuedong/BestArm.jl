@@ -183,8 +183,8 @@ function ttts_infinite(reservoir::String, num::Integer, budget::Integer,
 end
 
 
-function ttts_dynamic(reservoir::String, num::Integer, budget::Integer,
-	dist::String, frac::Real = 0.5,
+function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
+	budget::Integer, dist::String, frac::Real = 0.5,
 	theta1::Float64 = 1.0, theta2::Float64 = 1.0)
 	mu = [sample_reservoir(reservoir, theta1, theta2) for _ in 1:num]
     N = [0 for _ in 1:num]
@@ -199,7 +199,8 @@ function ttts_dynamic(reservoir::String, num::Integer, budget::Integer,
 		push!(N, 0)
 		push!(S, 0)
 		push!(mu, new)
-		dynamic_num += 1
+		if dynamic_num < limit
+			dynamic_num += 1
         # means = [N[i] == 0 ? -Inf : S[i]/N[i] for i in 1:dynamic_num]
 		probs = [1/dynamic_num for _ in 1:dynamic_num]
         for a in 1:dynamic_num

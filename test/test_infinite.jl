@@ -14,8 +14,8 @@ end
 # Problem setting
 reservoir = "Beta"
 dist = "Bernoulli"
-alpha = 2.0
-beta = 2.0
+alpha = 1.0
+beta = 1.0
 num = 64
 budget = 384
 mcmc = 1000
@@ -51,7 +51,7 @@ for imeth in 1:lp
 	elseif policy_names[imeth] == "Dynamic TTTS"
 		regrets = zeros(1, budget)
 		@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-			_, _, recs, mu = policy(reservoir, 1, budget, dist, 0.5, alpha, beta)
+			_, _, recs, mu = policy(reservoir, 1, num, budget, dist, 0.5, alpha, beta)
 			regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
 			regrets += regrets_current
 		end
