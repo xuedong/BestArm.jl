@@ -42,7 +42,7 @@ for iparam in 1:7
 			#for i in 1:mcmc
 			#	regrets += regrets_array[i]
 			#end
-			for i in 4:6
+			for i in 5:8
 				regrets = zeros(1, budget)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 					_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, 0.5, true, alphas[iparam], betas[iparam])
@@ -60,7 +60,7 @@ for iparam in 1:7
 			end
 			plot(X, reshape(regrets/mcmc, budget, 1), label = policy_names[imeth])
 		else
-			for i in 4:6
+			for i in 5:7
 				regrets = zeros(1, budget)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 					_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, BestArm.eba, alphas[iparam], betas[iparam])
