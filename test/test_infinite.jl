@@ -34,13 +34,13 @@ fig = figure()
 X = 1:budget
 for imeth in 1:lp
 	policy = policies[imeth]
-	regrets = zeros(1, budget)
 	if policy_names[imeth] == "TTTS"
 	  	#regrets_array = @DArray [BestArm.parallel_ttts(mu, budget, dist) for i = 1:mcmc]
 		#for i in 1:mcmc
 		#	regrets += regrets_array[i]
 		#end
 		for i in 4:7
+			regrets = zeros(1, budget)
 			@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 				_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, 0.5, true, alpha, beta)
 				regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
@@ -49,6 +49,7 @@ for imeth in 1:lp
 			plot(X, reshape(regrets/mcmc, budget, 1), linestyle="--", label=string(policy_names[imeth],2^i))
 		end
 	elseif policy_names[imeth] == "Dynamic TTTS"
+		regrets = zeros(1, budget)
 		@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 			_, _, recs, mu = policy(reservoir, 1, budget, dist, 0.5, alpha, beta)
 			regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
@@ -57,6 +58,7 @@ for imeth in 1:lp
 		plot(X, reshape(regrets/mcmc, budget, 1), label = policy_names[imeth])
 	else
 		for i in 3:6
+			regrets = zeros(1, budget)
 			@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 				_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, BestArm.eba, alpha, beta)
 				regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
