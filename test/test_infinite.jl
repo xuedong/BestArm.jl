@@ -75,9 +75,9 @@ for iparam in 1:7
 	grid("on")
 	legend(loc=1)
 	if Sys.KERNEL == :Darwin
-		savefig(string("/Users/xuedong/Programming/PhD/BestArm.jl/test/", reservoir, "(", alpha, ",", beta, ")", "_", budget, ".pdf"))
+		savefig(string("/Users/xuedong/Programming/PhD/BestArm.jl/test/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", budget, ".pdf"))
 	elseif Sys.KERNEL == :Linux
-		savefig(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/test/", reservoir, "(", alpha, ",", beta, ")", "_", budget, ".pdf"))
+		savefig(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/test/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", budget, ".pdf"))
 	end
 	close(fig)
 end
