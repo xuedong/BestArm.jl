@@ -14,8 +14,8 @@ end
 # Problem setting
 reservoir = "Beta"
 dist = "Bernoulli"
-alpha = 1.0
-beta = 3.0
+alpha = 2.0
+beta = 2.0
 num = 64
 budget = 384
 mcmc = 1000
@@ -72,8 +72,8 @@ ylabel("Expectation of the simple regret")
 grid("on")
 legend(loc=1)
 if Sys.KERNEL == :Darwin
-	savefig(string("/Users/xuedong/Programming/PhD/BestArm.jl/test/", reservoir, "()", alpha, ",", beta, ")", "_", budget, ".pdf"))
+	savefig(string("/Users/xuedong/Programming/PhD/BestArm.jl/test/", reservoir, "(", alpha, ",", beta, ")", "_", budget, ".pdf"))
 elseif Sys.KERNEL == :Linux
-	savefig(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/test/", reservoir, "()", alpha, ",", beta, ")", "_", budget, ".pdf"))
+	savefig(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/test/", reservoir, "(", alpha, ",", beta, ")", "_", budget, ".pdf"))
 end
 close(fig)
