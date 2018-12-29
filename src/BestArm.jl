@@ -28,6 +28,8 @@ module BestArm
     export ttps, parallel_ttps
     export at_lucb
 
+    export siri
+
     include("arms.jl")
     include("utils.jl")
     include("kl_functions.jl")
@@ -52,4 +54,6 @@ module BestArm
     include("anytime/ttvs.jl")
     include("anytime/ts.jl")
     include("anytime/at_lucb.jl")
+
+    include("infinite/siri.jl")
 end

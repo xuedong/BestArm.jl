@@ -310,7 +310,7 @@ function compute_b_value_siri(mean::Real, delta::Real, c::Real, beta::Real,
 	num_pulls::Integer, num_arms::Integer)
 	b = min(beta, 2)
 	tbeta = floor(log2(num_arms))
-	index = c / num_pulls * log2(2^(2*tbeta/b)/(num_pulls*delta))
+	index = c / num_pulls * log(2^(2*tbeta/b)/(num_pulls*delta))
 
 	return mean + 2*sqrt(index) + 2*index
 end

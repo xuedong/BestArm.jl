@@ -18,12 +18,14 @@ dist = "Bernoulli"
 # betas = [1.0]
 alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0]
 betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0]
-num = 128
-budget = 896
+num = 256
+budget = 2048
 mcmc = 1000
 
-policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic]
-policy_names = ["ISHA", "TTTS", "Dynamic TTTS"]
+# policies = [BestArm.siri]
+# policy_names = ["SiRI"]
+policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic, BestArm.siri]
+policy_names = ["ISHA", "TTTS", "Dynamic TTTS", "SiRI"]
 lp = length(policies)
 
 
@@ -42,14 +44,14 @@ for iparam in 1:7
 			#for i in 1:mcmc
 			#	regrets += regrets_array[i]
 			#end
-			for i in 5:8
+			for i in 6:9
 				regrets = zeros(1, budget)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 					_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, 0.5, true, alphas[iparam], betas[iparam])
 					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
 					regrets += regrets_current
 				end
-				plot(X, reshape(regrets/mcmc, budget, 1), linestyle="--", label=string(policy_names[imeth],2^i))
+				plot(X, reshape(regrets/mcmc, budget, 1), linestyle="--", label=string(policy_names[imeth], 2^i))
 			end
 		elseif policy_names[imeth] == "Dynamic TTTS"
 			regrets = zeros(1, budget)
@@ -58,16 +60,26 @@ for iparam in 1:7
 				regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
 				regrets += regrets_current
 			end
-			plot(X, reshape(regrets/mcmc, budget, 1), label = policy_names[imeth])
+			plot(X, reshape(regrets/mcmc, budget, 1), label=policy_names[imeth])
+		elseif policy_names[imeth] == "SiRI"
+			for beta in 1:1
+				regrets = zeros(1, budget)
+				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
+					_, _, _, recs, mu = policy(reservoir, budget, dist, 0.01, 1.0, beta, BestArm.mpa, alphas[iparam], betas[iparam])
+					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
+					regrets += regrets_current
+				end
+				plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=string(policy_names[imeth], beta))
+			end
 		else
-			for i in 5:7
+			for i in 6:8
 				regrets = zeros(1, budget)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 					_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, BestArm.eba, alphas[iparam], betas[iparam])
 					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
 					regrets += regrets_current
 				end
-				plot(X, reshape(regrets/mcmc, budget, 1), label=string(policy_names[imeth],2^i))
+				plot(X, reshape(regrets/mcmc, budget, 1), label=string(policy_names[imeth], 2^i))
 			end
 		end
 	end
