@@ -285,3 +285,4 @@ TSWLatexianTemp*
 # standalone packages
 *.sta
 docs/build/
+misc/log/
