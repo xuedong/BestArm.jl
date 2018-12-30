@@ -1,6 +1,7 @@
 using PyPlot
 using ProgressMeter
 using Distributed
+using HDF5
 
 addprocs(3)
 if Sys.KERNEL == :Darwin
