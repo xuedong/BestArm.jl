@@ -19,10 +19,10 @@ dist = "Bernoulli"
 # betas = [1.0]
 alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0, 1.0, 10.0]
 betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 10.0, 1.0]
-num = 16
-budget = 64
+num = 32
+budget = 160
 mcmc = 1000
-default = true
+default = false
 
 # policies = [BestArm.siri]
 # policy_names = ["SiRI"]
@@ -37,7 +37,7 @@ VERBOSE = true
 
 
 # Tests
-for iparam in 1:9
+for iparam in 1:1
 	fig = figure()
 	X = 1:budget
 	for imeth in 1:lp
@@ -47,7 +47,7 @@ for iparam in 1:9
 			#for i in 1:mcmc
 			#	regrets += regrets_array[i]
 			#end
-			for i in 2:5
+			for i in 3:6
 				regrets = zeros(1, budget)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 					_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, 0.5, true, alphas[iparam], betas[iparam])
@@ -93,7 +93,7 @@ for iparam in 1:9
 				plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=string(policy_names[imeth], beta))
 			end
 		else
-			for i in 2:4
+			for i in 3:5
 				regrets = zeros(1, budget)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 					_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, BestArm.eba, alphas[iparam], betas[iparam])
