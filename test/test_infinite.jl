@@ -20,12 +20,13 @@ alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0, 1.0, 10.0]
 betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 10.0, 1.0]
 num = 16
 budget = 64
-mcmc = 1000
+mcmc = 100
 
 # policies = [BestArm.siri]
 # policy_names = ["SiRI"]
 policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic]
 policy_names = ["ISHA", "TTTS", "Dynamic TTTS"]
+abrevs = ["isha", "ttts", "dttts"]
 lp = length(policies)
 
 
@@ -52,6 +53,9 @@ for iparam in 1:9
 					regrets += regrets_current
 				end
 				plot(X, reshape(regrets/mcmc, budget, 1), linestyle="--", label=string(policy_names[imeth], 2^i))
+				h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/log/infinite/", abrevs[imeth], Int(2^i), ".h5"), "w") do file
+		    		write(file, abrevs[imeth], regrets)
+				end
 			end
 		elseif policy_names[imeth] == "Dynamic TTTS"
 			regrets = zeros(1, budget)
@@ -59,6 +63,9 @@ for iparam in 1:9
 				_, _, recs, mu = policy(reservoir, 1, num, budget, dist, 0.5, true, alphas[iparam], betas[iparam])
 				regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
 				regrets += regrets_current
+				h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/log/infinite/", abrevs[imeth], ".h5"), "w") do file
+		    		write(file, abrevs[imeth], regrets)
+				end
 			end
 			plot(X, reshape(regrets/mcmc, budget, 1), label=policy_names[imeth])
 		elseif policy_names[imeth] == "SiRI"
@@ -80,6 +87,9 @@ for iparam in 1:9
 					regrets += regrets_current
 				end
 				plot(X, reshape(regrets/mcmc, budget, 1), label=string(policy_names[imeth], 2^i))
+				h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/log/infinite/", abrevs[imeth], Int(2^i), ".h5"), "w") do file
+		    		write(file, abrevs[imeth], regrets)
+				end
 			end
 		end
 	end
