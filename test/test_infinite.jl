@@ -22,7 +22,7 @@ betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 10.0, 1.0]
 num = 32
 budget = 160
 mcmc = 1000
-default = false
+default = true
 
 # policies = [BestArm.siri]
 # policy_names = ["SiRI"]
@@ -37,7 +37,7 @@ VERBOSE = true
 
 
 # Tests
-for iparam in 1:1
+for iparam in 1:9
 	fig = figure()
 	X = 1:budget
 	for imeth in 1:lp
