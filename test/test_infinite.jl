@@ -1,7 +1,7 @@
 using PyPlot
 using ProgressMeter
 using Distributed
-using HDF5
+# using HDF5
 
 addprocs(3)
 if Sys.KERNEL == :Darwin
@@ -21,7 +21,7 @@ alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0, 0.3]
 betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 0.7]
 num = 16
 budget = 64
-mcmc = 10000
+mcmc = 1000
 default = true
 
 # policies = [BestArm.siri]
@@ -38,7 +38,7 @@ SAVE = false
 
 
 # Tests
-for iparam in 1:8
+for iparam in 1:1
 	fig = figure()
 	X = 1:budget
 	for imeth in 1:lp
@@ -65,7 +65,7 @@ for iparam in 1:8
 		elseif policy_names[imeth] == "Dynamic TTTS"
 			regrets = zeros(1, budget)
 			@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-				_, _, recs, mu = policy(reservoir, 1, num, budget, dist, 0.5, true, alphas[iparam], betas[iparam])
+				_, _, recs, mu = policy(reservoir, 8, num, budget, dist, 0.5, true, alphas[iparam], betas[iparam])
 				regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
 				regrets += regrets_current
 				if SAVE
@@ -78,7 +78,7 @@ for iparam in 1:8
 			if default
 				regrets = zeros(1, budget)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-					_, _, recs, mu = policy(reservoir, 1, num, budget, dist, 0.5, false, alphas[iparam], betas[iparam])
+					_, _, recs, mu = policy(reservoir, 8, num, budget, dist, 0.5, false, alphas[iparam], betas[iparam])
 					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
 					regrets += regrets_current
 					if SAVE
