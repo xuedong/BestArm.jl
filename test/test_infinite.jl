@@ -34,6 +34,7 @@ lp = length(policies)
 
 # Options
 VERBOSE = true
+SAVE = false
 
 
 # Tests
@@ -55,8 +56,10 @@ for iparam in 1:8
 					regrets += regrets_current
 				end
 				plot(X, reshape(regrets/mcmc, budget, 1), linestyle="--", label=string(policy_names[imeth], 2^i))
-				h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], Int(2^i), ".h5"), "w") do file
-		    		write(file, abrevs[imeth], regrets)
+				if SAVE
+					h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], Int(2^i), ".h5"), "w") do file
+			    		write(file, abrevs[imeth], regrets)
+					end
 				end
 			end
 		elseif policy_names[imeth] == "Dynamic TTTS"
@@ -65,8 +68,10 @@ for iparam in 1:8
 				_, _, recs, mu = policy(reservoir, 1, num, budget, dist, 0.5, true, alphas[iparam], betas[iparam])
 				regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
 				regrets += regrets_current
-				h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], "_mpa.h5"), "w") do file
-			    	write(file, abrevs[imeth], regrets)
+				if SAVE
+					h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], "_mpa.h5"), "w") do file
+				    	write(file, abrevs[imeth], regrets)
+					end
 				end
 			end
 			plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=string(policy_names[imeth], " (MPA)"))
@@ -76,8 +81,10 @@ for iparam in 1:8
 					_, _, recs, mu = policy(reservoir, 1, num, budget, dist, 0.5, false, alphas[iparam], betas[iparam])
 					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
 					regrets += regrets_current
-					h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], ".h5"), "w") do file
-						write(file, abrevs[imeth], regrets)
+					if SAVE
+						h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], ".h5"), "w") do file
+							write(file, abrevs[imeth], regrets)
+						end
 					end
 				end
 				plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=policy_names[imeth])
@@ -101,8 +108,10 @@ for iparam in 1:8
 					regrets += regrets_current
 				end
 				plot(X, reshape(regrets/mcmc, budget, 1), label=string(policy_names[imeth], 2^i))
-				h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], Int(2^i), ".h5"), "w") do file
-		    		write(file, abrevs[imeth], regrets)
+				if SAVE
+					h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], Int(2^i), ".h5"), "w") do file
+			    		write(file, abrevs[imeth], regrets)
+					end
 				end
 			end
 		end
