@@ -65,7 +65,7 @@ for iparam in 1:1
 		elseif policy_names[imeth] == "Dynamic TTTS"
 			regrets = zeros(1, budget)
 			@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-				_, _, recs, mu = policy(reservoir, 8, num, budget, dist, 0.5, true, alphas[iparam], betas[iparam])
+				_, _, recs, mu = policy(reservoir, 1, num, budget, dist, 0.5, true, alphas[iparam], betas[iparam])
 				regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
 				regrets += regrets_current
 				if SAVE
@@ -78,7 +78,7 @@ for iparam in 1:1
 			if default
 				regrets = zeros(1, budget)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-					_, _, recs, mu = policy(reservoir, 8, num, budget, dist, 0.5, false, alphas[iparam], betas[iparam])
+					_, _, recs, mu = policy(reservoir, 1, num, budget, dist, 0.5, false, alphas[iparam], betas[iparam])
 					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
 					regrets += regrets_current
 					if SAVE
