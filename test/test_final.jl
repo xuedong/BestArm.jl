@@ -60,39 +60,30 @@ for iparam in 1:1
 					regrets[n] += regret_current
 				end
 			end
-			plot(X, reshape(regrets/mcmc, budget, 1), marker="o", label=string(policy_names[imeth]))
+			plot(X, reshape(regrets/mcmc, 8, 1), marker="o", label=string(policy_names[imeth]))
 			if SAVE
 				h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], Int(2^i), ".h5"), "w") do file
 					write(file, abrevs[imeth], regrets)
 				end
 			end
 		elseif policy_names[imeth] == "Dynamic TTTS"
-			regrets = zeros(1, budget)
-			@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-				_, _, recs, mu = policy(reservoir, 1, num, budget, dist, 0.5, true, alphas[iparam], betas[iparam])
-				regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
-				regrets += regrets_current
-				if SAVE
-					h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], "_mpa.h5"), "w") do file
-				    	write(file, abrevs[imeth], regrets)
-					end
-				end
-			end
-			plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=string(policy_names[imeth], " (MPA)"))
-			if default
+			regrets = zeros(1, 8)
+			for n in 1:8
+				num = 2^n
+				budget = Int(num*log2(num))
 				regrets = zeros(1, budget)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-					_, _, recs, mu = policy(reservoir, 1, num, budget, dist, 0.5, false, alphas[iparam], betas[iparam])
-					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
-					regrets += regrets_current
-					if SAVE
-						h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], ".h5"), "w") do file
-							write(file, abrevs[imeth], regrets)
-						end
-					end
+					rec, _, recs, mu = policy(reservoir, 1, num, budget, dist, 0.5, false, alphas[iparam], betas[iparam])
+					regret_current = 1 - mu[rec]
+					regrets[n] += regret_current
 				end
-				plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=policy_names[imeth])
 			end
+			if SAVE
+				h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], ".h5"), "w") do file
+					write(file, abrevs[imeth], regrets)
+				end
+			end
+			plot(X, reshape(regrets/mcmc, 8, 1), marker="*", label=policy_names[imeth])
 		elseif policy_names[imeth] == "SiRI"
 			regrets = zeros(1, 8)
 			for n in 1:8
