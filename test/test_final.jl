@@ -1,6 +1,7 @@
 using PyPlot
 using ProgressMeter
 using Distributed
+using Seaborn
 # using HDF5
 
 # addprocs(3)
@@ -40,6 +41,7 @@ SAVE = false
 # Tests
 for iparam in 1:1
 	fig = figure()
+	Seaborn.set(style="darkgrid")
 	X = [2^i for i in 1:8]
 	for imeth in 1:lp
 		policy = policies[imeth]
@@ -100,7 +102,7 @@ for iparam in 1:1
 					regrets[n] += regret_current
 				end
 			end
-			plot(X, reshape(regrets/mcmc, 8, 1), label=string(policy_names[imeth], 1.0))
+			plot(X, reshape(regrets/mcmc, 8, 1), marker="^", label=string(policy_names[imeth], 1.0))
 		else
 			for i in 2:4
 				regrets = zeros(1, budget)
