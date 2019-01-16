@@ -1,6 +1,7 @@
 function siri(reservoir::String, budget::Integer, dist::String,
 	delta::Real = 0.01, c::Real = 1.0, beta::Real = 2.0,
-	rec::Function = mpa, theta1::Float64 = 1.0, theta2::Float64 = 1.0)
+	rec::Function = mpa, theta1::Float64 = 1.0, theta2::Float64 = 1.0,
+	final::Bool = true)
 	K = compute_tbeta(budget, beta)
 	mu = [sample_reservoir(reservoir, theta1, theta2) for _ in 1:K]
 
@@ -13,7 +14,9 @@ function siri(reservoir::String, budget::Integer, dist::String,
 		N[a] = 1
 		S[a] = sample_arm(mu[a], dist)
 		means[a] = S[a]
-		recommendations[a] = rand(1:K)
+		if final == false
+			recommendations[a] = rand(1:K)
+		end
 	end
 
 	# Exploration
@@ -30,7 +33,9 @@ function siri(reservoir::String, budget::Integer, dist::String,
 			if t+i > budget
 				break
 			else
-				recommendations[t+i] = rec(N, S)
+				if final == false
+					recommendations[t+i] = rec(N, S)
+				end
 			end
 		end
 		means[maxindx] = S[maxindx]/N[maxindx]
