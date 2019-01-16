@@ -43,6 +43,11 @@ function siri(reservoir::String, budget::Integer, dist::String,
 	end
 
 	recommendations = Int.(recommendations)
+	if final
+		recommendation = rec(N, S)
+	else
+		recommendation = recommendations[budget]
+	end
 
-	return (recommendations[budget], N, means, recommendations, mu)
+	return (recommendation, N, means, recommendations, mu)
 end
