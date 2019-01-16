@@ -20,16 +20,12 @@ alphas = [1.0]
 betas = [1.0]
 # alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0, 0.3]
 # betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 0.7]
-num = 16
-budget = 64
 mcmc = 100
 default = true
 
-policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.siri]
-policy_names = ["ISHA", "TTTS", "SiRI"]
-# policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic]
-# policy_names = ["ISHA", "TTTS", "Dynamic TTTS"]
-abrevs = ["isha", "ttts", "dttts"]
+policies = [BestArm.seq_halving_infinite, BestArm.ttts_dynamic, BestArm.siri]
+policy_names = ["ISHA", "Dynamic TTTS", "SiRI"]
+abrevs = ["isha", "ttts", "dttts", "siri"]
 lp = length(policies)
 
 
