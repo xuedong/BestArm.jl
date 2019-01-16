@@ -15,19 +15,19 @@ end
 # Problem setting
 reservoir = "Beta"
 dist = "Bernoulli"
-# alphas = [1.0]
-# betas = [1.0]
-alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0, 0.3]
-betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 0.7]
+alphas = [1.0]
+betas = [1.0]
+# alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0, 0.3]
+# betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 0.7]
 num = 16
 budget = 64
 mcmc = 1000
 default = true
 
-# policies = [BestArm.siri]
-# policy_names = ["SiRI"]
-policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic]
-policy_names = ["ISHA", "TTTS", "Dynamic TTTS"]
+policies = [BestArm.siri]
+policy_names = ["SiRI"]
+# policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic]
+# policy_names = ["ISHA", "TTTS", "Dynamic TTTS"]
 abrevs = ["isha", "ttts", "dttts"]
 lp = length(policies)
 
@@ -93,7 +93,7 @@ for iparam in 1:1
 			for beta in 1:1
 				regrets = zeros(1, budget)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-					_, _, _, recs, mu = policy(reservoir, budget, dist, 0.01, 1.0, beta, BestArm.mpa, alphas[iparam], betas[iparam])
+					_, _, _, recs, mu = policy(reservoir, budget, dist, 0.01, 1.0, beta, BestArm.mpa, alphas[iparam], betas[iparam], false)
 					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
 					regrets += regrets_current
 				end

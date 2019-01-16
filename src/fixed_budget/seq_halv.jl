@@ -113,7 +113,8 @@ end
 # Sequential Halving for Infinitely-Many Armed Bandits
 function seq_halving_infinite(reservoir::String, num::Integer,
 	budget::Integer, dist::String, rec::Function = eba,
-	theta1::Float64 = 1.0, theta2::Float64 = 1.0)
+	theta1::Float64 = 1.0, theta2::Float64 = 1.0,
+	final::Bool = true)
 	mu = [sample_reservoir(reservoir, theta1, theta2) for _ in 1:num]
 	rounds = ceil(log2(num))
 

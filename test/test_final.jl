@@ -25,11 +25,11 @@ budget = 64
 mcmc = 100
 default = true
 
-policies = [BestArm.siri]
-policy_names = ["SiRI"]
+policies = [BestArm.seq_halving_infinite, BestArm.siri]
+policy_names = ["ISHA", "SiRI"]
 # policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic]
 # policy_names = ["ISHA", "TTTS", "Dynamic TTTS"]
-# abrevs = ["isha", "ttts", "dttts"]
+abrevs = ["isha", "ttts", "dttts"]
 lp = length(policies)
 
 
@@ -104,18 +104,20 @@ for iparam in 1:1
 			end
 			plot(X, reshape(regrets/mcmc, 8, 1), marker="^", label=string(policy_names[imeth], 1.0))
 		else
-			for i in 2:4
-				regrets = zeros(1, budget)
+			regrets = zeros(1, 8)
+			for n in 1:8
+				num = 2^n
+				budget = Int(num*log2(num))
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-					_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, BestArm.eba, alphas[iparam], betas[iparam])
-					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
-					regrets += regrets_current
+					rec, _, _, _, mu = policy(reservoir, num, budget, dist, BestArm.eba, alphas[iparam], betas[iparam])
+					regret_current = 1 - mu[rec]
+					regrets[n] += regret_current
 				end
-				plot(X, reshape(regrets/mcmc, budget, 1), label=string(policy_names[imeth], 2^i))
-				if SAVE
-					h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], Int(2^i), ".h5"), "w") do file
-			    		write(file, abrevs[imeth], regrets)
-					end
+			end
+			plot(X, reshape(regrets/mcmc, 8, 1), marker="s", label=string(policy_names[imeth]))
+			if SAVE
+				h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], Int(2^i), ".h5"), "w") do file
+					write(file, abrevs[imeth], regrets)
 				end
 			end
 		end

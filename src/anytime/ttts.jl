@@ -98,7 +98,8 @@ end
 
 function ttts_infinite(reservoir::String, num::Integer, budget::Integer,
 	dist::String, frac::Real = 0.5, default::Bool = true,
-	theta1::Float64 = 1.0, theta2::Float64 = 1.0)
+	theta1::Float64 = 1.0, theta2::Float64 = 1.0,
+	final::Bool = true)
 	mu = [sample_reservoir(reservoir, theta1, theta2) for _ in 1:num]
     N = zeros(1, num)
     S = zeros(1, num)
@@ -109,35 +110,37 @@ function ttts_infinite(reservoir::String, num::Integer, budget::Integer,
     best = 1
     for t in 1:budget
         means = [N[i] == 0 ? -Inf : S[i]/N[i] for i in 1:num]
-        if default
-            idx = (LinearIndices(means .== maximum(means)))[findall(means .== maximum(means))]
-            best = idx[floor(Int, length(idx) * rand()) + 1]
-            recommendations[t] = best
-        else
-            idx = find(probs .== maximum(probs))
-            best = idx[floor(Int, length(idx) * rand()) + 1]
-            recommendations[t] = best
+		if final == false
+	        if default
+	            idx = (LinearIndices(means .== maximum(means)))[findall(means .== maximum(means))]
+	            best = idx[floor(Int, length(idx) * rand()) + 1]
+	            recommendations[t] = best
+	        else
+	            idx = find(probs .== maximum(probs))
+	            best = idx[floor(Int, length(idx) * rand()) + 1]
+	            recommendations[t] = best
 
-            for a in 1:num
-                if dist == "Bernoulli"
-                    alpha = 1
-                    beta = 1
-                    function f(x)
-                        prod = pdf.(Beta(alpha + S[a], beta + N[a] - S[a]), x)[1]
-                        # println(prod)
-                        for i in 1:num
-                            if i != a
-                                prod *= cdf.(Beta(alpha + S[i], beta + N[i] - S[i]), x)[1]
-                                # println(prod)
-                            end
-                        end
-                        return prod
-                    end
-                    val, _ = hquadrature(f, 0.0, 1.0)
-                    probs[a] = val
-                end
-            end
-        end
+	            for a in 1:num
+	                if dist == "Bernoulli"
+	                    alpha = 1
+	                    beta = 1
+	                    function f(x)
+	                        prod = pdf.(Beta(alpha + S[a], beta + N[a] - S[a]), x)[1]
+	                        # println(prod)
+	                        for i in 1:num
+	                            if i != a
+	                                prod *= cdf.(Beta(alpha + S[i], beta + N[i] - S[i]), x)[1]
+	                                # println(prod)
+	                            end
+	                        end
+	                        return prod
+	                    end
+	                    val, _ = hquadrature(f, 0.0, 1.0)
+	                    probs[a] = val
+	                end
+	            end
+	        end
+		end
 
         TS = zeros(num)
         for a in 1:num
