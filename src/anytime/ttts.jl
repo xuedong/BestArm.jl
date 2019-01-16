@@ -179,7 +179,40 @@ function ttts_infinite(reservoir::String, num::Integer, budget::Integer,
         N[I] += 1
     end
 
-    recommendation = best
+	if final == false
+    	recommendation = best
+	else
+		if default
+			idx = (LinearIndices(means .== maximum(means)))[findall(means .== maximum(means))]
+			best = idx[floor(Int, length(idx) * rand()) + 1]
+			recommendation = best
+		else
+			for a in 1:num
+				if dist == "Bernoulli"
+					alpha = 1
+					beta = 1
+					function f(x)
+						prod = pdf.(Beta(alpha + S[a], beta + N[a] - S[a]), x)[1]
+						# println(prod)
+						for i in 1:num
+							if i != a
+								prod *= cdf.(Beta(alpha + S[i], beta + N[i] - S[i]), x)[1]
+								# println(prod)
+							end
+						end
+						return prod
+					end
+					val, _ = hquadrature(f, 0.0, 1.0)
+					probs[a] = val
+				end
+			end
+
+			idx = (LinearIndices(probs .== maximum(probs)))[findall(probs .== maximum(probs))]
+			best = idx[floor(Int, length(idx) * rand()) + 1]
+			recommendation = best
+		end
+	end
+
     recommendations = Int.(recommendations)
 
     return (recommendation, N, means, recommendations, mu)
