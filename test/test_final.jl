@@ -16,17 +16,18 @@ end
 # Problem setting
 reservoir = "Beta"
 dist = "Bernoulli"
-alphas = [1.0]
-betas = [1.0]
+alphas = [1.0, 3.0]
+betas = [1.0, 1.0]
 # alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0, 0.3]
 # betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 0.7]
 mcmc = 100
 default = true
 
-policies = [BestArm.seq_halving_infinite, BestArm.ttts_dynamic, BestArm.siri]
-policy_names = ["ISHA", "Dynamic TTTS", "SiRI"]
+policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic, BestArm.siri]
+policy_names = ["ISHA", "TTTS", "Dynamic TTTS", "SiRI"]
 abrevs = ["isha", "ttts", "dttts", "siri"]
 lp = length(policies)
+lparam = length(alphas)
 
 
 # Options
@@ -35,7 +36,7 @@ SAVE = false
 
 
 # Tests
-for iparam in 1:1
+for iparam in 1:lparam
 	fig = figure()
 	Seaborn.set(style="darkgrid")
 	X = [2^i for i in 1:8]
@@ -67,19 +68,18 @@ for iparam in 1:1
 			for n in 1:8
 				num = 2^n
 				budget = Int(num*log2(num))
-				regrets = zeros(1, budget)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-					rec, _, recs, mu = policy(reservoir, 1, num, budget, dist, 0.5, false, alphas[iparam], betas[iparam])
+					rec, _, _, mu = policy(reservoir, 1, num, budget, dist, 0.5, false, alphas[iparam], betas[iparam])
 					regret_current = 1 - mu[rec]
 					regrets[n] += regret_current
 				end
 			end
+			plot(X, reshape(regrets/mcmc, 8, 1), marker="*", label=policy_names[imeth])
 			if SAVE
 				h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], ".h5"), "w") do file
 					write(file, abrevs[imeth], regrets)
 				end
 			end
-			plot(X, reshape(regrets/mcmc, 8, 1), marker="*", label=policy_names[imeth])
 		elseif policy_names[imeth] == "SiRI"
 			regrets = zeros(1, 8)
 			for n in 1:8
@@ -117,9 +117,9 @@ for iparam in 1:1
 	grid("on")
 	legend(loc=1)
 	if Sys.KERNEL == :Darwin
-		savefig(string("/Users/xuedong/Programming/PhD/BestArm.jl/test/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", budget, ".pdf"))
+		savefig(string("/Users/xuedong/Programming/PhD/BestArm.jl/test/", reservoir, "(", alphas[iparam], ",", betas[iparam], ").pdf"))
 	elseif Sys.KERNEL == :Linux
-		savefig(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/test/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", budget, ".pdf"))
+		savefig(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/test/", reservoir, "(", alphas[iparam], ",", betas[iparam], ").pdf"))
 	end
 	close(fig)
 end
