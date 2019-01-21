@@ -20,10 +20,10 @@ alphas = [1.0, 3.0, 0.5, 1.0, 2.0]
 betas = [1.0, 1.0, 0.5, 3.0, 2.0]
 # alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0, 0.3]
 # betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 0.7]
-mcmc = 1
+mcmc = 10
 default = true
-budgets = [Int(round(2*i*log2(2*i))) for i in 16:128]
-narms = [2*i for i in 16:128]
+budgets = [Int(round(2*i*log2(2*i))) for i in 32:64]
+narms = [2*i for i in 32:64]
 lbudget = length(budgets)
 
 policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic, BestArm.siri]
@@ -50,7 +50,7 @@ for iparam in 1:lparam
 			#	regrets += regrets_array[i]
 			#end
 			regrets = zeros(1, lbudget)
-			for n in 1:113
+			for n in 1:lbudget
 				num = narms[n]
 				budget = budgets[n]
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
@@ -67,7 +67,7 @@ for iparam in 1:lparam
 			end
 		elseif policy_names[imeth] == "Dynamic TTTS"
 			regrets = zeros(1, lbudget)
-			for n in 1:113
+			for n in 1:lbudget
 				num = narms[n]
 				budget = budgets[n]
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
@@ -84,7 +84,7 @@ for iparam in 1:lparam
 			end
 		elseif policy_names[imeth] == "SiRI"
 			regrets = zeros(1, lbudget)
-			for n in 1:113
+			for n in 1:lbudget
 				num = narms[n]
 				budget = budgets[n]
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
@@ -96,7 +96,7 @@ for iparam in 1:lparam
 			plot(budgets, reshape(regrets/mcmc, lbudget, 1), marker="^", label=string(policy_names[imeth], 1.0))
 		else
 			regrets = zeros(1, lbudget)
-			for n in 1:113
+			for n in 1:lbudget
 				num = narms[n]
 				budget = budgets[n]
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
