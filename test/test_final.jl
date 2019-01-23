@@ -1,39 +1,37 @@
 using PyPlot
 using ProgressMeter
 using Distributed
-using Seaborn
-# using HDF5
 
-# addprocs(3)
+addprocs(4)
 if Sys.KERNEL == :Darwin
 	@everywhere include("/Users/xuedong/Programming/PhD/BestArm.jl/src/BestArm.jl")
 elseif Sys.KERNEL == :Linux
 	@everywhere include("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/src/BestArm.jl")
 end
-# @everywhere using BestArm
-# @everywhere using DistributedArrays
+@everywhere using Seaborn
+@everywhere using HDF5
 
 # Problem setting
-reservoir = "Beta"
-dist = "Bernoulli"
-alphas = [1.0, 3.0, 0.5, 1.0, 2.0]
-betas = [1.0, 1.0, 0.5, 3.0, 2.0]
+@everywhere reservoir = "Beta"
+@everywhere dist = "Bernoulli"
+@everywhere alphas = [1.0, 3.0, 0.5, 1.0, 2.0]
+@everywhere betas = [1.0, 1.0, 0.5, 3.0, 2.0]
 # alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0, 0.3]
 # betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 0.7]
-mcmc = 10
-default = true
-step = 4
-lb = 64
-ub = 128
-budgets = [Int(round(step*i*log2(step*i))) for i in (lb/step):(ub/step)]
-narms = [step*i for i in (lb/step):(ub/step)]
-lbudget = length(budgets)
+@everywhere mcmc = 1000
+@everywhere default = true
+@everywhere pace = 4
+@everywhere lb = 64
+@everywhere ub = 128
+@everywhere budgets = [Int(round(pace*i*log2(pace*i))) for i in Int(lb/pace):Int(ub/pace)]
+@everywhere narms = [pace*i for i in Int(lb/pace):Int(ub/pace)]
+@everywhere lbudget = length(budgets)
 
-policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic]
-policy_names = ["ISHA", "TTTS", "Dynamic TTTS"]
-abrevs = ["isha", "ttts", "dttts", "siri"]
-lp = length(policies)
-lparam = length(alphas)
+@everywhere policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic]
+@everywhere policy_names = ["ISHA", "TTTS", "Dynamic TTTS"]
+@everywhere abrevs = ["isha", "ttts", "dttts", "siri"]
+@everywhere lp = length(policies)
+@everywhere lparam = length(alphas)
 
 
 # Options
@@ -42,7 +40,7 @@ SAVE = true
 
 
 # Tests
-for iparam in 1:lparam
+@distributed (+) for iparam in 1:lparam
 	fig = figure()
 	Seaborn.set(style="darkgrid")
 	for imeth in 1:lp
