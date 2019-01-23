@@ -20,10 +20,13 @@ alphas = [1.0, 3.0, 0.5, 1.0, 2.0]
 betas = [1.0, 1.0, 0.5, 3.0, 2.0]
 # alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0, 0.3]
 # betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 0.7]
-mcmc = 1000
+mcmc = 10
 default = true
-budgets = [Int(round(2*i*log2(2*i))) for i in 32:64]
-narms = [2*i for i in 32:64]
+step = 4
+lb = 64
+ub = 128
+budgets = [Int(round(step*i*log2(step*i))) for i in (lb/step):(ub/step)]
+narms = [step*i for i in (lb/step):(ub/step)]
 lbudget = length(budgets)
 
 policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic]
@@ -35,7 +38,7 @@ lparam = length(alphas)
 
 # Options
 VERBOSE = true
-SAVE = false
+SAVE = true
 
 
 # Tests
