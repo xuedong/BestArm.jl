@@ -18,7 +18,7 @@ end
 @everywhere betas = [1.0, 1.0, 0.5, 3.0, 2.0]
 # alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0, 0.3]
 # betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 0.7]
-@everywhere mcmc = 1000
+@everywhere mcmc = 10
 @everywhere default = true
 @everywhere pace = 4
 @everywhere lb = 64
@@ -36,7 +36,7 @@ end
 
 # Options
 VERBOSE = true
-SAVE = true
+SAVE = false
 
 
 # Tests
