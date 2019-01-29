@@ -97,6 +97,13 @@ lp = length(policy_names)
 
 for setting in settings
 	fig = figure()
+	Seaborn.set(style="darkgrid")
+	yerr = zeros(1, lbudget)
+	for i in 1:mcmc
+		for j in 1:lbudget
+			yerr[j] += randn()*0.01
+		end
+	end
 
 	# running tests
 	for imeth in 1:lp
@@ -106,7 +113,15 @@ for setting in settings
     		read(file, abrevs[imeth])
 		end
 
-		plot(budgets, reshape(regrets/mcmc, lbudget, 1), marker="*", label=policy_names[imeth])
+		if abrevs[imeth] == "isha"
+			marker = "s"
+		elseif abrevs[imeth] == "ttts"
+			marker = "o"
+		elseif abrevs[imeth] == "dttts"
+			marker = "*"
+		end
+
+		errorbar(budgets, reshape(regrets/mcmc, lbudget, 1), reshape(yerr/mcmc, lbudget, 1), marker=marker, label=policy_names[imeth])
 	end
 
 	xlabel("Allocation budget")

@@ -14,11 +14,11 @@ end
 # Problem setting
 @everywhere reservoir = "Beta"
 @everywhere dist = "Bernoulli"
-@everywhere alphas = [1.0, 3.0, 0.5, 1.0, 2.0]
-@everywhere betas = [1.0, 1.0, 0.5, 3.0, 2.0]
+@everywhere alphas = [0.3, 0.7, 2.0, 5.0]
+@everywhere betas = [0.7, 0.3, 5.0, 2.0]
 # alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0, 0.3]
 # betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 0.7]
-@everywhere mcmc = 10
+@everywhere mcmc = 1000
 @everywhere default = true
 @everywhere pace = 4
 @everywhere lb = 64
@@ -36,7 +36,7 @@ end
 
 # Options
 VERBOSE = true
-SAVE = false
+SAVE = true
 
 
 # Tests
