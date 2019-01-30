@@ -23,7 +23,7 @@ narms = [pace*i for i in Int(lb/pace):Int(ub/pace)]
 lbudget = length(budgets)
 policy_names = ["ISHA", "TTTS", "Dynamic TTTS"]
 abrevs = ["isha", "ttts", "dttts"]
-settings = ["Beta(0.5,0.5)", "Beta(1.0,1.0)", "Beta(1.0,3.0)", "Beta(2.0,2.0)", "Beta(3.0,1.0)"]
+settings = ["Beta(0.3,0.7)", "Beta(0.7,0.3)", "Beta(2.0,5.0)", "Beta(5.0,2.0)"]
 
 lp = length(policy_names)
 
