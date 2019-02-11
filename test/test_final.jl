@@ -28,10 +28,11 @@ end
 @everywhere lbudget = length(budgets)
 
 # @everywhere policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic]
-@everywhere policies = [BestArm.siri]
+@everywhere policies = [BestArm.seq_halving_infinite]
 # @everywhere policy_names = ["ISHA", "TTTS", "Dynamic TTTS"]
-@everywhere policy_names = ["SiRI"]
-@everywhere abrevs = ["isha", "ttts", "dttts", "siri"]
+@everywhere policy_names = ["ISHA"]
+# @everywhere abrevs = ["isha", "ttts", "dttts", "siri"]
+@everywhere abrevs = ["isha"]
 @everywhere lp = length(policies)
 @everywhere lparam = length(alphas)
 

@@ -21,8 +21,8 @@ ub = 128
 budgets = [Int(round(pace*i*log2(pace*i))) for i in Int(lb/pace):Int(ub/pace)]
 narms = [pace*i for i in Int(lb/pace):Int(ub/pace)]
 lbudget = length(budgets)
-policy_names = ["ISHA", "TTTS", "Dynamic TTTS"]
-abrevs = ["isha", "ttts", "dttts"]
+policy_names = ["ISHA", "TTTS", "Dynamic TTTS", "SiRI"]
+abrevs = ["isha", "ttts", "dttts", "siri"]
 settings = ["Beta(0.3,0.7)", "Beta(0.7,0.3)", "Beta(2.0,5.0)", "Beta(5.0,2.0)"]
 
 lp = length(policy_names)
