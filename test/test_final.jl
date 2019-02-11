@@ -27,8 +27,10 @@ end
 @everywhere narms = [pace*i for i in Int(lb/pace):Int(ub/pace)]
 @everywhere lbudget = length(budgets)
 
-@everywhere policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic]
-@everywhere policy_names = ["ISHA", "TTTS", "Dynamic TTTS"]
+# @everywhere policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic]
+@everywhere policies = [BestArm.siri]
+# @everywhere policy_names = ["ISHA", "TTTS", "Dynamic TTTS"]
+@everywhere policy_names = ["SiRI"]
 @everywhere abrevs = ["isha", "ttts", "dttts", "siri"]
 @everywhere lp = length(policies)
 @everywhere lparam = length(alphas)
@@ -40,7 +42,8 @@ SAVE = true
 
 
 # Tests
-@distributed (+) for iparam in 1:lparam
+# @distributed (+) for iparam in 1:lparam
+for iparam in 1:lparam
 	fig = figure()
 	Seaborn.set(style="darkgrid")
 	for imeth in 1:lp
