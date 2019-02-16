@@ -21,8 +21,8 @@ ub = 128
 budgets = [Int(round(pace*i*log2(pace*i))) for i in Int(lb/pace):Int(ub/pace)]
 narms = [pace*i for i in Int(lb/pace):Int(ub/pace)]
 lbudget = length(budgets)
-policy_names = ["ISHA", "TTTS", "Dynamic TTTS", "SiRI"]
-abrevs = ["isha", "ttts", "dttts", "siri"]
+policy_names = ["ISHA", "TTTS", "Dynamic TTTS"]
+abrevs = ["isha", "ttts", "dttts"]
 settings = ["Beta(0.3,0.7)", "Beta(0.7,0.3)", "Beta(2.0,5.0)", "Beta(5.0,2.0)"]
 
 lp = length(policy_names)
@@ -119,6 +119,8 @@ for setting in settings
 			marker = "o"
 		elseif abrevs[imeth] == "dttts"
 			marker = "*"
+		elseif abrevs[imeth] == "siri"
+			marker = "^"
 		end
 
 		errorbar(budgets, reshape(regrets/mcmc, lbudget, 1), reshape(yerr/mcmc, lbudget, 1), marker=marker, label=policy_names[imeth])
