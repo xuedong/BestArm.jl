@@ -13,7 +13,7 @@ end
 @everywhere using DistributedArrays
 
 # Problem setting
-reservoir = "Beta"
+reservoir = "ShiftedBeta"
 dist = "Bernoulli"
 alphas = [1.0]
 betas = [1.0]
@@ -26,12 +26,10 @@ default = true
 
 # policies = [BestArm.siri]
 # policy_names = ["SiRI"]
-# policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic]
-policies = [BestArm.siri]
-policy_names = ["SiRI"]
-abrevs = ["siri"]
-# policy_names = ["ISHA", "TTTS", "Dynamic TTTS"]
-# abrevs = ["isha", "ttts", "dttts"]
+# abrevs = ["siri"]
+policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic]
+policy_names = ["ISHA", "TTTS", "Dynamic TTTS"]
+abrevs = ["isha", "ttts", "dttts"]
 lp = length(policies)
 
 
@@ -55,7 +53,7 @@ for iparam in 1:1
 				regrets = zeros(1, budget)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 					_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, 0.5, true, alphas[iparam], betas[iparam], false)
-					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
+					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, 0.5)
 					regrets += regrets_current
 				end
 				plot(X, reshape(regrets/mcmc, budget, 1), linestyle="--", label=string(policy_names[imeth], 2^i))
@@ -82,7 +80,7 @@ for iparam in 1:1
 				regrets = zeros(1, budget)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 					_, _, recs, mu = policy(reservoir, 1, num, budget, dist, 0.5, false, alphas[iparam], betas[iparam], false)
-					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
+					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, 0.5)
 					regrets += regrets_current
 					if SAVE
 						h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], ".h5"), "w") do file
@@ -107,7 +105,7 @@ for iparam in 1:1
 				regrets = zeros(1, budget)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 					_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, BestArm.eba, alphas[iparam], betas[iparam], false)
-					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
+					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, 0.5)
 					regrets += regrets_current
 				end
 				plot(X, reshape(regrets/mcmc, budget, 1), label=string(policy_names[imeth], 2^i))
