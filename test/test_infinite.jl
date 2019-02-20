@@ -15,13 +15,13 @@ end
 # Problem setting
 reservoir = "ShiftedBeta"
 dist = "Bernoulli"
-alphas = [1.0]
-betas = [1.0]
+alphas = [0.5, 1.0]
+betas = [0.5, 1.0]
 # alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0, 0.3]
 # betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 0.7]
 num = 16
 budget = 64
-mcmc = 100
+mcmc = 1000
 default = true
 
 # policies = [BestArm.siri]
@@ -67,7 +67,7 @@ for iparam in 1:1
 			regrets = zeros(1, budget)
 			@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 				_, _, recs, mu = policy(reservoir, 1, num, budget, dist, 0.5, true, alphas[iparam], betas[iparam], false)
-				regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
+				regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, 0.5)
 				regrets += regrets_current
 				if SAVE
 					h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], "_mpa.h5"), "w") do file
