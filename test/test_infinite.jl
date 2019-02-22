@@ -15,12 +15,12 @@ end
 # Problem setting
 reservoir = "ShiftedBeta"
 dist = "Bernoulli"
-alphas = [0.5, 1.0]
-betas = [0.5, 1.0]
+alphas = [0.5]
+betas = [0.5]
 # alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0, 0.3]
 # betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 0.7]
-num = 16
-budget = 64
+num = 64
+budget = 384
 mcmc = 1000
 default = true
 
@@ -49,7 +49,7 @@ for iparam in 1:1
 			#for i in 1:mcmc
 			#	regrets += regrets_array[i]
 			#end
-			for i in 2:5
+			for i in 5:7
 				regrets = zeros(1, budget)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 					_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, 0.5, true, alphas[iparam], betas[iparam], false)
@@ -78,8 +78,10 @@ for iparam in 1:1
 			plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=string(policy_names[imeth], " (MPA)"))
 			if default
 				regrets = zeros(1, budget)
+				num_arms = zeros(0, mcmc)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-					_, _, recs, mu = policy(reservoir, 1, num, budget, dist, 0.5, false, alphas[iparam], betas[iparam], false)
+					_, N, recs, mu = policy(reservoir, 1, num, budget, dist, 0.5, false, alphas[iparam], betas[iparam], false)
+					num_arms[k] = length(filter(x -> x>0, N))
 					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, 0.5)
 					regrets += regrets_current
 					if SAVE
@@ -88,6 +90,7 @@ for iparam in 1:1
 						end
 					end
 				end
+				print(num_arms)
 				plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=policy_names[imeth])
 			end
 		elseif policy_names[imeth] == "SiRI"
@@ -101,7 +104,7 @@ for iparam in 1:1
 				plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=string(policy_names[imeth], beta))
 			end
 		else
-			for i in 2:4
+			for i in 4:6
 				regrets = zeros(1, budget)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 					_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, BestArm.eba, alphas[iparam], betas[iparam], false)
