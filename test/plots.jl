@@ -21,8 +21,8 @@ ub = 128
 budgets = [Int(round(pace*i*log2(pace*i))) for i in Int(lb/pace):Int(ub/pace)]
 narms = [pace*i for i in Int(lb/pace):Int(ub/pace)]
 lbudget = length(budgets)
-policy_names = ["ISHA", "H-TTTS", "D-TTTS", "SiRI"]
-abrevs = ["isha", "ttts", "dttts", "siri"]
+policy_names = ["Hyperband", "ISHA", "SiRI", "H-TTTS", "D-TTTS"]
+abrevs = ["hyperband", "isha", "siri", "ttts", "dttts"]
 settings = ["Beta(1.0,1.0)", "Beta(1.0,3.0)", "Beta(3.0,1.0)", "Beta(0.5,0.5)"]
 
 lp = length(policy_names)
@@ -121,6 +121,8 @@ for setting in settings
 			marker = "*"
 		elseif abrevs[imeth] == "siri"
 			marker = "^"
+		elseif abrevs[imeth] == "hyperband"
+			marker = "x"
 		end
 
 		errorbar(budgets, reshape(regrets/mcmc, lbudget, 1), reshape(yerr/mcmc, lbudget, 1), marker=marker, label=policy_names[imeth])
@@ -131,6 +133,7 @@ for setting in settings
 	# xlim((2.0, 3.5))
 	# ylim((3.0, 7.0))
 	grid("on")
+	legend(loc=1)
 	if Sys.KERNEL == :Darwin
 		savefig(string("/Users/xuedong/Programming/PhD/BestArm.jl/misc/results/final/", setting, ".pdf"))
 	elseif Sys.KERNEL == :Linux

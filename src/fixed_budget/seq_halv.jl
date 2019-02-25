@@ -175,7 +175,7 @@ function hyperband(reservoir::String, num::Integer,
 	N = Int.(zeros(1, 0))
 	means = [0 for i in 1:0]
 	recommendations = zeros(1, 0)
-	mu = zeros(1, 0)
+	mu = [0 for i in 1:0]
 	recommendation = 0
 	current_best = 0
 	num_total = 0
@@ -185,15 +185,14 @@ function hyperband(reservoir::String, num::Integer,
 		num_i = Int.(floor(num / (s_max * gamma^(s_max-i))))
 		recommendation_i, N_i, means_i, recommendations_i, mu_i = seq_halving_infinite(reservoir, num_i, budget_i, dist, rec, theta1, theta2, final)
 		N = hcat(N, N_i)
-		print(size(means)
-		print(size(means_i)
 		means = vcat(means, means_i)
 		recommendations = hcat(recommendations, recommendations_i)
-		mu = hcat(mu, mu_i)
-		if current_best < mu[num_total+recommendation_i]
+		mu = vcat(mu, mu_i)
+		if current_best < means[num_total+recommendation_i]
 			recommendation = num_total+recommendation_i
-			current_best = mu[recommendation]
+			current_best = means[recommendation]
 		end
+		num_total += length(means_i)
 	end
 
 	recommendations = Int.(recommendations)
