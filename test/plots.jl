@@ -21,8 +21,8 @@ ub = 128
 budgets = [Int(round(pace*i*log2(pace*i))) for i in Int(lb/pace):Int(ub/pace)]
 narms = [pace*i for i in Int(lb/pace):Int(ub/pace)]
 lbudget = length(budgets)
-policy_names = ["Hyperband", "ISHA", "SiRI", "H-TTTS", "D-TTTS"]
-abrevs = ["hyperband", "isha", "siri", "ttts", "dttts"]
+policy_names = ["Hyperband", "ISHA", "H-TTTS", "D-TTTS"]
+abrevs = ["hyperband", "isha", "ttts", "dttts"]
 settings = ["Beta(1.0,1.0)", "Beta(1.0,3.0)", "Beta(3.0,1.0)", "Beta(0.5,0.5)"]
 
 lp = length(policy_names)
