@@ -110,7 +110,7 @@ for iparam in 1:lparam
 				num = narms[n]
 				budget = budgets[n]
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-					rec, _, _, _, mu = policy(reservoir, num, budget, dist, 2.0, 1, BestArm.eba, alphas[iparam], betas[iparam])
+					rec, _, _, _, mu = policy(reservoir, num, budget, dist, 2.0, 2, BestArm.eba, alphas[iparam], betas[iparam])
 					regret_current = 1 - mu[rec]
 					regrets[n] += regret_current
 				end
