@@ -21,7 +21,7 @@ betas = [0.5]
 # betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 0.7]
 num = 64
 budget = 384
-mcmc = 1000
+mcmc = 100
 default = true
 
 # policies = [BestArm.siri]
@@ -78,7 +78,7 @@ for iparam in 1:1
 			plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=string(policy_names[imeth], " (MPA)"))
 			if default
 				regrets = zeros(1, budget)
-				num_arms = zeros(0, mcmc)
+				num_arms = zeros(1, mcmc)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 					_, N, recs, mu = policy(reservoir, 1, num, budget, dist, 0.5, false, alphas[iparam], betas[iparam], false)
 					num_arms[k] = length(filter(x -> x>0, N))
@@ -104,7 +104,7 @@ for iparam in 1:1
 				plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=string(policy_names[imeth], beta))
 			end
 		else
-			for i in 4:6
+			for i in 5:6
 				regrets = zeros(1, budget)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 					_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, BestArm.eba, alphas[iparam], betas[iparam], false)
