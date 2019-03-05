@@ -15,8 +15,8 @@ end
 # Problem setting
 reservoir = "ShiftedBeta"
 dist = "Bernoulli"
-alphas = [0.5]
-betas = [0.5]
+alphas = [0.5, 1.0, 3.0, 1.0]
+betas = [0.5, 1.0, 1.0, 3.0]
 # alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0, 0.3]
 # betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 0.7]
 num = 64
@@ -49,7 +49,7 @@ for iparam in 1:1
 			#for i in 1:mcmc
 			#	regrets += regrets_array[i]
 			#end
-			for i in 5:7
+			for i in 6:7
 				regrets = zeros(1, budget)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 					_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, 0.5, true, alphas[iparam], betas[iparam], false)
