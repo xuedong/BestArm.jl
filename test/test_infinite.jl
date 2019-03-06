@@ -14,7 +14,7 @@ end
 
 # Problem setting
 # reservoir = "ShiftedBeta"
-reservoir = "Beta"
+reservoir = "ShiftedBeta"
 dist = "Bernoulli"
 alphas = [1.0, 2.0, 3.0, 1.0]
 betas = [1.0, 2.0, 1.0, 3.0]
@@ -23,7 +23,7 @@ betas = [1.0, 2.0, 1.0, 3.0]
 num = 16
 budget = 64
 mcmc = 10
-maxmu = 1.0
+maxmu = 0.5
 default = true
 
 # policies = [BestArm.siri]
@@ -101,8 +101,14 @@ for iparam in 1:4
 				end
 				num_arms /= mcmc
 				print(num_arms)
-				h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], "_N.h5"), "w") do file
-					write(file, abrevs[imeth], num_arms)
+				if Sys.KERNEL == :Darwin
+					h5open(string("/Users/xuedong/Programming/PhD/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], "_N.h5"), "w") do file
+						write(file, abrevs[imeth], num_arms)
+					end
+				elseif Sys.KERNEL == :Linux
+					h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], "_N.h5"), "w") do file
+						write(file, abrevs[imeth], num_arms)
+					end
 				end
 				# print(num_arms1)
 				# print(num_arms2)
