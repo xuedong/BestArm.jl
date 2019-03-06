@@ -86,10 +86,12 @@ for iparam in 1:4
 					# print(N)
 					# num_arms1[k] = length(filter(x -> x>0, N))
 					# num_arms2[k] = length(filter(x -> x>1, N))
+					print(length(N))
+					print(N)
 					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, maxmu)
 					regrets += regrets_current
 					for j in 1:(budget+1)
-						num_arms[j] += length(filter(x -> x==(j-1)))
+						num_arms[j] += length(filter(x -> x==(j-1), N))
 					end
 					if SAVE
 						h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], ".h5"), "w") do file
