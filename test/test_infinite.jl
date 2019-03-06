@@ -1,7 +1,7 @@
 using PyPlot
 using ProgressMeter
 using Distributed
-# using HDF5
+using HDF5
 
 addprocs(3)
 if Sys.KERNEL == :Darwin
@@ -19,9 +19,10 @@ alphas = [0.5]
 betas = [0.5]
 # alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0, 0.3]
 # betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 0.7]
-num = 64
-budget = 384
-mcmc = 1000
+num = 32
+budget = 160
+mcmc = 100
+maxmu = 0.5
 default = true
 
 # policies = [BestArm.siri]
@@ -49,11 +50,11 @@ for iparam in 1:1
 			#for i in 1:mcmc
 			#	regrets += regrets_array[i]
 			#end
-			for i in 5:7
+			for i in 5:6
 				regrets = zeros(1, budget)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 					_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, 0.5, true, alphas[iparam], betas[iparam], false)
-					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, 0.5)
+					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, maxmu)
 					regrets += regrets_current
 				end
 				plot(X, reshape(regrets/mcmc, budget, 1), linestyle="--", label=string(policy_names[imeth], 2^i))
@@ -67,7 +68,7 @@ for iparam in 1:1
 			regrets = zeros(1, budget)
 			@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 				_, _, recs, mu = policy(reservoir, 1, num, budget, dist, 0.5, true, alphas[iparam], betas[iparam], false)
-				regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, 0.5)
+				regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, maxmu)
 				regrets += regrets_current
 				if SAVE
 					h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], "_mpa.h5"), "w") do file
@@ -78,11 +79,14 @@ for iparam in 1:1
 			plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=string(policy_names[imeth], " (MPA)"))
 			if default
 				regrets = zeros(1, budget)
-				num_arms = zeros(0, mcmc)
+				num_arms1 = zeros(1, mcmc)
+				num_arms2 = zeros(1, mcmc)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-					_, N, recs, mu = policy(reservoir, 1, num, budget, dist, 0.5, false, alphas[iparam], betas[iparam], false)
-					num_arms[k] = length(filter(x -> x>0, N))
-					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, 0.5)
+					_, N, recs, mu = policy(reservoir, 1, budget, budget, dist, 0.5, false, alphas[iparam], betas[iparam], false)
+					print(N)
+					num_arms1[k] = length(filter(x -> x>0, N))
+					num_arms2[k] = length(filter(x -> x>1, N))
+					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, maxmu)
 					regrets += regrets_current
 					if SAVE
 						h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], ".h5"), "w") do file
@@ -90,7 +94,11 @@ for iparam in 1:1
 						end
 					end
 				end
-				print(num_arms)
+				print(num_arms1)
+				print(num_arms2)
+				# h5open(string("/Users/xuedong/Programming/PhD/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")_arms.h5"), "w") do file
+				# 	h5write(file, num_arms)
+				# end
 				plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=policy_names[imeth])
 			end
 		elseif policy_names[imeth] == "SiRI"
@@ -104,11 +112,11 @@ for iparam in 1:1
 				plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=string(policy_names[imeth], beta))
 			end
 		else
-			for i in 4:6
+			for i in 4:5
 				regrets = zeros(1, budget)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 					_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, BestArm.eba, alphas[iparam], betas[iparam], false)
-					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, 0.5)
+					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, maxmu)
 					regrets += regrets_current
 				end
 				plot(X, reshape(regrets/mcmc, budget, 1), label=string(policy_names[imeth], 2^i))

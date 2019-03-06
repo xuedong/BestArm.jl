@@ -11,7 +11,7 @@ end
 
 
 # Compute simple regrets for a normalized reservoir
-function compute_regrets_reservoir(mu::AbstractArray{<:Real}, recommendations::AbstractArray{<:Integer}, budget::Integer, maxmu::Float64 = 1.0)
+function compute_regrets_reservoir(mu::AbstractArray{<:Real}, recommendations::AbstractArray{<:Integer}, budget::Integer, maxmu::Float64 = 0.25)
 	regrets = zeros(1, budget)
 	for i in 1:budget
 		regrets[i] = maxmu - mu[recommendations[i]]
