@@ -16,14 +16,14 @@ end
 # reservoir = "ShiftedBeta"
 reservoir = "Beta"
 dist = "Bernoulli"
-alphas = [0.5, 1.0, 3.0, 1.0]
-betas = [0.5, 1.0, 1.0, 3.0]
+alphas = [1.0, 2.0, 3.0, 1.0]
+betas = [1.0, 2.0, 1.0, 3.0]
 # alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0, 0.3]
 # betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 0.7]
 num = 16
 budget = 64
-mcmc = 1000
-maxmu = 1
+mcmc = 10
+maxmu = 1.0
 default = true
 
 # policies = [BestArm.siri]
@@ -80,8 +80,7 @@ for iparam in 1:4
 			plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=string(policy_names[imeth], " (MPA)"))
 			if default
 				regrets = zeros(1, budget)
-				num_arms1 = zeros(1, mcmc)
-				num_arms2 = zeros(1, mcmc)
+				num_arms = zeros(1, budget+1)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 					_, N, recs, mu = policy(reservoir, 1, budget, budget, dist, 0.5, false, alphas[iparam], betas[iparam], false)
 					# print(N)
@@ -89,14 +88,19 @@ for iparam in 1:4
 					# num_arms2[k] = length(filter(x -> x>1, N))
 					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, maxmu)
 					regrets += regrets_current
-					h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], ".h5"), "w") do file
-						write(file, abrevs[imeth], regrets)
+					for j in 1:(budget+1)
+						num_arms[j] += length(filter(x -> x==(j-1)))
 					end
 					if SAVE
-						h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], "_N.h5"), "w") do file
+						h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], ".h5"), "w") do file
 							write(file, abrevs[imeth], regrets)
 						end
 					end
+				end
+				num_arms /= mcmc
+				print(num_arms)
+				h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], "_N.h5"), "w") do file
+					write(file, abrevs[imeth], num_arms)
 				end
 				# print(num_arms1)
 				# print(num_arms2)
