@@ -13,16 +13,17 @@ end
 @everywhere using DistributedArrays
 
 # Problem setting
-reservoir = "ShiftedBeta"
+# reservoir = "ShiftedBeta"
+reservoir = "Beta"
 dist = "Bernoulli"
 alphas = [0.5, 1.0, 3.0, 1.0]
 betas = [0.5, 1.0, 1.0, 3.0]
 # alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0, 0.3]
 # betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 0.7]
-num = 32
-budget = 160
-mcmc = 100
-maxmu = 0.5
+num = 16
+budget = 64
+mcmc = 1000
+maxmu = 1
 default = true
 
 # policies = [BestArm.siri]
@@ -40,7 +41,7 @@ SAVE = false
 
 
 # Tests
-for iparam in 1:1
+for iparam in 1:4
 	fig = figure()
 	X = 1:budget
 	for imeth in 1:lp
@@ -50,7 +51,7 @@ for iparam in 1:1
 			#for i in 1:mcmc
 			#	regrets += regrets_array[i]
 			#end
-			for i in 5:6
+			for i in 4:5
 				regrets = zeros(1, budget)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 					_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, 0.5, true, alphas[iparam], betas[iparam], false)
@@ -83,19 +84,22 @@ for iparam in 1:1
 				num_arms2 = zeros(1, mcmc)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 					_, N, recs, mu = policy(reservoir, 1, budget, budget, dist, 0.5, false, alphas[iparam], betas[iparam], false)
-					print(N)
-					num_arms1[k] = length(filter(x -> x>0, N))
-					num_arms2[k] = length(filter(x -> x>1, N))
+					# print(N)
+					# num_arms1[k] = length(filter(x -> x>0, N))
+					# num_arms2[k] = length(filter(x -> x>1, N))
 					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, maxmu)
 					regrets += regrets_current
+					h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], ".h5"), "w") do file
+						write(file, abrevs[imeth], regrets)
+					end
 					if SAVE
-						h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], ".h5"), "w") do file
+						h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], "_N.h5"), "w") do file
 							write(file, abrevs[imeth], regrets)
 						end
 					end
 				end
-				print(num_arms1)
-				print(num_arms2)
+				# print(num_arms1)
+				# print(num_arms2)
 				# h5open(string("/Users/xuedong/Programming/PhD/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")_arms.h5"), "w") do file
 				# 	h5write(file, num_arms)
 				# end
@@ -112,7 +116,7 @@ for iparam in 1:1
 				plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=string(policy_names[imeth], beta))
 			end
 		else
-			for i in 4:5
+			for i in 3:4
 				regrets = zeros(1, budget)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 					_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, BestArm.eba, alphas[iparam], betas[iparam], false)
