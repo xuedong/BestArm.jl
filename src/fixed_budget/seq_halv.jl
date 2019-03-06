@@ -166,3 +166,36 @@ function seq_halving_infinite(reservoir::String, num::Integer,
 
 	return(recommendation, N, means, recommendations, mu)
 end
+
+
+function hyperband(reservoir::String, num::Integer,
+	budget::Integer, dist::String, gamma::Real = 2.0, s_max::Integer = 3,
+	rec::Function = eba, theta1::Float64 = 1.0, theta2::Float64 = 1.0,
+	final::Bool = true)
+	N = Int.(zeros(1, 0))
+	means = [0 for i in 1:0]
+	recommendations = zeros(1, 0)
+	mu = [0 for i in 1:0]
+	recommendation = 0
+	current_best = 0
+	num_total = 0
+
+	budget_i = Int.(floor(budget / s_max))
+	for i in s_max:-1:1
+		num_i = Int.(floor(num / (s_max * gamma^(s_max-i))))
+		recommendation_i, N_i, means_i, recommendations_i, mu_i = seq_halving_infinite(reservoir, num_i, budget_i, dist, rec, theta1, theta2, final)
+		N = hcat(N, N_i)
+		means = vcat(means, means_i)
+		recommendations = hcat(recommendations, recommendations_i)
+		mu = vcat(mu, mu_i)
+		if current_best < means[num_total+recommendation_i]
+			recommendation = num_total+recommendation_i
+			current_best = means[recommendation]
+		end
+		num_total += length(means_i)
+	end
+
+	recommendations = Int.(recommendations)
+
+	return recommendation, N, means, recommendations, mu
+end

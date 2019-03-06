@@ -15,14 +15,20 @@ end
 # Problem setting
 reservoir = "ShiftedBeta"
 dist = "Bernoulli"
-alphas = [0.5]
-betas = [0.5]
+alphas = [0.5, 1.0, 3.0, 1.0]
+betas = [0.5, 1.0, 1.0, 3.0]
 # alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0, 0.3]
 # betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 0.7]
+<<<<<<< HEAD
 num = 32
 budget = 160
 mcmc = 100
 maxmu = 0.5
+=======
+num = 64
+budget = 384
+mcmc = 100
+>>>>>>> ddcfe9233fe595e396216f613e781c65001b0a71
 default = true
 
 # policies = [BestArm.siri]
@@ -50,7 +56,11 @@ for iparam in 1:1
 			#for i in 1:mcmc
 			#	regrets += regrets_array[i]
 			#end
+<<<<<<< HEAD
 			for i in 5:6
+=======
+			for i in 6:7
+>>>>>>> ddcfe9233fe595e396216f613e781c65001b0a71
 				regrets = zeros(1, budget)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 					_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, 0.5, true, alphas[iparam], betas[iparam], false)
@@ -79,8 +89,12 @@ for iparam in 1:1
 			plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=string(policy_names[imeth], " (MPA)"))
 			if default
 				regrets = zeros(1, budget)
+<<<<<<< HEAD
 				num_arms1 = zeros(1, mcmc)
 				num_arms2 = zeros(1, mcmc)
+=======
+				num_arms = zeros(1, mcmc)
+>>>>>>> ddcfe9233fe595e396216f613e781c65001b0a71
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 					_, N, recs, mu = policy(reservoir, 1, budget, budget, dist, 0.5, false, alphas[iparam], betas[iparam], false)
 					print(N)
@@ -112,7 +126,11 @@ for iparam in 1:1
 				plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=string(policy_names[imeth], beta))
 			end
 		else
+<<<<<<< HEAD
 			for i in 4:5
+=======
+			for i in 5:6
+>>>>>>> ddcfe9233fe595e396216f613e781c65001b0a71
 				regrets = zeros(1, budget)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
 					_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, BestArm.eba, alphas[iparam], betas[iparam], false)
