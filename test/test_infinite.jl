@@ -14,7 +14,7 @@ end
 
 # Problem setting
 # reservoir = "ShiftedBeta"
-reservoir = "ShiftedBeta"
+reservoir = "Beta"
 dist = "Bernoulli"
 alphas = [0.5, 1.0, 2.0, 3.0, 1.0]
 betas = [0.5, 1.0, 2.0, 1.0, 3.0]
@@ -22,8 +22,8 @@ betas = [0.5, 1.0, 2.0, 1.0, 3.0]
 # betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 0.7]
 num = 16
 budget = 64
-mcmc = 10
-maxmu = 0.5
+mcmc = 100
+maxmu = 1.0
 default = true
 limit = budget
 
@@ -87,8 +87,6 @@ for iparam in 1:1
 					# print(N)
 					# num_arms1[k] = length(filter(x -> x>0, N))
 					# num_arms2[k] = length(filter(x -> x>1, N))
-					print(length(N))
-					print(N)
 					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, maxmu)
 					regrets += regrets_current
 					for j in 1:(budget+1)
@@ -101,7 +99,7 @@ for iparam in 1:1
 					end
 				end
 				num_arms /= mcmc
-				print(num_arms)
+				# print(num_arms)
 				if Sys.KERNEL == :Darwin
 					h5open(string("/Users/xuedong/Programming/PhD/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], "_N.h5"), "w") do file
 						write(file, abrevs[imeth], num_arms)
