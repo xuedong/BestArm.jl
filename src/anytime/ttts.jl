@@ -224,6 +224,8 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
 	default::Bool = true, theta1::Float64 = 1.0, theta2::Float64 = 1.0,
 	final::Bool = true)
 	mu = [sample_reservoir(reservoir, theta1, theta2) for _ in 1:num]
+	N_0 = 0
+	S_0 = 0
     N = [0 for _ in 1:num]
     S = [0 for _ in 1:num]
     # means = [-Inf for _ in 1:num]
@@ -232,14 +234,6 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
 
     best = 1
     for t in 1:budget
-		new = sample_reservoir(reservoir, theta1, theta2)
-		push!(N, 0)
-		push!(S, 0)
-		push!(mu, new)
-		if dynamic_num < limit
-			dynamic_num += 1
-		end
-
 		if final == false
 			if default
 				recommendations[t] = mpa(N, S)
@@ -279,15 +273,16 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
                 beta = 1
                 TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1]
 			elseif dist == "Gaussian"
-				TS[a] = rand(Normal(S[a] / N[a], 1.0 / N[a]), 1)[1]
+				TS[a] = rand(Normal(S[a] / N[a+1], 1.0 / N[a]), 1)[1]
 			end
         end
-        I = argmax(TS)
+		TS_0 = rand(Beta(alpha + S_0, beta + N_0 - S_0), 1)[1]
+        I = argmax(vcat(TS, TS_0))
         if (rand() > frac)
             J = I
 			count = 1
             while (I == J) && (count < 10000)
-                TS = zeros(dynamic_num)
+                TS = zeros(dynamic_num+1)
                 if dist == "Bernoulli"
                     alpha = 1
                     beta = 1
@@ -295,18 +290,32 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
                         TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1]
 					end
 				elseif dist == "Gaussian"
-					for a = 1:dynamic_num
+					for a = 0:dynamic_num
 						TS[a] = rand(Normal(S[a] / N[a], 1.0 / N[a]), 1)[1]
 					end
                 end
-                J = argmax(TS)
+				TS_0 = rand(Beta(alpha + S_0, beta + N_0 - S_0), 1)[1]
+		        J = argmax(vcat(TS, TS_0))
 				count += 1
             end
             I = J
         end
         # draw arm I
-        S[I] += sample_arm(mu[I], dist)
-        N[I] += 1
+		if I == dynamic_num + 1
+			if dynamic_num < limit
+				dynamic_num += 1
+			end
+			new = sample_reservoir(reservoir, theta1, theta2)
+			push!(N, 0)
+			push!(S, 0)
+			push!(mu, new)
+        	S[I] += sample_arm(mu[I], dist)
+        	N[I] += 1
+			N_0 += 1
+		else
+			S[I] += sample_arm(mu[I], dist)
+        	N[I] += 1
+		end
     end
 
 	if final == false

@@ -25,6 +25,7 @@ budget = 64
 mcmc = 10
 maxmu = 0.5
 default = true
+limit = 33
 
 # policies = [BestArm.siri]
 # policy_names = ["SiRI"]
@@ -41,7 +42,7 @@ SAVE = false
 
 
 # Tests
-for iparam in 1:4
+for iparam in 1:1
 	fig = figure()
 	X = 1:budget
 	for imeth in 1:lp
@@ -82,7 +83,7 @@ for iparam in 1:4
 				regrets = zeros(1, budget)
 				num_arms = zeros(1, budget+1)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-					_, N, recs, mu = policy(reservoir, 1, budget, budget, dist, 0.5, false, alphas[iparam], betas[iparam], false)
+					_, N, recs, mu = policy(reservoir, 1, limit, budget, dist, 0.5, false, alphas[iparam], betas[iparam], false)
 					# print(N)
 					# num_arms1[k] = length(filter(x -> x>0, N))
 					# num_arms2[k] = length(filter(x -> x>1, N))
