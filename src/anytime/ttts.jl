@@ -276,7 +276,7 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
 				TS[a] = rand(Normal(S[a] / N[a+1], 1.0 / N[a]), 1)[1]
 			end
         end
-		TS_0 = rand(Beta(alpha + S_0, beta + N_0 - S_0), 1)[1]
+		TS_0 = rand(Beta(1.0, N_0), 1)[1]
         I = argmax(vcat(TS, TS_0))
         if (rand() > frac)
             J = I
@@ -294,7 +294,7 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
 						TS[a] = rand(Normal(S[a] / N[a], 1.0 / N[a]), 1)[1]
 					end
                 end
-				TS_0 = rand(Beta(alpha + S_0, beta + N_0 - S_0), 1)[1]
+				TS_0 = rand(Beta(1.0, N_0), 1)[1]
 		        J = argmax(vcat(TS, TS_0))
 				count += 1
             end
