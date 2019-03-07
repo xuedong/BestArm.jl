@@ -16,8 +16,8 @@ end
 # reservoir = "ShiftedBeta"
 reservoir = "ShiftedBeta"
 dist = "Bernoulli"
-alphas = [1.0, 2.0, 3.0, 1.0]
-betas = [1.0, 2.0, 1.0, 3.0]
+alphas = [0.5, 1.0, 2.0, 3.0, 1.0]
+betas = [0.5, 1.0, 2.0, 1.0, 3.0]
 # alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0, 0.3]
 # betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 0.7]
 num = 16
@@ -25,7 +25,7 @@ budget = 64
 mcmc = 10
 maxmu = 0.5
 default = true
-limit = 33
+limit = budget
 
 # policies = [BestArm.siri]
 # policy_names = ["SiRI"]
