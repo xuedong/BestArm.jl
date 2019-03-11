@@ -224,7 +224,7 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
 	default::Bool = true, theta1::Float64 = 1.0, theta2::Float64 = 1.0,
 	final::Bool = true)
 	mu = [sample_reservoir(reservoir, theta1, theta2) for _ in 1:num]
-	N_0 = 1
+	S_0 = 1
     N = [0 for _ in 1:num]
     S = [0 for _ in 1:num]
     # means = [-Inf for _ in 1:num]
@@ -275,7 +275,7 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
 				TS[a] = rand(Normal(S[a] / N[a], 1.0 / N[a]), 1)[1]
 			end
         end
-		TS_0 = rand(Beta(1.0, N_0), 1)[1]
+		TS_0 = rand(Beta(S_0, 1.0), 1)[1]
         I = argmax(vcat(TS, TS_0))
         if (rand() > frac)
             J = I
@@ -293,7 +293,7 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
 						TS[a] = rand(Normal(S[a] / N[a], 1.0 / N[a]), 1)[1]
 					end
                 end
-				TS_0 = rand(Beta(1.0, N_0), 1)[1]
+				TS_0 = rand(Beta(S_0, 1.0), 1)[1]
 		        J = argmax(vcat(TS, TS_0))
 				count += 1
             end
@@ -311,7 +311,7 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
 			push!(mu, new)
         	S[I] += sample_arm(mu[I], dist)
         	N[I] += 1
-			N_0 += 1
+			S_0 += 1
 		else
 			S[I] += sample_arm(mu[I], dist)
         	N[I] += 1

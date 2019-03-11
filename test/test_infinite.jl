@@ -42,7 +42,7 @@ SAVE = false
 
 
 # Tests
-for iparam in 1:1
+for iparam in 1:5
 	fig = figure()
 	X = 1:budget
 	for imeth in 1:lp

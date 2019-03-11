@@ -4,12 +4,12 @@ using HDF5
 # using Seaborn
 
 reservoir = "Beta"
-alphas = [1.0, 2.0, 3.0, 1.0]
-betas = [1.0, 2.0, 1.0, 3.0]
+alphas = [0.5, 1.0, 2.0, 3.0, 1.0]
+betas = [0.5, 1.0, 2.0, 1.0, 3.0]
 budget = 64
 
 
-for iparam in 1:4
+for iparam in 1:5
 	fig = figure()
 	# Seaborn.set(style="darkgrid")
 
