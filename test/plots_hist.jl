@@ -19,7 +19,8 @@ for iparam in 1:5
     	read(file, "dttts")
 	end
 	num_arms = reshape(num_arms', (budget+1,))
-	
+	println(string(alphas[iparam]), ",", betas[iparam], ": ", sum(num_arms))
+
 	bar(x, num_arms, color="#0f87bf", align="center", alpha=0.4) # Histogram
 
 	xlabel("Number of arm plays")

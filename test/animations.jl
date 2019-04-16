@@ -13,7 +13,7 @@ k = 10
 for iparam in 1:1
     fig = figure()
     Seaborn.set()
-    x = rand(Beta(k, 1), 100000)
+    x = rand(Beta(2, 2), 100000)
     Seaborn.distplot(x, hist=false)
 
     xlabel("Allocation budget")
