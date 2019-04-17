@@ -58,6 +58,11 @@ for iparam in 1:5
 					end
 
 					bar(mu, N, width=0.01, color="#0f87bf", align="center", alpha=0.5)
+
+					Seaborn.set()
+				    x = rand(Beta(alphas[iparam], betas[iparam]), 10000)
+				    Seaborn.distplot(x, his	t=false)
+
 					xlabel("Arm means")
 					ylabel("Number of pulls distribution")
 					grid("on")

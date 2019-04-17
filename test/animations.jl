@@ -4,8 +4,8 @@ using Seaborn
 using Distributions
 
 reservoir = "Beta"
-alphas = [1.0, 2.0, 3.0, 1.0]
-betas = [1.0, 2.0, 1.0, 3.0]
+alphas = [0.5, 1.0, 2.0, 3.0, 1.0]
+betas = [0.5, 1.0, 2.0, 1.0, 3.0]
 budget = 64
 
 k = 10
@@ -13,7 +13,7 @@ k = 10
 for iparam in 1:1
     fig = figure()
     Seaborn.set()
-    x = rand(Beta(2, 2), 100000)
+    x = rand(Beta(alphas[iparam], betas[iparam]), 100000)
     Seaborn.distplot(x, hist=false)
 
     xlabel("Allocation budget")
