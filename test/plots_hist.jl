@@ -14,14 +14,19 @@ for iparam in 1:5
 	# Seaborn.set(style="darkgrid")
 
 	# running tests
-	x = [0:1:budget;]
-	num_arms = h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", "dttts", "_N.h5"), "r") do file
+	x = [-1:1:budget-1;]
+	num_arms1 = h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", "dttts", "_N.h5"), "r") do file
     	read(file, "dttts")
 	end
-	num_arms = reshape(num_arms', (budget+1,))
-	println(string(alphas[iparam]), ",", betas[iparam], ": ", sum(num_arms))
+	num_arms2 = h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", "isha16", "_N.h5"), "r") do file
+    	read(file, "isha")
+	end
+	num_arms1 = reshape(num_arms1', (budget+1,))
+	num_arms2 = reshape(num_arms2', (budget+1,))
+	# println(string(alphas[iparam]), ",", betas[iparam], ": ", sum(num_arms))
 
-	bar(x, num_arms, color="#0f87bf", align="center", alpha=0.4) # Histogram
+	bar(x, num_arms1, width=0.4, color="b", align="center", alpha=0.8) # Histogram
+	bar(x, num_arms2, width=0.4, color="r", align="center", alpha=0.4)
 
 	xlabel("Number of arm plays")
 	ylabel("Expectation of number of arms")
