@@ -1,4 +1,4 @@
-function ttts_infinite(mu::String, budget::Integer,
+function ttts(mu::Array, budget::Integer,
 	dist::String, frac::Real = 0.5, default::Bool = true,
 	final::Bool = true)
 	num = length(mu)
@@ -116,7 +116,7 @@ function ttts_infinite(mu::String, budget::Integer,
 
     recommendations = Int.(recommendations)
 
-    return (recommendation, N, means, recommendations, mu)
+    return (recommendation, N, means, recommendations)
 end
 
 
