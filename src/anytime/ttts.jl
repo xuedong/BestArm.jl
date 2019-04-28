@@ -1,53 +1,50 @@
-function ttts(mu::Array, budget::Integer, dist::String, frac::Real = 0.5, default::Bool = true)
-    K = length(mu)
-    N = zeros(1, K)
-    S = zeros(1, K)
-    means = zeros(1, K)
-    probs = ones(1, K) / K
+function ttts_infinite(mu::String, budget::Integer,
+	dist::String, frac::Real = 0.5, default::Bool = true,
+	final::Bool = true)
+	num = length(mu)
+    N = zeros(1, num)
+    S = zeros(1, num)
+    means = ones(1, num) * -Inf
+    probs = ones(1, num) / num
     recommendations = zeros(1, budget)
 
-    # initialization
-    for a in 1:K
-        N[a] = 1
-        S[a] = sample_arm(mu[a], dist)
-        recommendations[a] = rand(1:K)
-    end
-
     best = 1
-    for t in (K+1):budget
-        means = S ./ N
-        if default
-            idx = (LinearIndices(means .== maximum(means)))[findall(means .== maximum(means))]
-            best = idx[floor(Int, length(idx) * rand()) + 1]
-            recommendations[t] = best
-        else
-            idx = find(probs .== maximum(probs))
-            best = idx[floor(Int, length(idx) * rand()) + 1]
-            recommendations[t] = best
+    for t in 1:budget
+        means = [N[i] == 0 ? -Inf : S[i]/N[i] for i in 1:num]
+		if final == false
+	        if default
+	            idx = (LinearIndices(means .== maximum(means)))[findall(means .== maximum(means))]
+	            best = idx[floor(Int, length(idx) * rand()) + 1]
+	            recommendations[t] = best
+	        else
+	            idx = find(probs .== maximum(probs))
+	            best = idx[floor(Int, length(idx) * rand()) + 1]
+	            recommendations[t] = best
 
-            for a in 1:K
-                if dist == "Bernoulli"
-                    alpha = 1
-                    beta = 1
-                    function f(x)
-                        prod = pdf.(Beta(alpha + S[a], beta + N[a] - S[a]), x)[1]
-                        # println(prod)
-                        for i in 1:K
-                            if i != a
-                                prod *= cdf.(Beta(alpha + S[i], beta + N[i] - S[i]), x)[1]
-                                # println(prod)
-                            end
-                        end
-                        return prod
-                    end
-                    val, _ = hquadrature(f, 0.0, 1.0)
-                    probs[a] = val
-                end
-            end
-        end
+	            for a in 1:num
+	                if dist == "Bernoulli"
+	                    alpha = 1
+	                    beta = 1
+	                    function f(x)
+	                        prod = pdf.(Beta(alpha + S[a], beta + N[a] - S[a]), x)[1]
+	                        # println(prod)
+	                        for i in 1:num
+	                            if i != a
+	                                prod *= cdf.(Beta(alpha + S[i], beta + N[i] - S[i]), x)[1]
+	                                # println(prod)
+	                            end
+	                        end
+	                        return prod
+	                    end
+	                    val, _ = hquadrature(f, 0.0, 1.0)
+	                    probs[a] = val
+	                end
+	            end
+	        end
+		end
 
-        TS = zeros(K)
-        for a in 1:K
+        TS = zeros(num)
+        for a in 1:num
             if dist == "Bernoulli"
                 alpha = 1
                 beta = 1
@@ -59,20 +56,22 @@ function ttts(mu::Array, budget::Integer, dist::String, frac::Real = 0.5, defaul
         I = argmax(TS)
         if (rand() > frac)
             J = I
-            while (I == J)
-                TS = zeros(K)
+			count = 1
+            while (I == J) && (count < 10000)
+                TS = zeros(num)
                 if dist == "Bernoulli"
                     alpha = 1
                     beta = 1
-                    for a = 1:K
+                    for a = 1:num
                         TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1]
 					end
 				elseif dist == "Gaussian"
-					for a = 1:K
+					for a = 1:num
 						TS[a] = rand(Normal(S[a] / N[a], 1.0 / N[a]), 1)[1]
 					end
                 end
                 J = argmax(TS)
+				count += 1
             end
             I = J
         end
@@ -81,10 +80,43 @@ function ttts(mu::Array, budget::Integer, dist::String, frac::Real = 0.5, defaul
         N[I] += 1
     end
 
-    recommendation = best
+	if final == false
+    	recommendation = best
+	else
+		if default
+			idx = (LinearIndices(means .== maximum(means)))[findall(means .== maximum(means))]
+			best = idx[floor(Int, length(idx) * rand()) + 1]
+			recommendation = best
+		else
+			for a in 1:num
+				if dist == "Bernoulli"
+					alpha = 1
+					beta = 1
+					function f(x)
+						prod = pdf.(Beta(alpha + S[a], beta + N[a] - S[a]), x)[1]
+						# println(prod)
+						for i in 1:num
+							if i != a
+								prod *= cdf.(Beta(alpha + S[i], beta + N[i] - S[i]), x)[1]
+								# println(prod)
+							end
+						end
+						return prod
+					end
+					val, _ = hquadrature(f, 0.0, 1.0)
+					probs[a] = val
+				end
+			end
+
+			idx = (LinearIndices(probs .== maximum(probs)))[findall(probs .== maximum(probs))]
+			best = idx[floor(Int, length(idx) * rand()) + 1]
+			recommendation = best
+		end
+	end
+
     recommendations = Int.(recommendations)
 
-    return (recommendation, N, means, recommendations)
+    return (recommendation, N, means, recommendations, mu)
 end
 
 
