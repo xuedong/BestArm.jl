@@ -15,11 +15,17 @@ for iparam in 1:5
 
 	# running tests
 	x = [0:1:budget;]
-	num_arms = h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", "dttts", "_N.h5"), "r") do file
-    	read(file, "dttts")
+	if Sys.KERNEL == :Darwin
+		num_arms = h5open(string("/Users/xuedong/Programming/PhD/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", "dttts", "_N.h5"), "r") do file
+	    	read(file, "dttts")
+		end
+	elseif Sys.KERNEL == :Linux
+		num_arms = h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", "dttts", "_N.h5"), "r") do file
+    		read(file, "dttts")
+		end
 	end
 	num_arms = reshape(num_arms', (budget+1,))
-	
+	print(sum(num_arms))
 	bar(x, num_arms, color="#0f87bf", align="center", alpha=0.4) # Histogram
 
 	xlabel("Number of arm plays")
