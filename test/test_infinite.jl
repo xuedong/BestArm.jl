@@ -27,12 +27,12 @@ maxmu = 1.0
 default = true
 limit = budget
 
-# policies = [BestArm.siri]
-# policy_names = ["SiRI"]
-# abrevs = ["siri"]
-policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic]
-policy_names = ["ISHA", "TTTS", "Dynamic TTTS"]
-abrevs = ["isha", "ttts", "dttts"]
+policies = [BestArm.seq_halving_infinite]
+policy_names = ["ISHA"]
+abrevs = ["isha"]
+# policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic]
+# policy_names = ["ISHA", "TTTS", "Dynamic TTTS"]
+# abrevs = ["isha", "ttts", "dttts"]
 lp = length(policies)
 
 
@@ -92,10 +92,10 @@ for iparam in 1:5
 					for j in 1:(budget+1)
 						num_arms[j] += length(filter(x -> x==(j-1), N))
 					end
-					if SAVE
-						h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], ".h5"), "w") do file
-							write(file, abrevs[imeth], regrets)
-						end
+				end
+				if SAVE
+					h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], ".h5"), "w") do file
+						write(file, abrevs[imeth], regrets)
 					end
 				end
 				num_arms /= mcmc
@@ -129,15 +129,30 @@ for iparam in 1:5
 		else
 			for i in 3:4
 				regrets = zeros(1, budget)
+				num_arms = zeros(1, budget+1)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-					_, _, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, BestArm.eba, alphas[iparam], betas[iparam], false)
+					_, N, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, BestArm.eba, alphas[iparam], betas[iparam], false)
 					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, maxmu)
 					regrets += regrets_current
+					for j in 1:(budget+1)
+						num_arms[j] += length(filter(x -> x==(j-1), N))
+					end
 				end
 				plot(X, reshape(regrets/mcmc, budget, 1), label=string(policy_names[imeth], 2^i))
 				if SAVE
 					h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], Int(2^i), ".h5"), "w") do file
 			    		write(file, abrevs[imeth], regrets)
+					end
+				end
+				num_arms /= mcmc
+				# print(num_arms)
+				if Sys.KERNEL == :Darwin
+					h5open(string("/Users/xuedong/Programming/PhD/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], Int(2^i), "_N.h5"), "w") do file
+						write(file, abrevs[imeth], num_arms)
+					end
+				elseif Sys.KERNEL == :Linux
+					h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], Int(2^i), "_N.h5"), "w") do file
+						write(file, abrevs[imeth], num_arms)
 					end
 				end
 			end
