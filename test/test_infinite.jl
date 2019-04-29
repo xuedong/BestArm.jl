@@ -24,12 +24,12 @@ num = 16
 budget = 64
 mcmc = 100
 maxmu = 1.0
-default = true
+mpa = false
 limit = budget
 
-policies = [BestArm.seq_halving_infinite]
-policy_names = ["ISHA"]
-abrevs = ["isha"]
+policies = [BestArm.ttts_dynamic]
+policy_names = ["Dynamic TTTS"]
+abrevs = ["dttts"]
 # policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic]
 # policy_names = ["ISHA", "TTTS", "Dynamic TTTS"]
 # abrevs = ["isha", "ttts", "dttts"]
@@ -67,19 +67,20 @@ for iparam in 1:5
 				end
 			end
 		elseif policy_names[imeth] == "Dynamic TTTS"
-			regrets = zeros(1, budget)
-			@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-				_, _, recs, mu = policy(reservoir, 1, num, budget, dist, 0.5, true, alphas[iparam], betas[iparam], false)
-				regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, maxmu)
-				regrets += regrets_current
-				if SAVE
-					h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], "_mpa.h5"), "w") do file
-				    	write(file, abrevs[imeth], regrets)
+			if mpa
+				regrets = zeros(1, budget)
+				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
+					_, _, recs, mu = policy(reservoir, 1, num, budget, dist, 0.5, true, alphas[iparam], betas[iparam], false)
+					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, maxmu)
+					regrets += regrets_current
+					if SAVE
+						h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/infinite/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrevs[imeth], "_mpa.h5"), "w") do file
+				    		write(file, abrevs[imeth], regrets)
+						end
 					end
 				end
-			end
-			plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=string(policy_names[imeth], " (MPA)"))
-			if default
+				plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=string(policy_names[imeth], " (MPA)"))
+			else
 				regrets = zeros(1, budget)
 				num_arms = zeros(1, budget+1)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc

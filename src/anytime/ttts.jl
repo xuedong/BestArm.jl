@@ -254,8 +254,8 @@ end
 function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
 	budget::Integer, dist::String, frac::Real = 0.5,
 	default::Bool = true, theta1::Float64 = 1.0, theta2::Float64 = 1.0,
-	final::Bool = true)
-	mu = [sample_reservoir(reservoir, theta1, theta2) for _ in 1:num]
+	final::Bool = true, shift::Real = 1.0)
+	mu = [sample_reservoir(reservoir, theta1, theta2, shift) for _ in 1:num]
 	S_0 = 1
     N = [0 for _ in 1:num]
     S = [0 for _ in 1:num]
