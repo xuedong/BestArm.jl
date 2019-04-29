@@ -22,7 +22,7 @@ betas = [0.5, 1.0, 2.0, 1.0, 3.0]
 # betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 0.7]
 # num = 16
 budget = 160
-mcmc = 100
+mcmc = 1
 shifts = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 limit = budget
 
@@ -50,17 +50,17 @@ for iparam in 1:5
 	end
 
 	if Sys.KERNEL == :Darwin
-		h5open(string("/Users/xuedong/Programming/PhD/BestArm.jl/misc/log/shift/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrev, "_", shifts[i], "_N.h5"), "w") do file
+		h5open(string("/Users/xuedong/Programming/PhD/BestArm.jl/misc/log/shift/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrev, "_", "_shift.h5"), "w") do file
 			write(file, abrev, arms)
 		end
 	elseif Sys.KERNEL == :Linux
-		h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/shift/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrev, "_", shifts[i], "_N.h5"), "w") do file
+		h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/shift/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrev, "_", "_shift.h5"), "w") do file
 			write(file, abrev, arms)
 		end
 	end
 
 	arms /= mcmc
-	plot(shifts, arms, linestyle="x")
+	plot(shifts, reshape(arms, length(shifts), 1), linestyle="x")
 
 	xlabel("Shift")
 	ylabel("Expectation of sampled arms")
