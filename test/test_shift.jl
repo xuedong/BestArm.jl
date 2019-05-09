@@ -36,7 +36,7 @@ SAVE = false
 
 
 # Tests
-for iparam in 1:1
+for iparam in 1:5
 	fig = figure()
 	arms = zeros(1, length(shifts))
 	for i in 1:length(shifts)
