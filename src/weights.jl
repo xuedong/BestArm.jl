@@ -131,8 +131,16 @@ function target(y, mu, dist, beta::Real = 0.5, delta::Real = 1e-11)
 end
 
 
-function optimal_weights_parameterized(mu, dist, delta::Real = 1e-11)
-	K = length(mu)
-
-	return 0
+function gamma_beta(mu, dist, beta::Real = 0.5, delta::Real = 1e-11)
+	y_max = 0.5
+	if beta * d(mu[1], mu[2], dist) == Inf
+		# find yMax such that aux(yMax, mu) > 0
+		while target(y_max, mu, dist, beta, delta) < 0
+			y_max = y_max * 2
+		end
+	else
+		y_max = beta * d(mu[1] , mu[2], dist)
+	end
+	gamma = dico_solve(y -> target(y, mu, dist, beta, delta), 0, y_max, delta)
+	return gamma
 end

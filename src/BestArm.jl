@@ -8,8 +8,8 @@ module BestArm
     export compute_regrets, compute_regrets_reservoir
     # export memuse
 
-    export optimal_weights, optimal_weights_parameterized
-    export target
+    export optimal_weights
+    export gamma_beta
 
     export seq_halving_ref, seq_halving_no_ref, seq_halving_infinite, hyperband
     export succ_reject
