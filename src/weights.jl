@@ -124,5 +124,8 @@ function inverse(y, k, mu, dist, beta::Real = 0.5, delta::Real = 1e-11)
 end
 
 
-function optimal_weights_parameterized(mu, dist, delta::Real == 1e-11)
+function optimal_weights_parameterized(mu, dist, delta::Real = 1e-11)
 	K = length(mu)
+
+	return 0
+end
