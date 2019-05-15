@@ -3,16 +3,16 @@ function dico_solve(f, x_min, x_max, delta = 1e-11)
 	lower = x_min
 	upper = x_max
 	sgn = f(x_min)
-	while (u - l) > delta
-		m = (u+l)/2
-		if f(m) * sgn > 0
-			l = m
+	while (upper - lower) > delta
+		middle = (upper+lower)/2
+		if f(middle) * sgn > 0
+			lower = middle
 		else
-			u = m
+			upper = middle
 		end
 	end
-	m = (u+l)/2
-	return m
+	middle = (upper+lower)/2
+	return middle
 end
 
 
