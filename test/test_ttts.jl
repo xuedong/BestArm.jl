@@ -93,7 +93,7 @@ for i in 1:len
 			if PLOT
 				plot(X, reshape(1 .- hits/mcmc, budget, 1), linestyle="--", label=string(policy_names[imeth]))
 			end
-			ends[i] = -1/budget*log(1 .- hits[budget]/mcmc)
+			ends[i] = -1/budget*log(1 - hits[budget]/mcmc)
 			if SAVE
 				if Sys.KERNEL == :Darwin
 					h5open(string("/Users/xuedong/Programming/PhD/BestArm.jl/misc/log/ttts/", setting, "_hits.h5"), "w") do file
