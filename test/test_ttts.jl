@@ -111,7 +111,7 @@ for i in 1:len
 		# plot(log10.(X), -log10.(transpose(regrets/mcmc) ./ X), label = names[imeth])
 	end
 
-	if Plot
+	if PLOT
 		xlabel("Allocation budget")
 		ylabel("Expectation of the simple regret")
 		grid("on")
