@@ -22,7 +22,7 @@ betas = [0.5, 1.0, 2.0, 1.0, 3.0]
 # betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 0.7]
 # num = 16
 budget = 160
-mcmc = 1
+mcmc = 100
 shifts = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 limit = budget
 
@@ -44,7 +44,7 @@ for iparam in 1:5
 			rec, N, recs, mu = policy(reservoir, 1, limit, budget, dist, 0.5, false, alphas[iparam], betas[iparam], true, shifts[i])
 			# regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, maxmu)
 			# regrets += regrets_current
-			arms[i] += length(filter(x -> x>1, N))
+			arms[i] += length(filter(x -> x>0, N))
 		end
 		# plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=policy_name)
 	end
@@ -60,7 +60,7 @@ for iparam in 1:5
 	end
 
 	arms /= mcmc
-	plot(shifts, reshape(arms, length(shifts), 1), linestyle="x")
+	plot(shifts, reshape(arms, length(shifts), 1), marker="x")
 
 	xlabel("Shift")
 	ylabel("Expectation of sampled arms")
