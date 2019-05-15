@@ -286,3 +286,4 @@ TSWLatexianTemp*
 *.sta
 docs/build/
 misc/log/
+misc/figs

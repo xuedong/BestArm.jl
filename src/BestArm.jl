@@ -7,7 +7,9 @@ module BestArm
     export edp, eba, mpa
     export compute_regrets, compute_regrets_reservoir
     # export memuse
+
     export optimal_weights
+    export gamma_beta
 
     export seq_halving_ref, seq_halving_no_ref, seq_halving_infinite, hyperband
     export succ_reject
@@ -34,6 +36,7 @@ module BestArm
     include("utils.jl")
     include("kl_functions.jl")
     include("reservoirs.jl")
+    include("weights.jl")
 
     include("fixed_budget/ucbe.jl")
     include("fixed_budget/seq_halv.jl")
