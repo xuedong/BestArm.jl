@@ -17,27 +17,57 @@ end
 # abrevs = ["uniform", "ucbe", "succ_reject", "seq_halving_ref", "ttts", "ts", "at_lucb"]
 settings = ["setting0", "setting1", "setting2", "setting3", "setting4", "setting5", "setting6", "setting7"]
 dist = "Bernoulli"
-mus = [[0.5, 0.4, 0.35, 0.3],
-		[0.5, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4],
-		[0.5, 0.42, 0.42, 0.42, 0.42, 0.42, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38],
-		[0.5, 0.3631, 0.449347, 0.48125839],
-		[0.5, 0.42, 0.4, 0.4, 0.35, 0.35],
-		[0.5, 0.45, 0.425, 0.4, 0.375, 0.35, 0.325, 0.3, 0.275, 0.25, 0.225, 0.2, 0.175, 0.15, 0.125],
-		[0.5, 0.48, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37],
-		[0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38]]
-budgets = [5000, 10000, 10000, 10000, 3000, 20000, 30000, 30000]
-mcmcs = [1000]
+# mus = [[0.5, 0.4, 0.35, 0.3],
+# 		[0.5, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4],
+# 		[0.5, 0.42, 0.42, 0.42, 0.42, 0.42, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38],
+# 		[0.5, 0.3631, 0.449347, 0.48125839],
+# 		[0.5, 0.42, 0.4, 0.4, 0.35, 0.35],
+# 		[0.5, 0.45, 0.425, 0.4, 0.375, 0.35, 0.325, 0.3, 0.275, 0.25, 0.225, 0.2, 0.175, 0.15, 0.125],
+# 		[0.5, 0.48, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37],
+# 		[0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38]]
+random_lengths = rand(3:10, 100)
+len = length(random_lengths)
+mus = [sort(rand(random_lengths[i]), rev=true) for i in 1:length(random_lengths)]
+#budgets = [5000, 10000, 10000, 10000, 3000, 20000, 30000, 30000]
+budgets = [1000 for _ in 1:len]
+mcmcs = [10]
 
 policies = [BestArm.ttts]
 policy_names = ["TTTS"]
 abrevs = ["ttts"]
 lp = length(policies)
-SAVE = true
+SAVE = false
+PLOT = false
+
+io = open("mus.txt", "w")
+for i in 1:len
+	for j in 1:length(mus[i])
+		current = mus[i][j]
+		write(io, "$current ")
+	end
+	write(io, "\n")
+end
+close(io)
+
+gammas = zeros(1, len)
+for i in 1:len
+	gamma = BestArm.gamma_beta(mus[i], dist, 0.5, 1e-11)
+	gammas[i] = gamma
+end
+
+io = open("gammas.txt", "w")
+for i in 1:length(gammas)
+	gamma = gammas[i]
+	write(io, "$gamma\n")
+end
+close(io)
+
+ends = zeros(1, len)
 
 
 # Tests
-for i in 1:length(settings)
-	setting = settings[i]
+for i in 1:len
+	# setting = settings[i]
 	mu = mus[i]
 	budget = budgets[i]
 	mcmc = mcmcs[1]
@@ -58,7 +88,10 @@ for i in 1:length(settings)
 					end
 				end
 			end
-			plot(X, reshape(1 .- hits/mcmc, budget, 1), linestyle="--", label=string(policy_names[imeth]))
+			if PLOT
+				plot(X, reshape(1 .- hits/mcmc, budget, 1), linestyle="--", label=string(policy_names[imeth]))
+			end
+			ends[i] = -1/budget*log(1 .- hits[budget]/mcmc)
 			if SAVE
 				if Sys.KERNEL == :Darwin
 					h5open(string("/Users/xuedong/Programming/PhD/BestArm.jl/misc/log/ttts/", setting, "_hits.h5"), "w") do file
@@ -78,14 +111,24 @@ for i in 1:length(settings)
 		# plot(log10.(X), -log10.(transpose(regrets/mcmc) ./ X), label = names[imeth])
 	end
 
-	xlabel("Allocation budget")
-	ylabel("Expectation of the simple regret")
-	grid("on")
-	legend(loc=2)
-	if Sys.KERNEL == :Darwin
-		savefig(string("/Users/xuedong/Programming/PhD/BestArm.jl/misc/results/ttts/", setting, ".pdf"))
-	elseif Sys.KERNEL == :Linux
-		savefig(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/results/ttts/", setting, ".pdf"))
+	if Plot
+		xlabel("Allocation budget")
+		ylabel("Expectation of the simple regret")
+		grid("on")
+		legend(loc=2)
+		if Sys.KERNEL == :Darwin
+			savefig(string("/Users/xuedong/Programming/PhD/BestArm.jl/misc/results/ttts/", setting, ".pdf"))
+		elseif Sys.KERNEL == :Linux
+			savefig(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/results/ttts/", setting, ".pdf"))
+		end
+		close(fig)
 	end
-	close(fig)
 end
+
+
+io = open("ends.txt", "w")
+for i in 1:length(ends)
+	current = ends[i]
+	write(io, "$current\n")
+end
+close(io)
