@@ -21,15 +21,9 @@ betas = [0.5, 1.0, 2.0, 1.0, 3.0]
 # alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0, 0.3]
 # betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 0.7]
 # num = 16
-<<<<<<< HEAD
-budget = 160
-mcmc = 100
-shifts = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-=======
 budget = 384
 mcmc = 1000
 shifts = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0]
->>>>>>> ed103ef68a92d6e1444adac092cbb416a8a7bee9
 limit = budget
 
 policy = BestArm.ttts_dynamic
@@ -50,11 +44,7 @@ for iparam in 1:5
 			rec, N, recs, mu = policy(reservoir, 1, limit, budget, dist, 0.5, false, alphas[iparam], betas[iparam], true, shifts[i])
 			# regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, maxmu)
 			# regrets += regrets_current
-<<<<<<< HEAD
-			arms[i] += length(filter(x -> x>0, N))
-=======
 			arms[i] += length(filter(x -> x==2, N))
->>>>>>> ed103ef68a92d6e1444adac092cbb416a8a7bee9
 		end
 		# plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=policy_name)
 	end
