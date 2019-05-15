@@ -120,7 +120,14 @@ function inverse(y, k, mu, dist, beta::Real = 0.5, delta::Real = 1e-11)
 	while g(x_max) < 0
 		x_max = 2 * x_max
 	end
-	return dico_solve(x->g(x), 0, x_max, 1e-11)
+	return dico_solve(x->g(x), 0, x_max, delta)
+end
+
+
+function target(y, mu, dist, beta::Real = 0.5, delta::Real = 1e-11)
+	K = length(mu)
+	x = [inverse(y, k, mu, dist, beta, delta) for k in 2:K]
+	return sum(x) - 1 + beta
 end
 
 

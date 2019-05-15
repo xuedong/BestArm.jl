@@ -9,7 +9,7 @@ module BestArm
     # export memuse
 
     export optimal_weights, optimal_weights_parameterized
-    export inverse
+    export target
 
     export seq_halving_ref, seq_halving_no_ref, seq_halving_infinite, hyperband
     export succ_reject
