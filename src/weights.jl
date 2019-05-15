@@ -115,7 +115,7 @@ end
 
 function inverse(y, k, mu, dist, beta::Real = 0.5, delta::Real = 1e-11)
 	# return x_k(y), i.e. finds x such that g_k(x)=y
-	g(x) = c_k(x, k, mu, dist, beta, delta) - y
+	g(x) = c_k(x, k, mu, dist, beta) - y
 	x_max = 1
 	while g(x_max) < 0
 		x_max = 2 * x_max
