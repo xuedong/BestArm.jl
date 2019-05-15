@@ -72,7 +72,9 @@ for i in 1:len
 	budget = budgets[i]
 	mcmc = mcmcs[1]
 
-	fig = figure()
+	if PLOT
+		fig = figure()
+	end
 	X = 1:budget
 
 	# running tests
