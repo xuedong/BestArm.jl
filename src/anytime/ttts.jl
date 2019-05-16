@@ -18,7 +18,7 @@ function ttts(mu::Array, budget::Integer,
 	            best = idx[floor(Int, length(idx) * rand()) + 1]
 	            recommendations[t] = best
 	        else
-	            idx = find(probs .== maximum(probs))
+	            idx = (LinearIndices(probs .== maximum(probs)))[findall(probs .== maximum(probs))]
 	            best = idx[floor(Int, length(idx) * rand()) + 1]
 	            recommendations[t] = best
 				max_probs[t] = probs[best]

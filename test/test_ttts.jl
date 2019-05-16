@@ -20,7 +20,7 @@ dist = "Bernoulli"
 mus = [[0.5, 0.4, 0.35, 0.3],
 		[0.5, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4],
 		[0.5, 0.42, 0.42, 0.42, 0.42, 0.42, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38],
-		[0.5, 0.3631, 0.449347, 0.48125839],
+		[0.5, 0.48125839, 0.3631, 0.449347],
 		[0.5, 0.42, 0.4, 0.4, 0.35, 0.35],
 		[0.5, 0.45, 0.425, 0.4, 0.375, 0.35, 0.325, 0.3, 0.275, 0.25, 0.225, 0.2, 0.175, 0.15, 0.125],
 		[0.5, 0.48, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37],
@@ -67,7 +67,7 @@ ends = zeros(1, len)
 
 # Tests
 for i in 1:len
-	# setting = settings[i]
+	setting = settings[i]
 	mu = mus[i]
 	budget = budgets[i]
 	mcmc = mcmcs[1]
@@ -83,7 +83,7 @@ for i in 1:len
 		if policy_names[imeth] == "TTTS"
 			hits = zeros(1, budget)
 			@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-				_, _, _, recs, max_probs = policy(mu, budget, dist, 0.5, true, false)
+				_, _, _, recs, max_probs = policy(mu, budget, dist, 0.5, false, false)
 				for j in 1:budget
 					hits[j] += max_probs[j]
 				end
