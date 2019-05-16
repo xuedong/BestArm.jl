@@ -30,7 +30,7 @@ len = length(mus)
 # mus = [sort(rand(random_lengths[i]), rev=true) for i in 1:length(random_lengths)]
 budgets = [1000, 2000, 2000, 2000, 600, 4000, 6000, 6000]
 # budgets = [1000 for _ in 1:len]
-mcmcs = [100]
+mcmcs = [10]
 
 policies = [BestArm.ttts]
 policy_names = ["TTTS"]
