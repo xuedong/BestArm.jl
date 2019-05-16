@@ -1,26 +1,24 @@
 using HDF5
 using StatsPlots
 
-reservoir = "Beta"
+reservoir = "ShiftedBeta"
 dist = "Bernoulli"
-# alphas = [1.0, 1.0, 1.0, 1.0, 1.0]
-# betas = [1.0, 2.0, 3.0, 4.0, 5.0]
-alphas = [1.0, 2.0, 3.0, 4.0, 5.0]
-betas = [1.0, 1.0, 1.0, 1.0, 1.0]
+alphas = [0.5]
+betas = [0.5]
+shifts = [0.2, 0.4, 0.6, 0.8, 1.0]
 
 budget = 160
 mcmc = 1000
-len = length(alphas)
 
 for _ in 1:1
         pulls = zeros(1, 0)
-        for iparam in 1:len
+        for i in 1:lenght(shifts)
                 if Sys.KERNEL == :Linux
-                        arms = h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/difficulty/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", "dttts.h5"), "r") do file
+                        arms = h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/shift/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", shifts[i], ".h5"), "r") do file
                                 read(file, "dttts")
                         end
                 elseif Sys.KERNEL == :Darwin
-                        arms = h5open(string("/Users/xuedong/Programming/PhD/BestArm.jl/misc/log/difficulty/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", "dttts.h5"), "r") do file
+                        arms = h5open(string("/Users/xuedong/Programming/PhD/BestArm.jl/misc/log/shift/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", shifts[i], ".h5"), "r") do file
                                 read(file, "dttts")
                         end
                 end
@@ -29,8 +27,7 @@ for _ in 1:1
                 pulls = hcat(pulls, arms)
         end
 
-        group = repeat(["alpha=1", "alpha=2", "alpha=3", "alpha=4", "alpha=5"], inner = 10)
-        # group = repeat(["beta=1", "beta=2", "beta=3", "beta=4", "beta=5"], inner = 10)
+        group = repeat(["shift=0.2", "shift=0.4", "shift=0.6", "shift=0.8", "no shift"], inner = 10)
         # std = [2, 3, 4, 1, 2, 3, 5, 2, 3, 3]
         xtick = repeat(["i=1", "i=2", "i=3", "i=4", "i=5", "i=6", "i=7", "i=8", "i=9", "i>=10"], outer = 5)
 
