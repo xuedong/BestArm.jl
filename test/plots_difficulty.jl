@@ -15,9 +15,16 @@ len = length(alphas)
 for _ in 1:1
         pulls = zeros(1, 0)
         for iparam in 1:len
-                arms = h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/difficulty/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", "dttts.h5"), "r") do file
-                        read(file, "dttts")
+                if Sys.KERNEL == :Linux
+                        arms = h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/difficulty/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", "dttts.h5"), "r") do file
+                                read(file, "dttts")
+                        end
+                elseif Sys.KERNEL == :Darwin
+                        arms = h5open(string("/Users/xuedong/Programming/PhD/BestArm.jl/misc/log/difficulty/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", "dttts.h5"), "r") do file
+                                read(file, "dttts")
+                        end
                 end
+
                 arms /= mcmc
                 pulls = hcat(pulls, arms)
         end
