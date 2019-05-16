@@ -1,18 +1,18 @@
 using PyPlot
 # using ConfParser
 using HDF5
-# using Seaborn
+using Seaborn
 
 budgets = [1000, 2000, 2000, 2000, 600, 4000, 6000, 6000]
 gamma_betas = [0.00407116, 0.000503566, 0.000540953, 0.000168461, 0.0018092, 0.000853012, 0.000179027, 0.000172676]
 settings = ["setting0", "setting1", "setting2", "setting3", "setting4", "setting5", "setting6", "setting7"]
-mcmc = 1000
+mcmc = 10
 
-for i in 1:length(settings)
+for i in 1:5
 	fig = figure()
 	budget = budgets[i]
 	setting = settings[i]
-	# Seaborn.set(style="darkgrid")
+	Seaborn.set(style="darkgrid")
 
 	# running tests
 	X = 1:budget
