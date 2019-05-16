@@ -46,11 +46,11 @@ for iparam in 1:len
 	end
 
 	if Sys.KERNEL == :Darwin
-		h5open(string("/Users/xuedong/Programming/PhD/BestArm.jl/misc/log/difficulty/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrev, "_.h5"), "w") do file
+		h5open(string("/Users/xuedong/Programming/PhD/BestArm.jl/misc/log/difficulty/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrev, ".h5"), "w") do file
 			write(file, abrev, arms)
 		end
 	elseif Sys.KERNEL == :Linux
-		h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/difficulty/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrev, "_.h5"), "w") do file
+		h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/difficulty/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrev, ".h5"), "w") do file
 			write(file, abrev, arms)
 		end
 	end
