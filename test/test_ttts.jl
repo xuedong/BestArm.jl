@@ -17,27 +17,27 @@ end
 # abrevs = ["uniform", "ucbe", "succ_reject", "seq_halving_ref", "ttts", "ts", "at_lucb"]
 settings = ["setting0", "setting1", "setting2", "setting3", "setting4", "setting5", "setting6", "setting7"]
 dist = "Bernoulli"
-# mus = [[0.5, 0.4, 0.35, 0.3],
-# 		[0.5, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4],
-# 		[0.5, 0.42, 0.42, 0.42, 0.42, 0.42, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38],
-# 		[0.5, 0.3631, 0.449347, 0.48125839],
-# 		[0.5, 0.42, 0.4, 0.4, 0.35, 0.35],
-# 		[0.5, 0.45, 0.425, 0.4, 0.375, 0.35, 0.325, 0.3, 0.275, 0.25, 0.225, 0.2, 0.175, 0.15, 0.125],
-# 		[0.5, 0.48, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37],
-# 		[0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38]]
-random_lengths = rand(3:10, 100)
-len = length(random_lengths)
-mus = [sort(rand(random_lengths[i]), rev=true) for i in 1:length(random_lengths)]
-#budgets = [5000, 10000, 10000, 10000, 3000, 20000, 30000, 30000]
-budgets = [1000 for _ in 1:len]
-mcmcs = [10]
+mus = [[0.5, 0.4, 0.35, 0.3],
+		[0.5, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4],
+		[0.5, 0.42, 0.42, 0.42, 0.42, 0.42, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38],
+		[0.5, 0.3631, 0.449347, 0.48125839],
+		[0.5, 0.42, 0.4, 0.4, 0.35, 0.35],
+		[0.5, 0.45, 0.425, 0.4, 0.375, 0.35, 0.325, 0.3, 0.275, 0.25, 0.225, 0.2, 0.175, 0.15, 0.125],
+		[0.5, 0.48, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37, 0.37],
+		[0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38]]
+# random_lengths = rand(3:10, 100)
+len = length(mus)
+# mus = [sort(rand(random_lengths[i]), rev=true) for i in 1:length(random_lengths)]
+budgets = [1000, 2000, 2000, 2000, 600, 4000, 6000, 6000]
+# budgets = [1000 for _ in 1:len]
+mcmcs = [100]
 
 policies = [BestArm.ttts]
 policy_names = ["TTTS"]
 abrevs = ["ttts"]
 lp = length(policies)
-SAVE = false
-PLOT = false
+SAVE = true
+PLOT = true
 
 io = open("mus.txt", "w")
 for i in 1:len
@@ -83,11 +83,9 @@ for i in 1:len
 		if policy_names[imeth] == "TTTS"
 			hits = zeros(1, budget)
 			@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-				_, _, _, recs = policy(mu, budget, dist, 0.5, true, false)
+				_, _, _, recs, max_probs = policy(mu, budget, dist, 0.5, true, false)
 				for j in 1:budget
-					if recs[j] == 1
-						hits[j] += 1
-					end
+					hits[j] += max_probs[j]
 				end
 			end
 			if PLOT
@@ -115,7 +113,7 @@ for i in 1:len
 
 	if PLOT
 		xlabel("Allocation budget")
-		ylabel("Expectation of the simple regret")
+		ylabel("Probability error")
 		grid("on")
 		legend(loc=2)
 		if Sys.KERNEL == :Darwin

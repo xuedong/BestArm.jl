@@ -6,6 +6,7 @@ function ttts(mu::Array, budget::Integer,
     S = zeros(1, num)
     means = ones(1, num) * -Inf
     probs = ones(1, num) / num
+	max_probs = zeros(1, budget)
     recommendations = zeros(1, budget)
 
     best = 1
@@ -20,6 +21,7 @@ function ttts(mu::Array, budget::Integer,
 	            idx = find(probs .== maximum(probs))
 	            best = idx[floor(Int, length(idx) * rand()) + 1]
 	            recommendations[t] = best
+				max_probs[t] = probs[best]
 
 	            for a in 1:num
 	                if dist == "Bernoulli"
@@ -116,7 +118,7 @@ function ttts(mu::Array, budget::Integer,
 
     recommendations = Int.(recommendations)
 
-    return (recommendation, N, means, recommendations)
+    return (recommendation, N, means, recommendations, max_probs)
 end
 
 
