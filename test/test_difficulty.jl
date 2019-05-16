@@ -16,10 +16,10 @@ end
 # reservoir = "ShiftedBeta"
 reservoir = "Beta"
 dist = "Bernoulli"
-alphas = [1.0, 1.0, 1.0, 1.0, 1.0]
-betas = [1.0, 2.0, 3.0, 4.0, 5.0]
-# alphas = [1.0, 2.0, 3.0, 4.0, 5.0]
-# betas = [1.0, 1.0, 1.0, 1.0, 1.0]
+# alphas = [1.0, 1.0, 1.0, 1.0, 1.0]
+# betas = [1.0, 2.0, 3.0, 4.0, 5.0]
+alphas = [1.0, 2.0, 3.0, 4.0, 5.0]
+betas = [1.0, 1.0, 1.0, 1.0, 1.0]
 # num = 16
 budget = 160
 mcmc = 1000
