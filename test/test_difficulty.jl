@@ -22,7 +22,7 @@ betas = [1.0, 2.0, 3.0, 4.0, 5.0]
 # betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 0.7]
 # num = 16
 budget = 160
-mcmc = 1
+mcmc = 1000
 len = length(alphas)
 limit = budget
 
