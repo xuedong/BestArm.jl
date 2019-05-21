@@ -13,26 +13,25 @@ end
 @everywhere using DistributedArrays
 
 # Problem setting
-# reservoir = "ShiftedBeta"
-reservoir = "Beta"
+reservoir = "ShiftedBeta"
 dist = "Bernoulli"
-alphas = [0.5, 1.0, 2.0, 3.0, 1.0]
-betas = [0.5, 1.0, 2.0, 1.0, 3.0]
-# alphas = [1.0, 3.0, 1.0, 0.5, 2.0, 5.0, 2.0, 0.3]
-# betas = [1.0, 1.0, 3.0, 0.5, 5.0, 2.0, 2.0, 0.7]
+# alphas = [0.5, 1.0, 2.0, 3.0, 1.0]
+# betas = [0.5, 1.0, 2.0, 1.0, 3.0]
+alphas = [0.5]
+betas = [0.5]
 num = 16
 budget = 64
 mcmc = 100
-maxmu = 1.0
+maxmu = 0.4
 mpa = false
 limit = budget
 
-policies = [BestArm.ttts_dynamic]
-policy_names = ["Dynamic TTTS"]
-abrevs = ["dttts"]
-# policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic]
-# policy_names = ["ISHA", "TTTS", "Dynamic TTTS"]
-# abrevs = ["isha", "ttts", "dttts"]
+# policies = [BestArm.ttts_dynamic]
+# policy_names = ["Dynamic TTTS"]
+# abrevs = ["dttts"]
+policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic]
+policy_names = ["ISHA", "TTTS", "Dynamic TTTS"]
+abrevs = ["isha", "ttts", "dttts"]
 lp = length(policies)
 
 
