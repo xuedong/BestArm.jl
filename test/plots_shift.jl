@@ -8,7 +8,7 @@ betas = [0.5]
 shifts = [0.2, 0.4, 0.6, 0.8, 1.0]
 
 budget = 160
-mcmc = 1000
+mcmc = 100
 
 for iparam in 1:1
         pulls = zeros(1, 0)

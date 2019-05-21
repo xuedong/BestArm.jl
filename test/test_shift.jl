@@ -20,7 +20,7 @@ alphas = [0.5]
 betas = [0.5]
 # num = 16
 budget = 160
-mcmc = 1000
+mcmc = 100
 # shifts = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0]
 shifts = [0.2, 0.4, 0.6, 0.8, 1.0]
 limit = budget
@@ -45,9 +45,9 @@ for iparam in 1:len
 			# regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, maxmu)
 			# regrets += regrets_current
 			for j in 1:9
-				arms[j] += length(filter(x -> x==j+1, N))
+				arms[j] += length(filter(x -> x==j, N))
 			end
-			arms[10] += length(filter(x -> x>=11, N))
+			arms[10] += length(filter(x -> x>=10, N))
 		end
 		# plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=policy_name)
 		if Sys.KERNEL == :Darwin

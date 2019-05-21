@@ -133,8 +133,8 @@ end
 function ttts_infinite(reservoir::String, num::Integer, budget::Integer,
 	dist::String, frac::Real = 0.5, default::Bool = true,
 	theta1::Float64 = 1.0, theta2::Float64 = 1.0,
-	final::Bool = true)
-	mu = [sample_reservoir(reservoir, theta1, theta2) for _ in 1:num]
+	final::Bool = true, shift::Real = 1.0)
+	mu = [sample_reservoir(reservoir, theta1, theta2, shift) for _ in 1:num]
     N = zeros(1, num)
     S = zeros(1, num)
     means = ones(1, num) * -Inf
@@ -306,7 +306,7 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
                 beta = 1
                 TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1]
 			elseif dist == "Gaussian"
-				TS[a] = rand(Normal(S[a] / N[a], 1.0 / N[a]), 1)[1]
+				TS[a] = rand(Normal(S[a] / N[a], sqrt(1.0 / N[a])), 1)[1]
 			end
         end
 		TS_0 = rand(Beta(S_0, 1.0), 1)[1]
@@ -324,7 +324,7 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
 					end
 				elseif dist == "Gaussian"
 					for a = 0:dynamic_num
-						TS[a] = rand(Normal(S[a] / N[a], 1.0 / N[a]), 1)[1]
+						TS[a] = rand(Normal(S[a] / N[a], sqrt(1.0 / N[a])), 1)[1]
 					end
                 end
 				TS_0 = rand(Beta(S_0, 1.0), 1)[1]
@@ -339,7 +339,7 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
 			if dynamic_num < limit
 				dynamic_num += 1
 			end
-			new = sample_reservoir(reservoir, theta1, theta2)
+			new = sample_reservoir(reservoir, theta1, theta2, shift)
 			push!(N, 0)
 			push!(S, 0)
 			push!(mu, new)
