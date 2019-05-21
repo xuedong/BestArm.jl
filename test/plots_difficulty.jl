@@ -9,7 +9,7 @@ betas = [1.0, 2.0, 3.0, 4.0, 5.0]
 # betas = [1.0, 1.0, 1.0, 1.0, 1.0]
 
 budget = 160
-mcmc = 1000
+mcmc = 100
 len = length(alphas)
 
 for _ in 1:1

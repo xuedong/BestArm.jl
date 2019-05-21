@@ -16,13 +16,13 @@ end
 # reservoir = "ShiftedBeta"
 reservoir = "Beta"
 dist = "Bernoulli"
-# alphas = [1.0, 1.0, 1.0, 1.0, 1.0]
-# betas = [1.0, 2.0, 3.0, 4.0, 5.0]
-alphas = [1.0, 2.0, 3.0, 4.0, 5.0]
-betas = [1.0, 1.0, 1.0, 1.0, 1.0]
+alphas = [1.0, 1.0, 1.0, 1.0, 1.0]
+betas = [1.0, 2.0, 3.0, 4.0, 5.0]
+# alphas = [1.0, 2.0, 3.0, 4.0, 5.0]
+# betas = [1.0, 1.0, 1.0, 1.0, 1.0]
 # num = 16
 budget = 160
-mcmc = 1000
+mcmc = 100
 len = length(alphas)
 limit = budget
 
@@ -40,9 +40,9 @@ for iparam in 1:len
 		# regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, maxmu)
 		# regrets += regrets_current
 		for i in 1:9
-			arms[i] += length(filter(x -> x==i+1, N))
+			arms[i] += length(filter(x -> x==i, N))
 		end
-		arms[10] += length(filter(x -> x>=11, N))
+		arms[10] += length(filter(x -> x>=10, N))
 	end
 
 	if Sys.KERNEL == :Darwin
