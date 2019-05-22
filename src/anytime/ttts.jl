@@ -150,7 +150,7 @@ function ttts_infinite(reservoir::String, num::Integer, budget::Integer,
 	            best = idx[floor(Int, length(idx) * rand()) + 1]
 	            recommendations[t] = best
 	        else
-	            idx = find(probs .== maximum(probs))
+	            idx = (LinearIndices(probs .== maximum(probs)))[findall(probs .== maximum(probs))]
 	            best = idx[floor(Int, length(idx) * rand()) + 1]
 	            recommendations[t] = best
 
@@ -183,7 +183,7 @@ function ttts_infinite(reservoir::String, num::Integer, budget::Integer,
                 beta = 1
                 TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1]
 			elseif dist == "Gaussian"
-				TS[a] = rand(Normal(S[a] / N[a], 1.0 / N[a]), 1)[1]
+				TS[a] = rand(Normal(S[a] / N[a], sqrt(1.0 / N[a])), 1)[1]
 			end
         end
         I = argmax(TS)
@@ -200,7 +200,7 @@ function ttts_infinite(reservoir::String, num::Integer, budget::Integer,
 					end
 				elseif dist == "Gaussian"
 					for a = 1:num
-						TS[a] = rand(Normal(S[a] / N[a], 1.0 / N[a]), 1)[1]
+						TS[a] = rand(Normal(S[a] / N[a], sqrt(1.0 / N[a])), 1)[1]
 					end
                 end
                 J = argmax(TS)

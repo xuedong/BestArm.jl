@@ -48,10 +48,10 @@ for iparam in 1:1
 	X = 1:budget
 	for imeth in 1:lp
 		policy = policies[imeth]
-		if policy_names[imeth] == "TTTS"
+		if policy_names[imeth] == "ITTTS"
 			regrets = zeros(1, budget)
 			@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-				_, _, _, recs, mu = policy(reservoir, num_ttts, budget, dist, 0.5, true, alphas[iparam], betas[iparam], false, shift)
+				_, _, _, recs, mu = policy(reservoir, num_ttts, budget, dist, 0.5, false, alphas[iparam], betas[iparam], false, shift)
 				regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, maxmu)
 				regrets += regrets_current
 			end
@@ -84,7 +84,7 @@ for iparam in 1:1
 					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget)
 					regrets += regrets_current
 				end
-				plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=string(policy_names[imeth], beta))
+				PyPlot.plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=string(policy_names[imeth], beta))
 			end
 		else
 			for i in 4:5
