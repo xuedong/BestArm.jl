@@ -23,7 +23,7 @@ num = 32
 nums_ttts = [81, 80, 78, 73, 54]
 # 81, 80, 78, 73, 54
 budget = 160
-mcmc = 100
+mcmc = 10
 maxmus = [0.2, 0.4, 0.6, 0.8, 1.0]
 limit = budget
 shifts = [0.2, 0.4, 0.6, 0.8, 1.0]
@@ -31,9 +31,9 @@ shifts = [0.2, 0.4, 0.6, 0.8, 1.0]
 # policies = [BestArm.ttts_dynamic]
 # policy_names = ["Dynamic TTTS"]
 # abrevs = ["dttts"]
-policies = [BestArm.seq_halving_infinite, BestArm.ttts_infinite, BestArm.ttts_dynamic]
-policy_names = ["ISHA", "ITTTS", "Dynamic TTTS"]
-abrevs = ["isha", "ittts", "dttts"]
+policies = [BestArm.seq_halving_infinite, BestArm.ttts_dynamic]
+policy_names = ["ISHA", "Dynamic TTTS"]
+abrevs = ["isha", "dttts"]
 lp = length(policies)
 
 
@@ -44,7 +44,7 @@ SAVE = false
 
 # Tests
 for iparam in 1:length(alphas)
-	for ishift in 1:length(shifts)
+	for ishift in 1:1
 		fig = figure()
 		shift = shifts[ishift]
 		maxmu = maxmus[ishift]
