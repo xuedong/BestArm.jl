@@ -309,7 +309,7 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
 				TS[a] = rand(Normal(S[a] / N[a], sqrt(1.0 / N[a])), 1)[1]
 			end
         end
-		TS_0 = rand(Beta(S_0, 1.0), 1)[1]
+		TS_0 = rand(Beta(S_0, 1.0), 1)[1] * shift
         I = argmax(vcat(TS, TS_0))
         if (rand() > frac)
             J = I
@@ -327,7 +327,7 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
 						TS[a] = rand(Normal(S[a] / N[a], sqrt(1.0 / N[a])), 1)[1]
 					end
                 end
-				TS_0 = rand(Beta(S_0, 1.0), 1)[1]
+				TS_0 = rand(Beta(S_0, 1.0), 1)[1] * shift
 		        J = argmax(vcat(TS, TS_0))
 				count += 1
             end
@@ -336,7 +336,7 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
 
         # draw arm I
 		if I == dynamic_num + 1
-			if sample_arm(shift, "Bernoulli")
+			if sample_arm(1.0, "Bernoulli")
 				if dynamic_num < limit
 					dynamic_num += 1
 				end
