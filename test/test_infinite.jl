@@ -17,8 +17,8 @@ reservoir = "ShiftedBeta"
 dist = "Bernoulli"
 # alphas = [0.5, 1.0, 2.0, 3.0, 1.0]
 # betas = [0.5, 1.0, 2.0, 1.0, 3.0]
-alphas = [2.0]
-betas = [2.0]
+alphas = [0.5]
+betas = [0.5]
 num = 1
 nums_ttts = [81, 80, 78, 73, 54]
 # 81, 80, 78, 73, 54

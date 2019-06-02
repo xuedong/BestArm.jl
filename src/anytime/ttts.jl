@@ -336,16 +336,18 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
 
         # draw arm I
 		if I == dynamic_num + 1
-			if dynamic_num < limit
-				dynamic_num += 1
+			if sample_arm(shift, "Bernoulli")
+				if dynamic_num < limit
+					dynamic_num += 1
+				end
+				new = sample_reservoir(reservoir, theta1, theta2, shift)
+				push!(N, 0)
+				push!(S, 0)
+				push!(mu, new)
+        		S[I] += sample_arm(mu[I], dist)
+        		N[I] += 1
+				S_0 += 1
 			end
-			new = sample_reservoir(reservoir, theta1, theta2, shift)
-			push!(N, 0)
-			push!(S, 0)
-			push!(mu, new)
-        	S[I] += sample_arm(mu[I], dist)
-        	N[I] += 1
-			S_0 += 1
 		else
 			S[I] += sample_arm(mu[I], dist)
         	N[I] += 1
