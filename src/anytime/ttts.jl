@@ -304,9 +304,9 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
             if dist == "Bernoulli"
                 alpha = 1
                 beta = 1
-                TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1] * shift
+                TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1]
 			elseif dist == "Gaussian"
-				TS[a] = rand(Normal(S[a] / N[a], sqrt(1.0 / N[a])), 1)[1] * shift
+				TS[a] = rand(Normal(S[a] / N[a], sqrt(1.0 / N[a])), 1)[1]
 			end
         end
 		TS_0 = rand(Beta(S_0, 1.0), 1)[1] * shift
@@ -320,11 +320,11 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
                     alpha = 1
                     beta = 1
                     for a = 1:dynamic_num
-                        TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1] * shift
+                        TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1]
 					end
 				elseif dist == "Gaussian"
 					for a = 0:dynamic_num
-						TS[a] = rand(Normal(S[a] / N[a], sqrt(1.0 / N[a])), 1)[1] * shift
+						TS[a] = rand(Normal(S[a] / N[a], sqrt(1.0 / N[a])), 1)[1]
 					end
                 end
 				TS_0 = rand(Beta(S_0, 1.0), 1)[1] * shift

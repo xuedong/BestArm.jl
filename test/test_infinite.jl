@@ -19,11 +19,11 @@ dist = "Bernoulli"
 # betas = [0.5, 1.0, 2.0, 1.0, 3.0]
 alphas = [0.5]
 betas = [0.5]
-num = 32
+num = 16
 nums_ttts = [81, 80, 78, 73, 54]
 # 81, 80, 78, 73, 54
-budget = 160
-mcmc = 10
+budget = 64
+mcmc = 100
 maxmus = [0.2, 0.4, 0.6, 0.8, 1.0]
 limit = budget
 shifts = [0.2, 0.4, 0.6, 0.8, 1.0]
@@ -91,7 +91,7 @@ for iparam in 1:length(alphas)
 					PyPlot.plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=string(policy_names[imeth], beta))
 				end
 			else
-				for i in 4:5
+				for i in 3:4
 					regrets = zeros(1, budget)
 					# num_arms = zeros(1, budget+1)
 					@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
