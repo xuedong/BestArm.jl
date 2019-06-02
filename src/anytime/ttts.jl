@@ -353,7 +353,6 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
         	N[I] += 1
 		end
     end
-	println(dynamic_num)
 
 	if final == false
     	recommendation = best
