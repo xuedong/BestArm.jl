@@ -17,9 +17,9 @@ reservoir = "ShiftedBeta"
 dist = "Bernoulli"
 # alphas = [0.5, 1.0, 2.0, 3.0, 1.0]
 # betas = [0.5, 1.0, 2.0, 1.0, 3.0]
-alphas = [0.5]
-betas = [0.5]
-num = 16
+alphas = [2.0]
+betas = [2.0]
+num = 1
 nums_ttts = [81, 80, 78, 73, 54]
 # 81, 80, 78, 73, 54
 budget = 64
@@ -44,7 +44,7 @@ SAVE = false
 
 # Tests
 for iparam in 1:length(alphas)
-	for ishift in 2:2
+	for ishift in 3:3
 		fig = figure()
 		shift = shifts[ishift]
 		maxmu = maxmus[ishift]
