@@ -3,6 +3,7 @@ import seaborn as sns
 import numpy as np
 
 from labellines import labelLines
+from scipy.stats import beta
 
 
 # def stick_legend(axis=None):
@@ -88,5 +89,20 @@ if __name__ == '__main__':
     plt.xticks(np.arange(10, 20), ('0', '', '', '', '', '', '', '', '', r'$\mu^\star$'))
     plt.yticks([])
     plt.xlabel('means')
+    plt.title('resevoir of arms')
 
-    plt.savefig('../misc/figs/reservoir.pdf')
+    plt.savefig('../misc/figs/reservoir.pdf', bbox_inches='tight')
+
+    # x_0 = np.linspace(beta.ppf(0.01, 5, 1), beta.ppf(0.99, 5, 1), 100)
+    # x_1 = np.linspace(beta.ppf(0.01, 1, 4), beta.ppf(0.99, 1, 4), 100)
+    # x_2 = np.linspace(beta.ppf(0.01, 1, 3), beta.ppf(0.99, 1, 3), 100)
+    # x_3 = np.linspace(beta.ppf(0.01, 4, 5), beta.ppf(0.99, 4, 5), 100)
+    # x_4 = np.linspace(beta.ppf(0.01, 2, 7), beta.ppf(0.99, 2, 7), 100)
+    # plt.plot(x_0, beta.pdf(x_0, 5, 1), '--', label=r'$Beta(t-|\mathcal{L}_{t-1}|, 1)$')
+    # plt.plot(x_1, beta.pdf(x_1, 1, 4))
+    # plt.plot(x_2, beta.pdf(x_2, 1, 3))
+    # plt.plot(x_3, beta.pdf(x_3, 4, 5))
+    # plt.plot(x_4, beta.pdf(x_4, 2, 7))
+    # plt.legend()
+    #
+    # plt.savefig('../misc/figs/order_trick.pdf')
