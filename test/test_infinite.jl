@@ -23,7 +23,7 @@ num = 1
 nums_ttts = [81, 80, 78, 73, 54]
 # 81, 80, 78, 73, 54
 budget = 160
-mcmc = 100
+mcmc = 10
 maxmus = [0.2, 0.4, 0.6, 0.8, 1.0]
 limit = budget
 shifts = [0.2, 0.4, 0.6, 0.8, 1.0]
@@ -44,7 +44,7 @@ SAVE = false
 
 # Tests
 for iparam in 1:length(alphas)
-	for ishift in 1:length(shifts)
+	for ishift in 1:1
 		fig = figure()
 		shift = shifts[ishift]
 		maxmu = maxmus[ishift]
