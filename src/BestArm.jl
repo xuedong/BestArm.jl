@@ -1,7 +1,7 @@
 module BestArm
     using Distributions
     using HCubature
-    # using Cubature
+    using StatsFuns
     using ProgressMeter
 
     export edp, eba, mpa
