@@ -44,7 +44,7 @@ SAVE = false
 
 # Tests
 for iparam in 1:length(alphas)
-	for ishift in 1:1
+	for ishift in 1:5
 		fig = figure()
 		shift = shifts[ishift]
 		maxmu = maxmus[ishift]
