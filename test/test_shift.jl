@@ -41,7 +41,7 @@ for iparam in 1:len
 	for i in 1:length(shifts)
 		arms = zeros(1, 10)
 		@showprogress 1 string("Computing ", policy_name, "...") for k in 1:mcmc
-			rec, N, recs, mu = policy(reservoir, 1, limit, budget, dist, 0.5, false, alphas[iparam], betas[iparam], true, shifts[i])
+			rec, N, recs, mu = policy(reservoir, 1, limit, budget, dist, 0.5, false, alphas[iparam], betas[iparam], true, 1.0)
 			# regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, maxmu)
 			# regrets += regrets_current
 			for j in 1:9
