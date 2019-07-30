@@ -51,11 +51,11 @@ for iparam in 1:len
 		end
 		# plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=policy_name)
 		if Sys.KERNEL == :Darwin
-			h5open(string("/Users/xuedong/Programming/PhD/BestArm.jl/misc/log/shift/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrev, "_", shifts[i], ".h5"), "w") do file
+			h5open(string("/Users/xuedong/Programming/PhD/BestArm.jl/misc/log/shift_fix/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrev, "_", shifts[i], ".h5"), "w") do file
 				write(file, abrev, arms)
 			end
 		elseif Sys.KERNEL == :Linux
-			h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/shift/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrev, "_", shifts[i], ".h5"), "w") do file
+			h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/shift_fix/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrev, "_", shifts[i], ".h5"), "w") do file
 				write(file, abrev, arms)
 			end
 		end
