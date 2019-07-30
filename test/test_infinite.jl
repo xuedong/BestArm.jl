@@ -44,7 +44,7 @@ SAVE = false
 
 # Tests
 for iparam in 1:length(alphas)
-	for ishift in 1:1
+	for ishift in 1:5
 		fig = figure()
 		shift = shifts[ishift]
 		maxmu = maxmus[ishift]
@@ -68,9 +68,9 @@ for iparam in 1:length(alphas)
 			elseif policy_names[imeth] == "Dynamic TTTS"
 				regrets = zeros(1, budget)
 				@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-					_, N, recs, mu = policy(reservoir, 1, limit, budget, dist, 0.5, false, alphas[iparam], betas[iparam], false, 1.0)
+					_, N, recs, mu = policy(reservoir, 1, limit, budget, dist, 0.5, false, alphas[iparam], betas[iparam], false, shift)
 
-					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, 1.0) * shift
+					regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, maxmu)
 					regrets += regrets_current
 				end
 				if SAVE
@@ -95,8 +95,8 @@ for iparam in 1:length(alphas)
 					regrets = zeros(1, budget)
 					# num_arms = zeros(1, budget+1)
 					@showprogress 1 string("Computing ", policy_names[imeth], "...") for k in 1:mcmc
-						_, N, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, BestArm.eba, alphas[iparam], betas[iparam], false, 1.0)
-						regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, maxmu) * shift
+						_, N, _, recs, mu = policy(reservoir, Int(2^i), budget, dist, BestArm.eba, alphas[iparam], betas[iparam], false, shift)
+						regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, maxmu)
 						regrets += regrets_current
 						# for j in 1:(budget+1)
 						# 	num_arms[j] += length(filter(x -> x==(j-1), N))
