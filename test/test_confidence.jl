@@ -9,8 +9,8 @@ elseif Sys.KERNEL == :Linux
 end
 
 # DO YOU WANT TO SAVE RESULTS?
-type_exp = "Save"
-#type_exp = "NoSave"
+#type_exp = "Save"
+type_exp = "NoSave"
 
 # TYPE OF DISTRIBUTION
 dist = "Bernoulli"
