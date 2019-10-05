@@ -2,8 +2,8 @@ function d_tracking(mu::Array, delta::Real, rate::Function, dist::String)
    	# Chernoff stopping + D-Tracking
    	condition = true
    	K = length(mu)
-   	N = zeros(1,K)
-   	S = zeros(1,K)
+   	N = zeros(1, K)
+   	S = zeros(1, K)
    	# initialization
    	for a in 1:K
       	N[a] = 1
@@ -32,7 +32,7 @@ function d_tracking(mu::Array, delta::Real, rate::Function, dist::String)
          	if (Score > rate(t, delta))
             	# stop
             	condition = false
-         	elseif (t >10000000)
+         	elseif (t > 10000000)
             	# stop and outputs (0,0)
             	condition = false
             	Best = 0
