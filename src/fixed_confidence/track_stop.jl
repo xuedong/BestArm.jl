@@ -38,7 +38,7 @@ function d_tracking(mu::Array, delta::Real, rate::Function, dist::String)
             	Best = 0
             	print(N)
             	print(S)
-            	N = zeros(1,K)
+            	N = zeros(1, K)
          	else
             	if (minimum(N) <= max(sqrt(t) - K/2,0))
                		# forced exploration
