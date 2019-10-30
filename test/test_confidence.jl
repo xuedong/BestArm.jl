@@ -42,8 +42,8 @@ print("Optimal weights: $(opt_weights)\n")
 @everywhere chernoff_ttts_half(x,y,z) = BestArm.chernoff_ttts(x, y, z, 0.5)
 @everywhere chernoff_ttts_opt(x,y,z) = BestArm.chernoff_ttts(x, y, z, gamma_opt)
 
-policies = [BestArm.track_stop, BestArm.chernoff_bc2, chernoff_ttts_half, chernoff_ttts_opt, BestArm.kl_lucb, BestArm.ugape_c]
-policy_names = ["Track-and-Stop","Chernoff BC","Chernoff TTTS","Chernoff TTTS Opt","KL-LUCB","UGapEC"]
+policies = [BestArm.d_tracking, BestArm.chernoff_bc2, chernoff_ttts_half, chernoff_ttts_opt, BestArm.kl_lucb, BestArm.ugape_c]
+policy_names = ["D-Tracking", "Chernoff BC", "Chernoff TTTS", "Chernoff TTTS Opt", "KL-LUCB", "UGapEC"]
 
 
 # EXPLORATION RATES

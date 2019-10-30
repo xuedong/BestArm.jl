@@ -1,14 +1,14 @@
 function chernoff_bc(mu::Array, delta::Real, rate::Function, dist::String)
     # Chernoff stopping rule, sampling based on the "best challenger"
-    # described in experimental section of [Garivier and Kaufmann 2016]
+    # described in experimental section of Garivier and Kaufmann [2016]
     condition = true
     K = length(mu)
     N = zeros(1,K)
     S = zeros(1,K)
     # initialization
     for a in 1:K
-        N[a]=1
-        S[a]=sample_arm(mu[a], dist)
+        N[a] = 1
+        S[a] = sample_arm(mu[a], dist)
     end
     t=K
     Best=1

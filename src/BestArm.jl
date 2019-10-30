@@ -22,7 +22,7 @@ module BestArm
     export chernoff_racing, kl_racing
     export chernoff_target
     export chernoff_kl_lucb, kl_lucb
-    export track_stop, track_stop2
+    export d_tracking, c_tracking
     export ugape_c
 
     export ts

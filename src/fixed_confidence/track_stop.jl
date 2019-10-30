@@ -61,8 +61,8 @@ function d_tracking(mu::Array, delta::Real, rate::Function, dist::String)
 end
 
 
-function track_stop2(mu::Array, delta::Real, rate::Function, dist::String)
-    # Uses a Tracking of the cummulated sum
+function c_tracking(mu::Array, delta::Real, rate::Function, dist::String)
+    # Uses a tracking of the cummulated sum
     condition = true
     K=length(mu)
     N = zeros(1,K)
