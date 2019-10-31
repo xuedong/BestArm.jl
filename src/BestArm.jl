@@ -12,28 +12,35 @@ module BestArm
     export optimal_weights
     export gamma_beta
 
-    export seq_halving_ref, seq_halving_no_ref, seq_halving_infinite, hyperband
-    export succ_reject
-    export uniform
-    export ucbe, ucbe_adaptive
-    export ugape_b, ugape_b_adaptive
-
-    export best_challenger, best_challenger_bis, best_challenger_ts
-    export ttts_c
-    export ttei
-    export t3c
-    export racing, kl_racing
-    export target
-    export kl_lucb
-    export d_tracking, c_tracking
-    export ugape_c
-
+    '''anytime'''
+    export at_lucb
     export ts
     export ttts, parallel_ttts, ttts_infinite, ttts_dynamic
     export ttps, parallel_ttps
-    export at_lucb
 
+    '''fixed-budget'''
+    export seq_halving_ref, seq_halving_no_ref, seq_halving_infinite, hyperband
+    export succ_reject
+    export ucbe, ucbe_adaptive
+    export ugape_b, ugape_b_adaptive
+    export uniform
+
+    '''fixed-confidence'''
+    export best_challenger, best_challenger_bis, best_challenger_ts
+    export kl_lucb
+    export racing, kl_racing
+    export t3c
+    export target
+    export d_tracking, c_tracking
+    export ttei
+    export ttts_c
+    export ugape_c
+    export uniform_c
+
+    '''infinite bandit'''
     export siri
+
+    '''linear bandit'''
 
     include("arms.jl")
     include("utils.jl")
