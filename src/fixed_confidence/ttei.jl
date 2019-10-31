@@ -1,4 +1,4 @@
-function ChernoffTTEI(mu,delta,rate,frac=0.5,alpha=1,beta=1)
+function ttei(mu,delta,rate,frac=0.5,alpha=1,beta=1)
    # Chernoff stopping rule combined with the TTTS sampling rule of [Russo, 2016]
    condition = true
    K=length(mu)

@@ -1,4 +1,4 @@
-function ChernoffT3C(mu,delta,rate,frac=0.5,alpha=1,beta=1)
+function t3c(mu,delta,rate,frac=0.5,alpha=1,beta=1)
    # T3C with Chernoff stopping rule
    continuing = true
    K=length(mu)

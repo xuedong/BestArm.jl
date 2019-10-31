@@ -20,6 +20,8 @@ module BestArm
 
     export best_challenger, best_challenger_bis, best_challenger_ts
     export ttts_c
+    export ttei
+    export t3c
     export racing, kl_racing
     export target
     export kl_lucb

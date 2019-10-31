@@ -1,4 +1,4 @@
-function chernoff_bc(mu::Array, delta::Real, rate::Function, dist::String)
+function best_challenger(mu::Array, delta::Real, rate::Function, dist::String)
     # Chernoff stopping rule, sampling based on the "best challenger"
     # described in experimental section of Garivier and Kaufmann [2016]
     condition = true
@@ -67,7 +67,7 @@ function chernoff_bc(mu::Array, delta::Real, rate::Function, dist::String)
 end
 
 
-function chernoff_bc2(mu::Array, delta::Real, rate::Function, dist::String)
+function best_challenger_bis(mu::Array, delta::Real, rate::Function, dist::String)
     # Chernoff stopping rule + alternative choice between the empirical best and its "challenger"
     # Faster, requires no computation of Optimal Weights
     condition = true
@@ -134,7 +134,7 @@ function chernoff_bc2(mu::Array, delta::Real, rate::Function, dist::String)
 end
 
 
-function ChernoffBC(mu,delta,rate,forced_explo=false,TS=false,alpha=1,beta=1)
+function best_challenger_ts(mu,delta,rate,forced_explo=false,TS=false,alpha=1,beta=1)
    # Chernoff stopping rule,  sampling based on the "best challenger"
    # (different tie breaking rule compared to the one described in [Garivier and Kaufmann 2016])
    continuing = true
