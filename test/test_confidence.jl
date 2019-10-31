@@ -12,7 +12,7 @@ end
 typeExp = "NoSave"
 
 # TYPE OF DISTRIBUTION
-@everywhere typeDistribution="Gaussian"
+@everywhere distribution="Gaussian"
 
 # CHANGE NAME (save mode)
 fname="/home/xuedong/Downloads/t3c/results/xs"
@@ -32,7 +32,7 @@ sigma=1
 N=1
 
 # OPTIMAL SOLUTION
-@everywhere v, optWeights = BestArm.optimal_weights(mu, typeDistribution)
+@everywhere v, optWeights = BestArm.optimal_weights(mu, distribution)
 @everywhere gammaOpt=optWeights[best]
 print("mu=$(mu)\n")
 print("Theoretical number of samples: $(v*log(1/delta))\n")
@@ -65,7 +65,7 @@ function MCexp(mu,delta,N)
 		beta=rates[imeth]
 		startTime=time()
 		Reco,Draws = @distributed ((x,y) -> (vcat(x[1],y[1]),vcat(x[2],y[2]))) for n in 1:N
-				rec,dra = policy(mu,delta,beta)
+				rec,dra = policy(mu, delta, beta, distribution)
 				rec,dra
 		end
 		Error=collect([(r==best) ? 0 : 1 for r in Reco])
