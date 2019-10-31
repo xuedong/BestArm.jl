@@ -1,5 +1,6 @@
 module BestArm
     using Distributions
+    using Documenter
     using HCubature
     using StatsFuns
     using ProgressMeter

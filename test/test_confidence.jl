@@ -8,7 +8,6 @@ elseif Sys.KERNEL == :Linux
 	@everywhere include("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/src/BestArm.jl")
 end
 
-# DO YOU WANT TO SAVE RESULTS?
 #type_exp = "Save"
 type_exp = "NoSave"
 
