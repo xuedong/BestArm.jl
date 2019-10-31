@@ -1,4 +1,3 @@
-# Run Experiments, display results (and possibly save data) on a Bandit Problem to be specified
 using HDF5
 using Distributed
 
@@ -8,73 +7,79 @@ elseif Sys.KERNEL == :Linux
 	@everywhere include("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/src/BestArm.jl")
 end
 
-#type_exp = "Save"
-type_exp = "NoSave"
+# DO YOU WANT TO SAVE RESULTS?
+#typeExp = "Save"
+typeExp = "NoSave"
 
 # TYPE OF DISTRIBUTION
-dist = "Bernoulli"
+@everywhere typeDistribution="Gaussian"
 
 # CHANGE NAME (save mode)
-fname = "results/Experiment4arms"
+fname="/home/xuedong/Downloads/t3c/results/xs"
 
 # BANDIT PROBLEM
-mu = vec([0.3 0.25 0.2 0.1])
-best = (LinearIndices(mu .== maximum(mu)))[findall(mu .== maximum(mu))]
-K = length(mu)
+@everywhere mu=[1 0.8 0.75 0.7]
+@everywhere best=findall(x->x==maximum(mu),mu)[1][2]
+K=length(mu)
 
 # RISK LEVEL
-delta = 0.1
+delta=0.01
+
+# Variance for Gaussian Bandits
+sigma=1
 
 # NUMBER OF SIMULATIONS
-N = 5
-
+N=1000
 
 # OPTIMAL SOLUTION
-@everywhere v, opt_weights = BestArm.optimal_weights(mu, dist)
-@everywhere gamma_opt = opt_weights[best]
-print("mu = $(mu)\n")
-print("Theoretical number of samples: $((1/v)*log(1/delta))\n")
-print("Optimal weights: $(opt_weights)\n")
+@everywhere v, optWeights = BestArm.optimal_weights(mu, typeDistribution)
+@everywhere gammaOpt=optWeights[best]
+print("mu=$(mu)\n")
+print("Theoretical number of samples: $(v*log(1/delta))\n")
+print("Optimal weights: $(optWeights)\n\n")
 
 # POLICIES
 
-@everywhere chernoff_ttts_half(x,y,z) = BestArm.chernoff_ttts(x, y, z, 0.5)
-@everywhere chernoff_ttts_opt(x,y,z) = BestArm.chernoff_ttts(x, y, z, gamma_opt)
+@everywhere ChernoffSFWForcedExplo(mu,delta,explo)=ChernoffSFW(mu,delta,explo,true)
+@everywhere ChernoffSFWTS(mu,delta,explo)=ChernoffSFW(mu,delta,explo,false,true)
+@everywhere ChernoffBCForcedExplo(mu,delta,explo)=ChernoffBC(mu,delta,explo,true)
+@everywhere ChernoffBCTS(mu,delta,explo)=ChernoffBC(mu,delta,explo,false,true)
 
-policies = [BestArm.d_tracking, BestArm.chernoff_bc2, chernoff_ttts_half, chernoff_ttts_opt, BestArm.kl_lucb, BestArm.ugape_c]
-policy_names = ["D-Tracking", "Chernoff BC", "Chernoff TTTS", "Chernoff TTTS Opt", "KL-LUCB", "UGapEC"]
+@everywhere policies = [ChernoffT3C, ChernoffTTTS, ChernoffTTEI, ChernoffBCTS, TrackAndStop, Uniform, UGapE]
+@everywhere namesPolicies = ["T3C", "TTTS", "TTEI", "BC", "D-Tracking", "Uniform", "UGapE"]
+#@everywhere policies = [ChernoffT3C, ChernoffTTTS, ChernoffBCTS, TrackAndStop, Uniform, UGapE]
+#@everywhere namesPolicies = ["T3C", "TTTS", "BC", "D-Tracking", "Uniform", "UGapE"]
 
 
 # EXPLORATION RATES
-@everywhere explo(t, n, delta) = log((log(t)+1)/delta)
+@everywhere explo(t,delta)=log((log(t)+1)/delta)
 
-lp = length(policies)
-rates = [explo for i in 1:lp]
-
+lP=length(policies)
+rates=[explo for i in 1:lP]
 
 
 # RUN EXPERIMENTS
 
-function MCexp(mu, delta, N)
-	for imeth = 1:lp
-		Draws = zeros(N,K)
-		policy = policies[imeth]
-		beta = rates[imeth]
-		startTime = time()
-		Reco, Draws = @spawnat ((x,y) -> (vcat(x[1],y[1]),vcat(x[2],y[2]))) for n in 1:N
-			rec,dra = policy(mu,delta,beta)
-			rec,dra
+function MCexp(mu,delta,N)
+	for imeth=1:lP
+		Draws=zeros(N,K)
+		policy=policies[imeth]
+		beta=rates[imeth]
+		startTime=time()
+		Reco,Draws = @distributed ((x,y) -> (vcat(x[1],y[1]),vcat(x[2],y[2]))) for n in 1:N
+				rec,dra = policy(mu,delta,beta)
+				rec,dra
 		end
-		Error = collect([(r==best) ? 0 : 1 for r in Reco])
-		FracNT = sum([r==0 for r in Reco])/N
-		FracReco = zeros(K)
+		Error=collect([(r==best) ? 0 : 1 for r in Reco])
+		FracNT=sum([r==0 for r in Reco])/N
+		FracReco=zeros(K)
 		proportion = zeros(K)
 		for k in 1:K
-			FracReco[k] = sum([(r==k) ? 1 : 0 for r in Reco])/(N*(1-FracNT))
+			FracReco[k]=sum([(r==k) ? 1 : 0 for r in Reco])/(N*(1-FracNT))
 		end
 		for n in 1:N
 			if (Reco[n]!=0)
-				proportion += Draws[n,:]/sum(Draws[n,:])
+			    proportion += Draws[n,:]/sum(Draws[n,:])
 			end
 		end
 		proportion = proportion / (N*(1-FracNT))
@@ -89,51 +94,52 @@ function MCexp(mu, delta, N)
 end
 
 
-function SaveData(mu, delta, N)
-	K = length(mu)
-	for imeth = 1:lp
-		Draws = zeros(N,K)
-		policy = policies[imeth]
-		beta = rates[imeth]
-		namePol = policy_names[imeth]
-		startTime = time()
-		Reco,Draws = @spawnat ((x,y) -> (vcat(x[1],y[1]),vcat(x[2],y[2]))) for n in 1:N
-			reco,draws = policy(mu,delta,beta)
-			reco,draws
-		end
-		Error = collect([(r==best) ? 0 : 1 for r in Reco])
-		FracNT = sum([r==0 for r in Reco])/N
-		FracReco = zeros(K)
+function SaveData(mu,delta,N)
+	K=length(mu)
+    for imeth=1:lP
+        Draws=zeros(N,K)
+        policy=policies[imeth]
+		beta=rates[imeth]
+        namePol=namesPolicies[imeth]
+        startTime=time()
+		Reco,Draws = @distributed ((x,y) -> (vcat(x[1],y[1]),vcat(x[2],y[2]))) for n in 1:N
+	        reco,draws = policy(mu,delta,beta)
+	        reco,draws
+	    end
+		Error=collect([(r==best) ? 0 : 1 for r in Reco])
+        FracNT=sum([r==0 for r in Reco])/N
+        FracReco=zeros(K)
 		proportion = zeros(K)
-		for k in 1:K
-			FracReco[k] = sum([(r==k) ? 1 : 0 for r in Reco])/(N*(1-FracNT))
+        for k in 1:K
+            FracReco[k]=sum([(r==k) ? 1 : 0 for r in Reco])/(N*(1-FracNT))
 		end
 		for n in 1:N
 			if (Reco[n]!=0)
-				proportion += Draws[n,:]/sum(Draws[n,:])
+			   proportion += Draws[n,:]/sum(Draws[n,:])
 			end
-		end
-		proportion = proportion / N
-		print("Results for $(policy), average on $(N) runs\n")
-		print("proportion of runs that did not terminate: $(FracNT)\n")
-		print("average number of draws: $(sum(Draws)/(N*(1-FracNT)))\n")
+        end
+		proportion = proportion /(N*(1-FracNT))
+        print("Results for $(policy), average on $(N) runs\n")
+	    print("proportion of runs that did not terminate: $(FracNT)\n")
+	    print("average number of draws: $(sum(Draws)/(N*(1-FracNT)))\n")
 		print("average proportions of draws: $(proportion)\n")
-		print("proportion of errors: $(sum(Error)/(float(N*(1-FracNT))))\n")
-		print("proportion of recommendation made when termination: $(FracReco)\n")
-		print("elapsed time: $(time()-startTime)\n\n")
-		name="$(fname)_$(namePol)_delta_$(delta)_N_$(N).h5"
-		h5write(name,"mu",mu)
-		h5write(name,"delta",delta)
-		h5write(name,"FracNT",collect(FracNT))
-		h5write(name,"FracReco",FracReco)
-		h5write(name,"Draws",Draws)
-		h5write(name,"Error",Error)
+	    print("proportion of errors: $(sum(Error)/(float(N*(1-FracNT))))\n")
+        print("proportion of recommendation made when termination: $(FracReco)\n")
+        print("elapsed time: $(time()-startTime)\n")
+		print("one step time: $((time()-startTime)/((sum(Draws)/(N*(1-FracNT)))))\n\n")
+        name="$(fname)_$(namePol)_delta_$(delta)_N_$(N).h5"
+        h5write(name,"mu",mu)
+        h5write(name,"delta",delta)
+        h5write(name,"FracNT",collect(FracNT))
+        h5write(name,"FracReco",FracReco)
+        h5write(name,"Draws",Draws)
+        h5write(name,"Error",mean(Error))
 	end
 end
 
 
-if type_exp == "Save"
-   SaveData(mu, delta, N)
+if (typeExp=="Save")
+   SaveData(mu,delta,N)
 else
-   MCexp(mu, delta, N)
+   MCexp(mu,delta,N)
 end

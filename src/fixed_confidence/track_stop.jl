@@ -1,9 +1,8 @@
 """
-
+D-Tracking by Garivier and Kaufmann [2016].
 """
 function d_tracking(mu::Array, delta::Real, rate::Function, dist::String,
 	stopping::String = "Chernoff")
-   	# D-Tracking + Chernoff stopping
    	condition = true
    	K = length(mu)
    	N = zeros(1, K)

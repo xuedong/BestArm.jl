@@ -21,7 +21,10 @@ function compute_regrets_reservoir(mu::AbstractArray{<:Real}, recommendations::A
 end
 
 
-# Recommendation strategies
+#############################
+# Recommendation strategies #
+#############################
+
 # EDP: Empirical distribution of plays
 function edp(N, S)
 	total = sum(N)
