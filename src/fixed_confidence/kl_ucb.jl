@@ -47,7 +47,7 @@ function kl_lucb(mu::Array, delta::Real, rate::Function, dist::String,
         # check stopping condition
         if stopping == "chernoff"
             condition = (Score <= rate(t,0,delta))
-        elif stopping == "lucb"
+        elseif stopping == "lucb"
             condition = (LCB < UCB[Challenger])
         end
         if (t>1000000)

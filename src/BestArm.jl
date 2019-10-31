@@ -18,11 +18,11 @@ module BestArm
     export ucbe, ucbe_adaptive
     export ugape_b, ugape_b_adaptive
 
-    export chernoff_bc, chernoff_bc2
-    export chernoff_ttts
-    export chernoff_racing, kl_racing
-    export chernoff_target
-    export chernoff_kl_lucb, kl_lucb
+    export best_challenger, best_challenger_bis, best_challenger_ts
+    export ttts_c
+    export racing, kl_racing
+    export target
+    export kl_lucb
     export d_tracking, c_tracking
     export ugape_c
 

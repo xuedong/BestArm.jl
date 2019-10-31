@@ -1,5 +1,5 @@
-function chernoff_ttts(mu::Array, delta::Real, rate::Function, dist::String,
-    frac::Real, alpha::Real = 1, beta::Real = 1)
+function ttts_c(mu::Array, delta::Real, rate::Function, dist::String,
+    frac::Real, alpha::Real = 1, beta::Real = 1, stopping::String = "chernoff")
     # Chernoff stopping rule combined with the PTS sampling rule
     condition = true
     K = length(mu)

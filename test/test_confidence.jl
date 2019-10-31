@@ -29,7 +29,7 @@ delta=0.01
 sigma=1
 
 # NUMBER OF SIMULATIONS
-N=1000
+N=1
 
 # OPTIMAL SOLUTION
 @everywhere v, optWeights = BestArm.optimal_weights(mu, typeDistribution)
@@ -45,8 +45,8 @@ print("Optimal weights: $(optWeights)\n\n")
 @everywhere ChernoffBCForcedExplo(mu,delta,explo)=ChernoffBC(mu,delta,explo,true)
 @everywhere ChernoffBCTS(mu,delta,explo)=ChernoffBC(mu,delta,explo,false,true)
 
-@everywhere policies = [ChernoffT3C, ChernoffTTTS, ChernoffTTEI, ChernoffBCTS, TrackAndStop, Uniform, UGapE]
-@everywhere namesPolicies = ["T3C", "TTTS", "TTEI", "BC", "D-Tracking", "Uniform", "UGapE"]
+@everywhere policies = [BestArm.ttts_c, ChernoffTTEI, ChernoffBCTS, TrackAndStop, Uniform, UGapE]
+@everywhere namesPolicies = [TTTS", "TTEI", "BC", "D-Tracking", "Uniform", "UGapE"]
 #@everywhere policies = [ChernoffT3C, ChernoffTTTS, ChernoffBCTS, TrackAndStop, Uniform, UGapE]
 #@everywhere namesPolicies = ["T3C", "TTTS", "BC", "D-Tracking", "Uniform", "UGapE"]
 
