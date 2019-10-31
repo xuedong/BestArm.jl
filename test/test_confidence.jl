@@ -40,19 +40,18 @@ print("Optimal weights: $(optWeights)\n\n")
 
 # POLICIES
 
-@everywhere ChernoffSFWForcedExplo(mu,delta,explo)=ChernoffSFW(mu,delta,explo,true)
-@everywhere ChernoffSFWTS(mu,delta,explo)=ChernoffSFW(mu,delta,explo,false,true)
 @everywhere ChernoffBCForcedExplo(mu,delta,explo)=ChernoffBC(mu,delta,explo,true)
 @everywhere ChernoffBCTS(mu,delta,explo)=ChernoffBC(mu,delta,explo,false,true)
 
-@everywhere policies = [BestArm.ttts_c, ChernoffTTEI, ChernoffBCTS, TrackAndStop, Uniform, UGapE]
+@everywhere policies = [BestArm.ttts_c, BestArm.ttei,
+BestArm.best_challenger_ts, BestArm.d_tracking, BestArm.uniform_c, BestArm.ugape_c]
 @everywhere namesPolicies = [TTTS", "TTEI", "BC", "D-Tracking", "Uniform", "UGapE"]
 #@everywhere policies = [ChernoffT3C, ChernoffTTTS, ChernoffBCTS, TrackAndStop, Uniform, UGapE]
 #@everywhere namesPolicies = ["T3C", "TTTS", "BC", "D-Tracking", "Uniform", "UGapE"]
 
 
 # EXPLORATION RATES
-@everywhere explo(t,delta)=log((log(t)+1)/delta)
+@everywhere explo(t, delta)=log((log(t)+1)/delta)
 
 lP=length(policies)
 rates=[explo for i in 1:lP]
