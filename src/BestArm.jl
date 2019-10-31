@@ -42,25 +42,27 @@ module BestArm
     include("reservoirs.jl")
     include("weights.jl")
 
-    include("fixed_budget/ucbe.jl")
-    include("fixed_budget/seq_halv.jl")
-    include("fixed_budget/succ_rej.jl")
-    include("fixed_budget/ugape_b.jl")
-    include("fixed_budget/uniform.jl")
-
-    include("fixed_confidence/kl_ucb.jl")
-    include("fixed_confidence/racing.jl")
-    include("fixed_confidence/target.jl")
-    include("fixed_confidence/best_challenger.jl")
-    include("fixed_confidence/ttts_c.jl")
-    include("fixed_confidence/track_stop.jl")
-    include("fixed_confidence/ugape_c.jl")
-
+    include("anytime/at_lucb.jl")
+    include("anytime/ts.jl")
     include("anytime/ttps.jl")
     include("anytime/ttts.jl")
     include("anytime/ttvs.jl")
-    include("anytime/ts.jl")
-    include("anytime/at_lucb.jl")
+
+    include("fixed_budget/seq_halv.jl")
+    include("fixed_budget/succ_rej.jl")
+    include("fixed_budget/ucbe.jl")
+    include("fixed_budget/ugape_b.jl")
+    include("fixed_budget/uniform.jl")
+
+    include("fixed_confidence/best_challenger.jl")
+    include("fixed_confidence/kl_ucb.jl")
+    include("fixed_confidence/racing.jl")
+    include("fixed_confidence/target.jl")
+    include("fixed_confidence/track_stop.jl")
+    include("fixed_confidence/ttei.jl")
+    include("fixed_confidence/ttts_c.jl")
+    include("fixed_confidence/ugape_c.jl")
+    include("fixed_confidence/uniform_c.jl")
 
     include("infinite/siri.jl")
 end
