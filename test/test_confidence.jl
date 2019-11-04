@@ -45,8 +45,8 @@ print("Optimal weights: $(optWeights)\n\n")
 
 # @everywhere policies = [BestArm.ttts_c, BestArm.ttei, BestArm.best_challenger_ts, BestArm.d_tracking, BestArm.uniform_c, BestArm.ugape_c]
 # @everywhere namesPolicies = ["TTTS", "TTEI", "BC", "D-Tracking", "Uniform", "UGapE"]
-@everywhere policies = [BestArm.ttts_c]
-@everywhere namesPolicies = ["TTTS"]
+@everywhere policies = [BestArm.ttts_c, BestArm.ttei]
+@everywhere namesPolicies = ["TTTS", "TTEI"]
 
 # EXPLORATION RATES
 @everywhere explo(t, delta)=log((log(t)+1)/delta)

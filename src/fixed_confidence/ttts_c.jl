@@ -36,9 +36,9 @@ function ttts_c(mu::Array, delta::Real, rate::Function, dist::String,
       	else
          	TS=zeros(K)
          	for a=1:K
-            	if typeDistribution == "Gaussian"
+            	if dist == "Gaussian"
                		TS[a] = rand(Normal(S[a] / N[a], sigma / sqrt(N[a])), 1)[1]
-            	elseif typeDistribution == "Bernoulli"
+            	elseif dist == "Bernoulli"
                		TS[a]=rand(Beta(alpha+S[a], beta+N[a]-S[a]), 1)[1]
             	end
          	end
@@ -49,9 +49,9 @@ function ttts_c(mu::Array, delta::Real, rate::Function, dist::String,
             	while (I==J)
                		TS=zeros(K)
                		for a=1:K
-                  		if typeDistribution == "Gaussian"
+                  		if dist == "Gaussian"
                      		TS[a] = rand(Normal(S[a] / N[a], sigma / sqrt(N[a])), 1)[1]
-                  		elseif typeDistribution == "Bernoulli"
+                  		elseif dist == "Bernoulli"
                      		TS[a]=rand(Beta(alpha+S[a], beta+N[a]-S[a]), 1)[1]
                   		end
                		end

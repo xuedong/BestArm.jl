@@ -1,8 +1,8 @@
 function ttei(mu::Array, delta::Real, rate::Function, dist::String,
-	frac::Real = 0.5, alpha::Real = 1, beta::Real = 1)
+	frac::Real = 0.5, alpha::Real = 1, beta::Real = 1, stopping::String = "chernoff")
 	# Chernoff stopping rule combined with the TTTS sampling rule of [Russo, 2016]
-   	condition = true
-   	K=length(mu)
+	condition = true
+   	K = length(mu)
    	N = zeros(1,K)
    	S = zeros(1,K)
    	# initialization
@@ -23,7 +23,7 @@ function ttei(mu::Array, delta::Real, rate::Function, dist::String,
       	MuMid=(SB.+S)./(NB.+N)
       	Index=collect(1:K)
       	deleteat!(Index,Best)
-      	Score=minimum([NB*d(muB,MuMid[i])+N[i]*d(Mu[i],MuMid[i]) for i in Index])
+      	Score=minimum([NB*d(muB, MuMid[i], dist)+N[i]*d(Mu[i], MuMid[i], dist) for i in Index])
       	if (Score > rate(t,delta))
          	# stop
          	condition=false
@@ -57,11 +57,11 @@ function ttei(mu::Array, delta::Real, rate::Function, dist::String,
             	end
             	#println(EII)
             	I = argmax(EII)
-        	end
-			# draw arm I
-	    	t+=1
-	    	S[I]+=sample(mu[I])
-	    	N[I]+=1
+         	end
+         	# draw arm I
+	      	t+=1
+	      	S[I]+=sample(mu[I], dist)
+	      	N[I]+=1
 	   	end
    	end
    	recommendation=Best
