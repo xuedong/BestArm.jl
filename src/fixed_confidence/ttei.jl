@@ -9,7 +9,7 @@ function ttei(mu::Array, delta::Real, rate::Function, dist::String,
    	# initialization
    	for a in 1:K
       	N[a]=1
-      	S[a]=sample(mu[a], dist)
+      	S[a]=sample_arm(mu[a], dist)
    	end
    	t=K
    	Best=1
@@ -38,9 +38,9 @@ function ttei(mu::Array, delta::Real, rate::Function, dist::String,
          	EI=zeros(K)
          	for a=1:K
 	         	#TS[a]=rand(Beta(alpha+S[a], beta+N[a]-S[a]), 1)[1]
-            	SigmaI = sqrt(sigma^2/N[a])
+            	SigmaI = sqrt(alpha^2/N[a])
             	x = (Mu[a] - muB)/SigmaI
-            	EI[a] = SigmaI * f(x)
+            	EI[a] = SigmaI * compute_ei_aux(x)
          	end
          	#println(EI)
          	I = argmax(EI)
@@ -51,9 +51,9 @@ function ttei(mu::Array, delta::Real, rate::Function, dist::String,
                		if b == I
                   		EII[b] = 0
                		else
-                  		SigmaI = sqrt(sigma^2/N[I]+sigma^2/N[b])
+                  		SigmaI = sqrt(alpha^2/N[I] + alpha^2/N[b])
                   		x = (Mu[b] - Mu[I])/SigmaI
-                  		EII[b] = SigmaI * f(x)
+                  		EII[b] = SigmaI * compute_ei_aux(x)
                		end
             	end
             	#println(EII)
@@ -61,7 +61,7 @@ function ttei(mu::Array, delta::Real, rate::Function, dist::String,
          	end
          	# draw arm I
 	      	t+=1
-	      	S[I]+=sample(mu[I], dist)
+	      	S[I]+=sample_arm(mu[I], dist)
 	      	N[I]+=1
 	   	end
    	end

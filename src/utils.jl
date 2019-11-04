@@ -219,3 +219,9 @@ function compute_b_value_siri(mean::Real, delta::Real, c::Real, beta::Real,
 
 	return mean + 2*sqrt(index) + 2*index
 end
+
+
+# Helper function for TTEI
+function compute_ei_aux(x)
+   return x * cdf.(Normal(0.0, 1.0), x)[1] + pdf.(Normal(0.0, 1.0), x)[1]
+end

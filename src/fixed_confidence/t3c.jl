@@ -8,8 +8,8 @@ function t3c(mu::Array, delta::Real, rate::Function, dist::String,
    	S = zeros(1,K)
    	# initialization
    	for a in 1:K
-      	N[a]=1
-      	S[a]=sample(mu[a], dist)
+      	N[a] = 1
+      	S[a] = sample_arm(mu[a], dist)
    	end
    	t=K
    	TrueBest=1
@@ -27,9 +27,9 @@ function t3c(mu::Array, delta::Real, rate::Function, dist::String,
       	# compute the best arm and the challenger
       	for a=1:K
          	if dist == "Gaussian"
-            	Mu[a] = rand(Normal(S[a] / N[a], sigma / sqrt(N[a])), 1)[1]
+            	Mu[a] = rand(Normal(S[a] / N[a], alpha / sqrt(N[a])), 1)[1]
          	elseif dist == "Bernoulli"
-            	Mu[a]=rand(Beta(alpha+S[a], beta+N[a]-S[a]), 1)[1]
+            	Mu[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1]
          	end
       	end
       	Best=randmax(Mu)
@@ -70,8 +70,8 @@ function t3c(mu::Array, delta::Real, rate::Function, dist::String,
       	end
       	# draw the arm
       	t+=1
-      	S[I]+=sample(mu[I], dist)
-      	N[I]+=1
+      	S[I] += sample_arm(mu[I], dist)
+      	N[I] += 1
    	end
    	return TrueBest,N
 end

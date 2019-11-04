@@ -38,9 +38,9 @@ function ttts_c(mu::Array, delta::Real, rate::Function, dist::String,
          	TS=zeros(K)
          	for a=1:K
             	if dist == "Gaussian"
-               		TS[a] = rand(Normal(S[a] / N[a], sigma / sqrt(N[a])), 1)[1]
+               		TS[a] = rand(Normal(S[a] / N[a], alpha / sqrt(N[a])), 1)[1]
             	elseif dist == "Bernoulli"
-               		TS[a]=rand(Beta(alpha+S[a], beta+N[a]-S[a]), 1)[1]
+               		TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1]
             	end
          	end
          	I = argmax(TS)
@@ -51,9 +51,9 @@ function ttts_c(mu::Array, delta::Real, rate::Function, dist::String,
                		TS=zeros(K)
                		for a=1:K
                   		if dist == "Gaussian"
-                     		TS[a] = rand(Normal(S[a] / N[a], sigma / sqrt(N[a])), 1)[1]
+                     		TS[a] = rand(Normal(S[a] / N[a], alpha / sqrt(N[a])), 1)[1]
                   		elseif dist == "Bernoulli"
-                     		TS[a]=rand(Beta(alpha+S[a], beta+N[a]-S[a]), 1)[1]
+                     		TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1]
                   		end
                		end
                		J = argmax(TS)
