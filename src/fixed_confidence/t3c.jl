@@ -70,7 +70,7 @@ function t3c(mu::Array, delta::Real, rate::Function, dist::String,
       	end
       	# draw the arm
       	t+=1
-      	S[I]+=sample(mu[I])
+      	S[I]+=sample(mu[I], dist)
       	N[I]+=1
    	end
    	return TrueBest,N

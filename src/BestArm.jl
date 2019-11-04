@@ -57,6 +57,7 @@ module BestArm
     include("fixed_confidence/best_challenger.jl")
     include("fixed_confidence/kl_ucb.jl")
     include("fixed_confidence/racing.jl")
+    include("fixed_confidence/t3c.jl")
     include("fixed_confidence/target.jl")
     include("fixed_confidence/track_stop.jl")
     include("fixed_confidence/ttei.jl")
