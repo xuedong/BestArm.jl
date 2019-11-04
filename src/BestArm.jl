@@ -23,7 +23,7 @@ module BestArm
     export ugape_b, ugape_b_adaptive
     export uniform
 
-    export best_challenger, best_challenger_bis, best_challenger_ts
+    export best_challenger
     export kl_lucb
     export racing, kl_racing
     export t3c
