@@ -14,8 +14,9 @@ function ttts_c(mu::Array, delta::Real, rate::Function, dist::String,
     Best=1
     while (condition)
         Mu=S./N
-        Ind = (LinearIndices(Mu .== maximum(Mu)))[findall(Mu .== maximum(Mu))]
-        # Empirical best arm
+        # Empirical best arm, tie-breaking with random pick
+        #Ind = (LinearIndices(Mu .== maximum(Mu)))[findall(Mu .== maximum(Mu))]
+        Ind = findall(Mu .== maximum(Mu))
         Best=Ind[floor(Int,length(Ind)*rand())+1]
         # Compute the stopping statistic
         NB=N[Best]
