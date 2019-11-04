@@ -1,6 +1,5 @@
 function ttei(mu::Array, delta::Real, rate::Function, dist::String,
-	frac::Real = 0.5, alpha::Real = 1, beta::Real = 1,
-	stopping::String = "chernoff")
+	alpha::Real=1, beta::Real=1, frac::Real=0.5, stopping::Symbol=:Chernoff)
 	# Chernoff stopping rule combined with the TTTS sampling rule of [Russo, 2016]
 	condition = true
    	K = length(mu)
