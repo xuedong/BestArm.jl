@@ -23,7 +23,7 @@ function target(mu::Array, delta::Real, rate::Function, dist::String,
        	MuMid=(SB.+S)./(NB.+N)
        	Index=collect(1:K)
        	deleteat!(Index,Best)
-       	Score=minimum([NB*d(muB,MuMid[i])+N[i]*d(Mu[i],MuMid[i]) for i in Index])
+       	Score=minimum([NB*d(muB, MuMid[i], dist)+N[i]*d(Mu[i], MuMid[i], dist) for i in Index])
        	if (Score > rate(t,delta))
 			# stop
             condition=false
@@ -35,7 +35,7 @@ function target(mu::Array, delta::Real, rate::Function, dist::String,
             print(S)
             N=zeros(1,K)
        	else
-	    	I = argmax(Target-N/t)
+	    	I = argmax(target-N/t)
 	    	t += 1
 	    	S[I] += sample_arm(mu[I], dist)
 	    	N[I] += 1
