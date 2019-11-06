@@ -25,7 +25,7 @@ module BestArm
 
     export best_challenger
     export kl_lucb
-    export racing, kl_racing
+    export racing
     export t3c
     export target
     export d_tracking, c_tracking
