@@ -78,11 +78,11 @@ function best_challenger(mu::Array, delta::Real, rate::Function, dist::String,
                 # forced exploration
                 I=randmax(-N)
             else
-    			if challenger == "Proportion"
+    			if challenger == :Proportion
      				I = (NB/(NB+N[Challenger]) < Dist[Best]/(Dist[Best]+Dist[Challenger])) ? Best : Challenger
-     			elseif challenger == "Transportation"
+     			elseif challenger == :Transportation
      				I = (d(MuB, MuMid[Challenger], dist) > d(Mu[Challenger], MuMid[Challenger], dist)) ? Best : Challenger
-     			elseif challenger == "Pull"
+     			elseif challenger == :Pull
      				I = (N[Best] < N[Challenger]) ? Best : Challenger
      			end
             end
