@@ -29,7 +29,7 @@ function racing(mu::Array, delta::Real, rate::Function, dist::String,
       	MuWorst=minimum(MuR)
       	IndWorst=randmax(-MuR)
 	  	if elimination == :Chernoff
-      		if (round*(d(MuBest, (MuBest+MuWorst)/2, dist)+d(MuWorst, (MuBest+MuWorst)/2), dist) > rate(t,delta))
+      		if (round*(d(MuBest, (MuBest+MuWorst)/2, dist)+d(MuWorst, (MuBest+MuWorst)/2, dist)) > rate(t,delta))
          		# remove Worst arm
          		deleteat!(Remaining, IndWorst)
       		end

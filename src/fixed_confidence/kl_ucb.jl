@@ -23,6 +23,16 @@ function kl_lucb(mu::Array, delta::Real, rate::Function, dist::String,
       	# Empirical best arm
       	Best=randmax(Mu)
       	# Find the challenger
+		if stopping == :Chernoff
+			# Compute the stopping statistic
+      		NB=N[Best]
+      		SB=S[Best]
+      		muB=SB/NB
+      		MuMid=(SB.+S)./(NB.+N)
+      		Index=collect(1:K)
+      		deleteat!(Index,Best)
+      		Score=minimum([NB*d(muB, MuMid[i], dist)+N[i]*d(Mu[i], MuMid[i], dist) for i in Index])
+		end
       	UCB = zeros(1,K)
       	LCB = dlow(Mu[Best], rate(t,delta)/N[Best], dist)
       	for a in 1:K
