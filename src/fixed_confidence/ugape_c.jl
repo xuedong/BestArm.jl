@@ -28,13 +28,12 @@ function ugape_c(mu::Array, delta::Real, rate::Function, dist::String)
          	B[a] = maximum(UCB[Index])-LCB[a]
       	end
       	Value=minimum(B)
-      	Best=argmin(B)
+      	Best=argmin(B)[2]
       	UCB[Best]=0
       	Challenger=argmax(UCB)
       	# choose which arm to draw
       	t = t+1
       	I = (N[Best] < N[Challenger]) ? Best : Challenger
-		print(I)
       	S[I] += sample_arm(mu[I], dist)
       	N[I] += 1
       	# check stopping condition
