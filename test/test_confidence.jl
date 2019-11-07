@@ -63,9 +63,9 @@ function MCexp(mu,delta,N)
 		policy=policies[imeth]
 		beta=rates[imeth]
 		startTime=time()
-		Reco,Draws = @distributed ((x,y) -> (vcat(x[1],y[1]),vcat(x[2],y[2]))) for n in 1:N
-				rec,dra = policy(mu, delta, beta, distribution)
-				rec,dra
+		Reco,Draws = @distributed ((x,y) -> (vcat(x[1], y[1]), vcat(x[2], y[2]))) for n in 1:N
+				rec, dra = policy(mu, delta, beta, distribution)
+				rec, dra
 		end
 		Error=collect([(r==best) ? 0 : 1 for r in Reco])
 		FracNT=sum([r==0 for r in Reco])/N
