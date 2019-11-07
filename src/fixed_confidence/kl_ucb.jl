@@ -38,9 +38,9 @@ function kl_lucb(mu::Array, delta::Real, rate::Function, dist::String,
       	S[Challenger] += sample_arm(mu[Challenger], dist)
       	N[Challenger] += 1
       	# check stopping condition
-		if stopping == "Chernoff"
+		if stopping == :Chernoff
 			condition = (Score <= rate(t,delta))
-		elseif stopping == "LUCB"
+		elseif stopping == :LUCB
       		condition = (LCB < UCB[Challenger])
 		end
       	if (t>1000000)

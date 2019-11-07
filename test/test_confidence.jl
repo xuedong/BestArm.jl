@@ -29,7 +29,7 @@ delta=0.01
 sigma=1
 
 # NUMBER OF SIMULATIONS
-N=1
+N=10
 
 # OPTIMAL SOLUTION
 @everywhere v, optWeights = BestArm.optimal_weights(mu, distribution)
@@ -45,8 +45,8 @@ print("Optimal weights: $(optWeights)\n\n")
 
 # @everywhere policies = [BestArm.ttts_c, BestArm.ttei, BestArm.best_challenger_ts, BestArm.d_tracking, BestArm.uniform_c, BestArm.ugape_c]
 # @everywhere namesPolicies = ["TTTS", "TTEI", "BC", "D-Tracking", "Uniform", "UGapE"]
-@everywhere policies = [BestArm.ttts_c, BestArm.ttei, BestArm.t3c, BestArm.target, BestArm.kl_lucb, BestArm.racing]
-@everywhere namesPolicies = ["TTTS", "TTEI", "T3C", "Target", "KL-LUCB", "Racing"]
+@everywhere policies = [BestArm.kl_lucb, BestArm.racing]
+@everywhere namesPolicies = ["KL-LUCB", "Racing"]
 
 # EXPLORATION RATES
 @everywhere explo(t, delta)=log((log(t)+1)/delta)

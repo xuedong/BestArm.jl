@@ -28,12 +28,12 @@ function racing(mu::Array, delta::Real, rate::Function, dist::String,
       	Best=Remaining[IndBest]
       	MuWorst=minimum(MuR)
       	IndWorst=randmax(-MuR)
-	  	if elimination == "Chernoff"
+	  	if elimination == :Chernoff
       		if (round*(d(MuBest, (MuBest+MuWorst)/2, dist)+d(MuWorst, (MuBest+MuWorst)/2), dist) > rate(t,delta))
          		# remove Worst arm
          		deleteat!(Remaining, IndWorst)
       		end
-		elseif elimination == "KL"
+		elseif elimination == :KL
 			kl_low = dlow(MuBest, rate(round, delta)/round, dist)
 			kl_up = dup(MuWorst, rate(round, delta)/round, dist)
 			if kl_low > kl_up
