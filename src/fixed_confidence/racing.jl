@@ -15,7 +15,7 @@ function racing(mu::Array, delta::Real, rate::Function, dist::String,
   	while (length(Remaining)>1)
       	# Drawn all remaining arms
       	for a in Remaining
-	      	S[a] += sample(mu[a], dist)
+	      	S[a] += sample_arm(mu[a], dist)
 	      	N[a] += 1
       	end
       	round+=1
