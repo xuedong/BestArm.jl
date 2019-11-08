@@ -37,7 +37,7 @@ function best_challenger(mu::Array, delta::Real, rate::Function, dist::String,
         # Compute the stopping statistic
         num_pulls_best = num_pulls[empirical_best]
         reward_best = rewards[empirical_best]
-        empirical_mean_best = num_pulls_best / reward_best
+        empirical_mean_best = reward_best / num_pulls_best
         weighted_means = (empirical_mean_best .+ rewards) ./
             (num_pulls_best .+ num_pulls)
         # Compute the minimum GLR
