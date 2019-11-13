@@ -26,7 +26,7 @@ K=length(mu)
 delta=0.01
 
 # Variance for Gaussian Bandits
-sigma=1
+#sigma=1
 
 # NUMBER OF SIMULATIONS
 N=1
@@ -43,15 +43,10 @@ print("Optimal weights: $(optWeights)\n\n")
 @everywhere ChernoffBCForcedExplo(mu,delta,explo)=ChernoffBC(mu,delta,explo,true)
 @everywhere ChernoffBCTS(mu,delta,explo)=ChernoffBC(mu,delta,explo,false,true)
 
-@everywhere policies = [BestArm.best_challenger]
-@everywhere namesPolicies = ["BC"]
-# @everywhere policies =
-# [BestArm.best_challenger, BestArm.kl_lucb, BestArm.racing,
-# BestArm.t3c, BestArm.target, BestArm.d_tracking, BestArm.ttei,
-# BestArm.ttts_c, BestArm.ugape_c, BestArm.uniform_c]
-# @everywhere namesPolicies =
-# ["BC", "KL-LUCB", "Racing", "T3C", "Target", "D-Tracking",
-# "TTEI", "TTTS", "UGapE", "Uniform"]
+#@everywhere policies = [BestArm.best_challenger]
+#@everywhere namesPolicies = ["BC"]
+@everywhere policies = [BestArm.best_challenger, BestArm.kl_lucb, BestArm.racing, BestArm.t3c, BestArm.target, BestArm.d_tracking, BestArm.ttei, BestArm.ttts_c, BestArm.ugape_c, BestArm.uniform_c]
+@everywhere namesPolicies = ["BC", "KL-LUCB", "Racing", "T3C", "Target", "D-Tracking", "TTEI", "TTTS", "UGapE", "Uniform"]
 
 # EXPLORATION RATES
 @everywhere explo(t, delta)=log((log(t)+1)/delta)
@@ -66,10 +61,10 @@ function MCexp(mu,delta,N)
 	for imeth=1:lP
 		Draws=zeros(N,K)
 		policy=policies[imeth]
-		beta=rates[imeth]
+		rate=rates[imeth]
 		startTime=time()
-		Reco,Draws = @distributed ((x,y) -> (vcat(x[1], y[1]), vcat(x[2], y[2]))) for n in 1:N
-				rec, dra = policy(mu, delta, beta, distribution)
+		Reco, Draws = @distributed ((x,y) -> (vcat(x[1], y[1]), vcat(x[2], y[2]))) for n in 1:N
+				rec, dra = policy(mu, delta, rate, distribution)
 				rec, dra
 		end
 		Error=collect([(r==best) ? 0 : 1 for r in Reco])

@@ -1,17 +1,17 @@
 """
     best_challenger(mu::Array, delta::Real, rate::Function, dist::String,
         alpha::Real=1, beta::Real=1, fe::Bool=false, ts::Bool=false,
-        challenger::Symbol=:Transportation, stopping::Symbol=:Chernoff)
+        cm::Symbol=:Transportation, stopping::Symbol=:Chernoff)
 
 Given a bandit model `mu`, a confidence level `delta`, the function returns a
 guess of the best arm when reaching the confidence level. The function compares
-the transportation cost (if `challenger=:Transportation`), the number of pulls
-(if `challenger=:Pull`) or the proportion of pulls (if `challenger=:Proportion`)
+the transportation cost (if `cm=:Transportation`), the number of pulls
+(if `cm=:Pull`) or the proportion of pulls (if `cm=:Proportion`)
 to pick between the best arm and the challenger.
 """
 function best_challenger(mu::Array, delta::Real, rate::Function, dist::String,
     alpha::Real=1, beta::Real=1, fe::Bool=false, ts::Bool=false,
-    challenger::Symbol=:Transportation, stopping::Symbol=:Chernoff)
+    cm::Symbol=:Transportation, stopping::Symbol=:Chernoff)
     # Flag of whether we should stop the algorithm or not
     condition = true
 
@@ -103,7 +103,7 @@ function best_challenger(mu::Array, delta::Real, rate::Function, dist::String,
                 # Forced exploration
                 new_sample = randmax(-num_pulls)
             else
-    			if challenger == :Proportion
+    			if cm == :Proportion
                     _, weights = optimal_weights(empirical_means, 1e-11)
      				new_sample =
                         (num_pulls_best /
@@ -111,14 +111,14 @@ function best_challenger(mu::Array, delta::Real, rate::Function, dist::String,
                         weights[empirical_best] /
                         (weights[empirical_best] + weights[challenger])) ?
                         empirical_best : challenger
-     			elseif challenger == :Transportation
+     			elseif cm == :Transportation
      				new_sample =
                         (d(empirical_mean_best,
                         weighted_means[challenger], dist) >
                         d(empirical_means[challenger],
                         weighted_means[challenger], dist)) ?
                         empirical_best : challenger
-     			elseif challenger == :Pull
+     			elseif cm == :Pull
      				new_sample =
                         (num_pulls[empirical_best] < num_pulls[challenger]) ?
                         empirical_best : challenger
