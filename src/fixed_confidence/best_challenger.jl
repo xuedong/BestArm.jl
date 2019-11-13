@@ -74,13 +74,13 @@ function best_challenger(mu::Array, delta::Real, rate::Function, dist::String,
         new_score = Inf
         for i = 1:num_arms
             if i != empirical_best
-                score = num_pulls_best *
+                score_i = num_pulls_best *
                     d(empirical_mean_best, weighted_means[i], dist) +
                     num_pulls[i] *
                     d(empirical_means[i], weighted_means[i], dist)
-                if (score < new_score)
+                if (score_i < new_score)
                     challenger = i
-                    new_score = score
+                    new_score = score_i
                 end
             end
         end
@@ -101,7 +101,7 @@ function best_challenger(mu::Array, delta::Real, rate::Function, dist::String,
             # Continue and sample an arm
     	    if fe && (minimum(num_pulls) <= max(sqrt(t) - num_arms/2, 0))
                 # Forced exploration
-                sample = randmax(-num_pulls)
+                new_sample = randmax(-num_pulls)
             else
     			if challenger == :Proportion
                     _, weights = optimal_weights(empirical_means, 1e-11)

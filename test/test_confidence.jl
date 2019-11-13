@@ -43,13 +43,15 @@ print("Optimal weights: $(optWeights)\n\n")
 @everywhere ChernoffBCForcedExplo(mu,delta,explo)=ChernoffBC(mu,delta,explo,true)
 @everywhere ChernoffBCTS(mu,delta,explo)=ChernoffBC(mu,delta,explo,false,true)
 
-@everywhere policies =
-[BestArm.best_challenger, BestArm.kl_lucb, BestArm.racing,
-BestArm.t3c, BestArm.target, BestArm.d_tracking, BestArm.ttei,
-BestArm.ttts_c, BestArm.ugape_c, BestArm.uniform_c]
-@everywhere namesPolicies =
-["BC", "KL-LUCB", "Racing", "T3C", "Target", "D-Tracking",
-"TTEI", "TTTS", "UGapE", "Uniform"]
+@everywhere policies = [BestArm.best_challenger]
+@everywhere namesPolicies = ["BC"]
+# @everywhere policies =
+# [BestArm.best_challenger, BestArm.kl_lucb, BestArm.racing,
+# BestArm.t3c, BestArm.target, BestArm.d_tracking, BestArm.ttei,
+# BestArm.ttts_c, BestArm.ugape_c, BestArm.uniform_c]
+# @everywhere namesPolicies =
+# ["BC", "KL-LUCB", "Racing", "T3C", "Target", "D-Tracking",
+# "TTEI", "TTTS", "UGapE", "Uniform"]
 
 # EXPLORATION RATES
 @everywhere explo(t, delta)=log((log(t)+1)/delta)
