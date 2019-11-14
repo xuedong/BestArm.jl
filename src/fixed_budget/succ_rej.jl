@@ -51,3 +51,27 @@ function succ_reject(mu::Array, budget::Integer, dist::String, rec::Function = e
 
 	return (arms[1], N, means, recommendations)
 end
+
+
+# Helper functions for Successive Reject
+function compute_nk(n, K, k, log_bar)
+	if k == 0
+		return 0
+	else
+		return ceil((n-K)/(log_bar*(K+1-k)))
+	end
+end
+
+
+# function sum_nk(n, K, k, log_bar)
+# 	s = 0
+# 	if k == 1
+# 		return s
+# 	else
+# 		for i in 1:(k-1)
+# 			n_k = compute_nk(n, K, i+1, log_bar) - compute_nk(n, K, i, log_bar)
+# 			s += (K-i+1) * n_k
+# 		end
+# 	end
+# 	return s
+# end

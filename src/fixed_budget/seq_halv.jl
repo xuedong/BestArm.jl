@@ -199,3 +199,24 @@ function hyperband(reservoir::String, num::Integer,
 
 	return recommendation, N, means, recommendations, mu
 end
+
+
+# Helper functions for Sequential Halving
+function sr(n, r)
+	s_r = n
+	if r == 1
+		return s_r
+	else
+		for i in 2:r
+			s_r = ceil(s_r/2)
+		end
+		return s_r
+	end
+end
+
+
+function tr(budget, n, r)
+	s_r = sr(n, r)
+	t_r = round(budget/(s_r*ceil(log2(n))))
+	return t_r
+end

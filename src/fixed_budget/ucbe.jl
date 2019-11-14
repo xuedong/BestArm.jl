@@ -76,3 +76,33 @@ function ucbe_adaptive(mu::Array, budget::Integer, dist::String, rec::Function =
 
 	return (recommendations[budget], N, means, recommendations)
 end
+
+
+# Helper functions for UCB-E
+function compute_ucbe(mean, a, s)
+	if s > 0
+		return mean + sqrt(a/s)
+	else
+		return 10^10
+	end
+end
+
+
+function compute_log_bar(k)
+	return 0.5 + sum([(1/i) for i in 2:k])
+end
+
+
+# Helper functions for Adaptive UCB-E
+function compute_tk(n, K, k, log_bar)
+	if k == 0
+		tk = 0
+	elseif k == 1
+		tk = K * compute_nk(n, K, k, log_bar)
+	elseif k == K
+		tk = n
+	else
+		tk = sum([compute_nk(n, K, i, log_bar) for i in 1:(k-1)]) + (K-k+1) * compute_nk(n, K, k, log_bar)
+	end
+	return Int(floor(tk))
+end
