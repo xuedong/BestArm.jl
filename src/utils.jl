@@ -1,3 +1,7 @@
+#######################
+# Regrets computation #
+#######################
+
 # Compute simple regrets
 function compute_regrets(mu::AbstractArray{<:Real}, recommendations::AbstractArray{<:Integer}, budget::Integer)
 	maxmu = argmax(mu)[1]
