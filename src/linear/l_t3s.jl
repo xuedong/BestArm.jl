@@ -68,3 +68,6 @@ function l_t3s(mu::Array, delta::Real, rate::Function, dist::String,
    	recommendation=Best
    	return (recommendation,N)
 end
+
+
+# Helper functions of L-T3S
