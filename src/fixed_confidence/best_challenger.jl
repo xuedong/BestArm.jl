@@ -38,13 +38,9 @@ function best_challenger(mu::Array, delta::Real, rate::Function, dist::String,
         num_pulls_best = num_pulls[empirical_best]
         reward_best = rewards[empirical_best]
         empirical_mean_best = reward_best / num_pulls_best
-        weighted_means = (empirical_mean_best .+ rewards) ./
-            (num_pulls_best .+ num_pulls)
+        weighted_means = (empirical_mean_best .+ rewards) ./ (num_pulls_best .+ num_pulls)
         # Compute the minimum GLR
-        score = minimum([num_pulls_best *
-            d(empirical_mean_best, weighted_means[i], dist) +
-            num_pulls[i] * d(empirical_means[i], weighted_means[i], dist)
-            for i in 1:num_arms if i != empirical_best])
+        score = minimum([num_pulls_best * d(empirical_mean_best, weighted_means[i], dist) + num_pulls[i] * d(empirical_means[i], weighted_means[i], dist) for i in 1:num_arms if i != empirical_best])
 
         # Compute the best arm and the challenger
         if ts
@@ -52,21 +48,15 @@ function best_challenger(mu::Array, delta::Real, rate::Function, dist::String,
                 # When the underlying distribution is Gaussian,
                 # alpha refers to sigma
                 if dist == "Gaussian"
-                    empirical_means[a] =
-                        rand(Normal(rewards[a] / num_pulls[a],
-                        alpha / sqrt(num_pulls[a])), 1)[1]
+                    empirical_means[a] = rand(Normal(rewards[a] / num_pulls[a], alpha / sqrt(num_pulls[a])), 1)[1]
                 elseif dist == "Bernoulli"
-                    empirical_means[a] =
-                        rand(Beta(alpha + rewards[a],
-                        beta + num_pulls[a] - rewards[a]), 1)[1]
+                    empirical_means[a] = rand(Beta(alpha + rewards[a], beta + num_pulls[a] - rewards[a]), 1)[1]
                 end
             end
             empirical_best = randmax(empirical_means)
             num_pulls_best = num_pulls[empirical_best]
             empirical_mean_best = empirical_means[empirical_best]
-            weighted_means =
-                (num_pulls_best * empirical_mean_best .+
-                num_pulls .* empirical_means) ./ (num_pulls_best .+ num_pulls)
+            weighted_means = (num_pulls_best * empirical_mean_best .+ num_pulls .* empirical_means) ./ (num_pulls_best .+ num_pulls)
         end
 
         # Compute the challenger
@@ -74,10 +64,7 @@ function best_challenger(mu::Array, delta::Real, rate::Function, dist::String,
         new_score = Inf
         for i = 1:num_arms
             if i != empirical_best
-                score_i = num_pulls_best *
-                    d(empirical_mean_best, weighted_means[i], dist) +
-                    num_pulls[i] *
-                    d(empirical_means[i], weighted_means[i], dist)
+                score_i = num_pulls_best * d(empirical_mean_best, weighted_means[i], dist) + num_pulls[i] * d(empirical_means[i], weighted_means[i], dist)
                 if (score_i < new_score)
                     challenger = i
                     new_score = score_i
@@ -105,23 +92,11 @@ function best_challenger(mu::Array, delta::Real, rate::Function, dist::String,
             else
     			if cm == :Proportion
                     _, weights = optimal_weights(empirical_means, 1e-11)
-     				new_sample =
-                        (num_pulls_best /
-                        (num_pulls_best + num_pulls[challenger]) <
-                        weights[empirical_best] /
-                        (weights[empirical_best] + weights[challenger])) ?
-                        empirical_best : challenger
+     				new_sample = (num_pulls_best / (num_pulls_best + num_pulls[challenger]) < weights[empirical_best] / (weights[empirical_best] + weights[challenger])) ? empirical_best : challenger
      			elseif cm == :Transportation
-     				new_sample =
-                        (d(empirical_mean_best,
-                        weighted_means[challenger], dist) >
-                        d(empirical_means[challenger],
-                        weighted_means[challenger], dist)) ?
-                        empirical_best : challenger
+     				new_sample = (d(empirical_mean_best, weighted_means[challenger], dist) > d(empirical_means[challenger], weighted_means[challenger], dist)) ? empirical_best : challenger
      			elseif cm == :Pull
-     				new_sample =
-                        (num_pulls[empirical_best] < num_pulls[challenger]) ?
-                        empirical_best : challenger
+     				new_sample = (num_pulls[empirical_best] < num_pulls[challenger]) ? empirical_best : challenger
      			end
             end
         end
