@@ -67,3 +67,9 @@ function ttei(mu::Array, delta::Real, rate::Function, dist::String,
    	recommendation=Best
    	return (recommendation,N)
 end
+
+
+# Helper functions for TTEI
+function compute_ei_aux(x)
+   return x * cdf.(Normal(0.0, 1.0), x)[1] + pdf.(Normal(0.0, 1.0), x)[1]
+end

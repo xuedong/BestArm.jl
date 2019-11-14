@@ -193,35 +193,3 @@ end
 # function memuse()
 #   return string(round(Int, parse(Int, readstring(`ps -p 29563 -o rss=`))/1024), "M")
 # end
-
-
-# Helper function for SiRI
-function compute_tbeta(n::Integer, beta::Real, a::Real = 0.3)
-	b = min(beta, 2)
-	if beta < 2
-		a_n = a
-	elseif beta == 2
-		a_n = a / (log2(n))^2
-	else
-		a_n = a / log2(n)
-	end
-
-	tbeta = Int(ceil(a_n * n^(b/2)))
-	return tbeta
-end
-
-
-function compute_b_value_siri(mean::Real, delta::Real, c::Real, beta::Real,
-	num_pulls::Integer, num_arms::Integer)
-	b = min(beta, 2)
-	tbeta = floor(log2(num_arms))
-	index = c / num_pulls * log(2^(2*tbeta/b)/(num_pulls*delta))
-
-	return mean + 2*sqrt(index) + 2*index
-end
-
-
-# Helper function for TTEI
-function compute_ei_aux(x)
-   return x * cdf.(Normal(0.0, 1.0), x)[1] + pdf.(Normal(0.0, 1.0), x)[1]
-end
