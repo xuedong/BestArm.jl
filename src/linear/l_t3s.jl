@@ -1,72 +1,69 @@
-function l_t3s(mu::Array, delta::Real, rate::Function, dist::String,
+function l_t3s(contexts::Array, delta::Real, rate::Function, dist::String,
 	alpha::Real=1, beta::Real=1, frac::Real=0.5, stopping::Symbol=:Chernoff)
-    # Chernoff stopping rule combined with the PTS sampling rule
     condition = true
-   	K = length(mu)
-   	N = zeros(1, K)
-   	S = zeros(1, K)
-   	# initialization
-	for a in 1:K
-      	N[a] = 1
-      	S[a] = sample_arm(mu[a], dist)
-   	end
-   	t=K
-   	Best=1
+   	num_contexts = length(contexts)
+	dim = length(contexts[1])
+   	num_pulls = zeros(1, contexts)
+   	rewards = zeros(1, contexts)
+
+   	rls = zeros(1, dim)
+	var = zeros(dim, dim)
+
+	best = 1
    	while (condition)
-      	Mu=S./N
+      	empirical_means = rewards ./ num_pulls
       	# Empirical best arm
-      	Best=randmax(Mu)
+      	best = randmax(empirical_means)
       	# Compute the stopping statistic
-      	NB=N[Best]
-      	SB=S[Best]
-      	muB=SB/NB
-      	MuMid=(SB.+S)./(NB.+N)
-      	Index=collect(1:K)
-      	deleteat!(Index,Best)
-      	Score=minimum([NB*d(muB, MuMid[i], dist)+N[i]*d(Mu[i], MuMid[i], dist) for i in Index])
-      	if (Score > rate(t,delta))
+      	num_pulls_best = num_pulls[best]
+      	reward_best = rewards[best]
+      	empirical_mean_best = reward_best / num_pulls_best
+      	weighted_means = (reward_best .+ rewards) ./ (num_pulls_best .+ num_pulls)
+
+      	index = collect(1:num_contexts)
+      	deleteat!(index, best)
+		# Compute the minimum GLR
+		score = minimum([num_pulls_best * d(empirical_mean_best, weighted_means[i], dist) + num_pulls[i] * d(empirical_means[i], weighted_means[i], dist) for i in 1:num_arms if i != empirical_best])
+      	if (score > rate(t, delta))
          	# stop
-         	condition=false
-      	elseif (t >1000000)
-         	condition=false
-         	Best=0
-         	print(N)
-         	print(S)
-         	N=zeros(1,K)
+         	condition = false
+      	elseif (t > 1e7)
+         	condition = false
+         	best = 0
+         	print(num_pulls)
+         	print(rewards)
+         	num_pulls = zeros(1, num_contexts)
       	else
-         	TS=zeros(K)
-         	for a=1:K
+         	ts = zeros(num_contexts)
+         	for a = 1:num_contexts
             	if dist == "Gaussian"
-               		TS[a] = rand(Normal(S[a] / N[a], alpha / sqrt(N[a])), 1)[1]
-            	elseif dist == "Bernoulli"
-               		TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1]
+               		ts[a] = sum(rand(MvNormal(rls, var)) .* contexts[a])
             	end
          	end
-         	I = argmax(TS)
-         	if (rand()>frac)
-            	J=I
-            	condition=true
-            	while (I==J)
-               		TS=zeros(K)
-               		for a=1:K
-                  		if dist == "Gaussian"
-                     		TS[a] = rand(Normal(S[a] / N[a], alpha / sqrt(N[a])), 1)[1]
-                  		elseif dist == "Bernoulli"
-                     		TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1]
-                  		end
-               		end
-               		J = argmax(TS)
+
+         	new_sample = argmax(ts)
+         	if (rand() > frac)
+            	challenger = new_sample
+            	condition = true
+            	while (new_sample == challenger)
+					ts = zeros(num_contexts)
+		         	for a = 1:num_contexts
+		            	if dist == "Gaussian"
+		               		ts[a] = sum(rand(MvNormal(rls, var)) .* contexts[a])
+		            	end
+		         	end
+               		challenger = argmax(ts)
             	end
-            	I=J
+            	new_sample = challenger
          	end
          	# draw arm I
-	      	t+=1
-	      	S[I] += sample_arm(mu[I], dist)
-	      	N[I] += 1
+	      	t += 1
+	      	rewards[new_sample] += sample_arm(mu[I], dist)
+	      	num_pulls[new_sample] += 1
 	   	end
    	end
-   	recommendation=Best
-   	return (recommendation,N)
+   	recommendation = best
+   	return recommendation, num_pulls
 end
 
 
