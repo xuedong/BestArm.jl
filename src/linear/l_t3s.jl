@@ -58,7 +58,7 @@ function l_t3s(contexts::Array, delta::Real, rate::Function, dist::String,
          	end
          	# draw arm I
 	      	t += 1
-	      	rewards[new_sample] += sample_arm(mu[I], dist)
+	      	rewards[new_sample] += compute_observation(contexts[new_sample], theta)
 	      	num_pulls[new_sample] += 1
 	   	end
    	end
@@ -68,3 +68,6 @@ end
 
 
 # Helper functions of L-T3S
+function compute_observation(context::Array, theta::Array, sigma::Real=1)
+	
+end

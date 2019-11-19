@@ -1,5 +1,6 @@
 module BestArm
     using Distributions
+    using LinearAlgebra
     using Documenter
     using HCubature
     using StatsFuns
