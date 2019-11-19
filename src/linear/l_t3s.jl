@@ -1,5 +1,5 @@
 function l_t3s(contexts::Array, delta::Real, rate::Function, dist::String,
-	alpha::Real=1, beta::Real=1, frac::Real=0.5, stopping::Symbol=:Chernoff)
+	sigma::Real=1, kappa::Real=1, frac::Real=0.5, stopping::Symbol=:Chernoff)
     condition = true
    	num_contexts = length(contexts)
 	dim = length(contexts[1])
@@ -25,7 +25,7 @@ function l_t3s(contexts::Array, delta::Real, rate::Function, dist::String,
 		# Compute the minimum GLR
 		score = minimum([num_pulls_best * d(empirical_mean_best, weighted_means[i], dist) + num_pulls[i] * d(empirical_means[i], weighted_means[i], dist) for i in 1:num_arms if i != empirical_best])
       	if (score > rate(t, delta))
-         	# stop
+         	# Stop
          	condition = false
       	elseif (t > 1e7)
          	condition = false
@@ -56,10 +56,16 @@ function l_t3s(contexts::Array, delta::Real, rate::Function, dist::String,
             	end
             	new_sample = challenger
          	end
-         	# draw arm I
+         	# Play the selected arm
 	      	t += 1
-	      	rewards[new_sample] += compute_observation(contexts[new_sample], theta)
+			new_reward = compute_observation(contexts[new_sample], theta, sigma)
+	      	rewards[new_sample] += new_reward
 	      	num_pulls[new_sample] += 1
+
+			# Update the posterior
+			update_design_inverse(design_inverse, contexts[new_sample])
+			rls = design_inverse * z_t
+			var = sigma^2 * design_inverse
 	   	end
    	end
    	recommendation = best
@@ -69,5 +75,12 @@ end
 
 # Helper functions of L-T3S
 function compute_observation(context::Array, theta::Array, sigma::Real=1)
-	
+	obs = dot(context, theta) + rand(Normal(0, sigma^2))[1]
+end
+
+
+function update_design_inverse(matrix::Array, context::Array)
+	aux = matrix * context * transpose(context) * matrix / (1 + transpose(context) * matrix * context)
+	matrix -= aux
+	return matrix
 end
