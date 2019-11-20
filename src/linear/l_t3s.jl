@@ -6,6 +6,10 @@ function l_t3s(contexts::Array, delta::Real, rate::Function, dist::String,
    	num_pulls = zeros(1, contexts)
    	rewards = zeros(1, contexts)
 
+	# Initialize the prior
+	lambda = sigma^2 / kappa^2
+	design_inverse = Matrix{Float64}(1/lambda * I, dim, dim)
+	z_t = zeros(1, dim)
    	rls = zeros(1, dim)
 	var = zeros(dim, dim)
 
@@ -63,7 +67,8 @@ function l_t3s(contexts::Array, delta::Real, rate::Function, dist::String,
 	      	num_pulls[new_sample] += 1
 
 			# Update the posterior
-			update_design_inverse(design_inverse, contexts[new_sample])
+			design_inverse = update_design_inverse(design_inverse, contexts[new_sample])
+			z_t += new_reward * contexts[new_sample]
 			rls = design_inverse * z_t
 			var = sigma^2 * design_inverse
 	   	end
@@ -80,7 +85,6 @@ end
 
 
 function update_design_inverse(matrix::Array, context::Array)
-	aux = matrix * context * transpose(context) * matrix / (1 + transpose(context) * matrix * context)
-	matrix -= aux
+	matrix = matrix - matrix * context * transpose(context) * matrix / (1 + transpose(context) * matrix * context)
 	return matrix
 end
