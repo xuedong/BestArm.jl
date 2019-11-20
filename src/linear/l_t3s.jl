@@ -1,17 +1,27 @@
-function l_t3s(contexts::Array, delta::Real, rate::Function, dist::String,
-	sigma::Real=1, kappa::Real=1, frac::Real=0.5, stopping::Symbol=:Chernoff)
+function l_t3s(contexts::Array, theta::Array, delta::Real, rate::Function,
+	dist::String, sigma::Real=1, kappa::Real=1, frac::Real=0.5,
+	stopping::Symbol=:Chernoff)
     condition = true
    	num_contexts = length(contexts)
 	dim = length(contexts[1])
-   	num_pulls = zeros(1, contexts)
-   	rewards = zeros(1, contexts)
+   	num_pulls = zeros(1, num_contexts)
+   	rewards = zeros(1, num_contexts)
+	t = 0
 
 	# Initialize the prior
 	lambda = sigma^2 / kappa^2
 	design_inverse = Matrix{Float64}(1/lambda * I, dim, dim)
-	z_t = zeros(1, dim)
-   	rls = zeros(1, dim)
-	var = zeros(dim, dim)
+	z_t = vec(zeros(1, dim))
+   	rls = vec(zeros(1, dim))
+	var = Matrix{Float64}(kappa^2 * I, dim, dim)
+
+	# Play each arm once
+	for c in 1:num_contexts
+		t += 1
+		new_reward = compute_observation(contexts[c], theta, sigma)
+		rewards[c] += new_reward
+		num_pulls[c] = 1
+	end
 
 	best = 1
    	while (condition)
@@ -27,7 +37,7 @@ function l_t3s(contexts::Array, delta::Real, rate::Function, dist::String,
       	index = collect(1:num_contexts)
       	deleteat!(index, best)
 		# Compute the minimum GLR
-		score = minimum([num_pulls_best * d(empirical_mean_best, weighted_means[i], dist) + num_pulls[i] * d(empirical_means[i], weighted_means[i], dist) for i in 1:num_arms if i != empirical_best])
+		score = minimum([num_pulls_best * d(empirical_mean_best, weighted_means[i], dist) + num_pulls[i] * d(empirical_means[i], weighted_means[i], dist) for i in 1:num_contexts if i != best])
       	if (score > rate(t, delta))
          	# Stop
          	condition = false
@@ -42,7 +52,7 @@ function l_t3s(contexts::Array, delta::Real, rate::Function, dist::String,
          	for a = 1:num_contexts
             	if dist == "Gaussian"
                		ts[a] = sum(rand(MvNormal(rls, var)) .* contexts[a])
-            	end
+				end
          	end
 
          	new_sample = argmax(ts)

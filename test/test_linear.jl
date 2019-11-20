@@ -67,7 +67,7 @@ function MCexp(mu,delta,N)
 		rate=rates[imeth]
 		startTime=time()
 		Reco, Draws = @distributed ((x,y) -> (vcat(x[1], y[1]), vcat(x[2], y[2]))) for n in 1:N
-				rec, dra = policy(mu, delta, rate, distribution)
+				rec, dra = policy(contexts, true_theta, delta, rate, distribution)
 				rec, dra
 		end
 		Error=collect([(r==best) ? 0 : 1 for r in Reco])
