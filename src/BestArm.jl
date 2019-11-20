@@ -37,6 +37,8 @@ module BestArm
 
     export siri
 
+    export l_t3s
+
     include("arms.jl")
     include("utils.jl")
     include("kl_functions.jl")
@@ -67,4 +69,10 @@ module BestArm
     include("fixed_confidence/uniform_c.jl")
 
     include("infinite/siri.jl")
+
+    include("linear/l_t3c.jl")
+    include("linear/l_t3s.jl")
+    include("linear/lingape.jl")
+    include("linear/xy_adaptive.jl")
+    include("linear/xy_static.jl")
 end
