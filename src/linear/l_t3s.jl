@@ -20,6 +20,7 @@ function l_t3s(
     # Initialize the prior
     lambda = sigma^2 / kappa^2
     design_inverse = Matrix{Float64}(1 / lambda * I, dim, dim)
+    square_root_inverse = Matrix{Float64}(kappa / sigma * I, dim, dim)
     z_t = vec(zeros(1, dim))
     rls = vec(zeros(1, dim))
     var = Matrix{Float64}(kappa^2 * I, dim, dim)
@@ -32,6 +33,7 @@ function l_t3s(
         num_pulls[c] = 1
 
         design_inverse = update_design_inverse(design_inverse, contexts[c])
+        square_root_inverse = update_square_root(square_root_inverse, contexts[c])
         z_t += new_reward * contexts[c]
         rls = design_inverse * z_t
         var = sigma^2 * design_inverse
@@ -54,7 +56,7 @@ function l_t3s(
         score = minimum([num_pulls_best * d(empirical_mean_best, weighted_means[i], dist) +
                          num_pulls[i] * d(empirical_means[i], weighted_means[i], dist) for i in 1:num_contexts if i != best])
         if (score > rate(t, delta))
-         # Stop
+            # Stop
             condition = false
         elseif (t > 1e7)
             condition = false
@@ -66,9 +68,9 @@ function l_t3s(
             ts = zeros(num_contexts)
             for a = 1:num_contexts
                 if dist == "Gaussian"
-                    println(rls)
-                    println(var)
-                    ts[a] = sum(rand(MvNormal(rls, var)) .* contexts[a])
+                    z = rand(MvNormal(dim, 1))
+                    theta = sigma * square_root_inverse * z + rls
+                    ts[a] = sum(theta .* contexts[a])
                 end
             end
 
@@ -80,7 +82,9 @@ function l_t3s(
                     ts = zeros(num_contexts)
                     for a = 1:num_contexts
                         if dist == "Gaussian"
-                            ts[a] = sum(rand(MvNormal(rls, var)) .* contexts[a])
+                            z = rand(MvNormal(dim, 1))
+                            theta = sigma * square_root_inverse * z + rls
+                            ts[a] = sum(theta .* contexts[a])
                         end
                     end
                     challenger = argmax(ts)
@@ -95,6 +99,7 @@ function l_t3s(
 
             # Update the posterior
             design_inverse = update_design_inverse(design_inverse, contexts[new_sample])
+            square_root_inverse = update_square_root(square_root_inverse, contexts[new_sample])
             z_t += new_reward * contexts[new_sample]
             rls = design_inverse * z_t
             var = sigma^2 * design_inverse

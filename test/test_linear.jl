@@ -40,12 +40,7 @@ delta = 0.01
 # NUMBER OF SIMULATIONS
 N = 1
 
-# OPTIMAL SOLUTION
-@everywhere v, optWeights = BestArm.optimal_weights(mu, distribution)
-@everywhere gammaOpt = optWeights[best]
-print("mu=$(mu)\n")
-print("Theoretical number of samples: $(v*log(1/delta))\n")
-print("Optimal weights: $(optWeights)\n\n")
+print("mu = $(mu)\n")
 
 # POLICIES
 

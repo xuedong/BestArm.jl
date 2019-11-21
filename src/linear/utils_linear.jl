@@ -14,7 +14,7 @@ end
 function update_square_root(matrix::Array, context::Array)
     norm = transpose(context) * matrix * matrix * context
     matrix = matrix -
-             (1 - sqrt(1 - 4 * norm / (1 + norm))) / (2 * norm) * matrix * context *
-             tranpose(context) * matrix
+             (1 - sqrt(1 - norm / (1 + norm))) / norm * matrix * context *
+             transpose(context) * matrix
     return matrix
 end
