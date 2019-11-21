@@ -13,7 +13,7 @@ function ttts_c(
     K = length(mu)
     N = zeros(1, K)
     S = zeros(1, K)
-   # initialization
+    # Initialization
     for a = 1:K
         N[a] = 1
         S[a] = sample_arm(mu[a], dist)
