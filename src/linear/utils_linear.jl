@@ -5,8 +5,8 @@ end
 
 function compute_transportation(context1::Array, context2::Array, mu::Array, cov::Matrix)
     norm = transpose(context1 - context2) * cov * (context1 - context2)
-    if context2 .* mu - context1 .* mu < 0
-        cost = (context1 .* mu - context2 .* mu)^2 / (2 * norm)
+    if (dot(context2, mu) - dot(context1, mu) < 0)
+        cost = (dot(context1, mu) - dot(context2, mu))^2 / (2 * norm)
     else
         cost = 0
     end

@@ -53,8 +53,7 @@ function l_t3s(
         index = collect(1:num_contexts)
         deleteat!(index, best)
         # Compute the minimum GLR
-        score = minimum([num_pulls_best * d(empirical_mean_best, weighted_means[i], dist) +
-                         num_pulls[i] * d(empirical_means[i], weighted_means[i], dist) for i in 1:num_contexts if i != best])
+        score = minimum([compute_transportation(contexts[best], contexts[i], rls, var) for i in 1:num_contexts if i != best])
         if (score > rate(t, delta))
             # Stop
             condition = false
@@ -99,7 +98,10 @@ function l_t3s(
 
             # Update the posterior
             design_inverse = update_design_inverse(design_inverse, contexts[new_sample])
-            square_root_inverse = update_square_root(square_root_inverse, contexts[new_sample])
+            square_root_inverse = update_square_root(
+                square_root_inverse,
+                contexts[new_sample],
+            )
             z_t += new_reward * contexts[new_sample]
             rls = design_inverse * z_t
             var = sigma^2 * design_inverse
