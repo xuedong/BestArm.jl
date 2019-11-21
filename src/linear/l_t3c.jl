@@ -73,22 +73,23 @@ function l_t3c(
                     ts[a] = sum(theta .* contexts[a])
                 end
             end
+            best = argmax(ts)
 
-            new_sample = argmax(ts)
+            challenger = 1
+          	new_score = Inf
+          	for i = 1:num_contexts
+    	      	if i != best
+                	score_i = compute_transportation(contexts[best], contexts[i], rls, var)
+    	         	if (score_i < new_score)
+    		         	challenger = i
+    		         	new_score = score
+    	         	end
+    	      	end
+          	end
+
             if (rand() > frac)
-                challenger = new_sample
-                condition = true
-                while (new_sample == challenger)
-                    ts = zeros(num_contexts)
-                    for a = 1:num_contexts
-                        if dist == "Gaussian"
-                            z = rand(MvNormal(dim, 1))
-                            theta = sigma * square_root_inverse * z + rls
-                            ts[a] = sum(theta .* contexts[a])
-                        end
-                    end
-                    challenger = argmax(ts)
-                end
+                new_sample = best
+            else
                 new_sample = challenger
             end
             # Play the selected arm
