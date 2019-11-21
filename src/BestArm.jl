@@ -9,7 +9,8 @@ module BestArm
     export edp, eba, mpa
     export compute_regrets, compute_regrets_reservoir
     # export memuse
-    export compute_observation, update_design_inverse, update_square_root
+    export compute_observation, compute_transportation
+    export update_design_inverse, update_square_root
 
     export optimal_weights
     export gamma_beta

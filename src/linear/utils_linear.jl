@@ -3,6 +3,17 @@ function compute_observation(context::Array, theta::Array, sigma::Real = 1)
 end
 
 
+function compute_transportation(context1::Array, context2::Array, mu::Array, cov::Matrix)
+    norm = transpose(context1 - context2) * cov * (context1 - context2)
+    if context2 .* mu - context1 .* mu < 0
+        cost = (context1 .* mu - context2 .* mu)^2 / (2 * norm)
+    else
+        cost = 0
+    end
+    return cost
+end
+
+
 function update_design_inverse(matrix::Array, context::Array)
     matrix = matrix -
              matrix * context * transpose(context) * matrix /
@@ -13,8 +24,7 @@ end
 
 function update_square_root(matrix::Array, context::Array)
     norm = transpose(context) * matrix * matrix * context
-    matrix = matrix -
-             (1 - sqrt(1 - norm / (1 + norm))) / norm * matrix * context *
+    matrix = matrix - (1 - sqrt(1 - norm / (1 + norm))) / norm * matrix * context *
              transpose(context) * matrix
     return matrix
 end
