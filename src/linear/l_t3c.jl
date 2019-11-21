@@ -53,8 +53,7 @@ function l_t3c(
         index = collect(1:num_contexts)
         deleteat!(index, best)
         # Compute the minimum GLR
-        score = minimum([num_pulls_best * d(empirical_mean_best, weighted_means[i], dist) +
-                         num_pulls[i] * d(empirical_means[i], weighted_means[i], dist) for i in 1:num_contexts if i != best])
+        score = minimum([compute_transportation(contexts[best], contexts[i], rls, var) for i in 1:num_contexts if i != best])
         if (score > rate(t, delta))
             # Stop
             condition = false
