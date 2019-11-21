@@ -1,5 +1,6 @@
 using HDF5
 using Distributed
+using LinearAlgebra
 
 if Sys.KERNEL == :Darwin
     @everywhere include("/Users/xuedong/Programming/PhD/BestArm.jl/src/BestArm.jl")

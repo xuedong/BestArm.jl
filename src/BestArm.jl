@@ -9,6 +9,7 @@ module BestArm
     export edp, eba, mpa
     export compute_regrets, compute_regrets_reservoir
     # export memuse
+    export compute_observation, update_design_inverse
 
     export optimal_weights
     export gamma_beta
@@ -41,6 +42,7 @@ module BestArm
 
     include("arms.jl")
     include("utils.jl")
+    include("linear/utils_linear.jl")
     include("kl_functions.jl")
     include("reservoirs.jl")
     include("weights.jl")

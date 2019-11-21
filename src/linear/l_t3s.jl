@@ -21,6 +21,11 @@ function l_t3s(contexts::Array, theta::Array, delta::Real, rate::Function,
 		new_reward = compute_observation(contexts[c], theta, sigma)
 		rewards[c] += new_reward
 		num_pulls[c] = 1
+
+		design_inverse = update_design_inverse(design_inverse, contexts[new_sample])
+		z_t += new_reward * contexts[new_sample]
+		rls = design_inverse * z_t
+		var = sigma^2 * design_inverse
 	end
 
 	best = 1
@@ -51,6 +56,8 @@ function l_t3s(contexts::Array, theta::Array, delta::Real, rate::Function,
          	ts = zeros(num_contexts)
          	for a = 1:num_contexts
             	if dist == "Gaussian"
+					println(rls)
+					println(var)
                		ts[a] = sum(rand(MvNormal(rls, var)) .* contexts[a])
 				end
          	end
@@ -85,16 +92,4 @@ function l_t3s(contexts::Array, theta::Array, delta::Real, rate::Function,
    	end
    	recommendation = best
    	return recommendation, num_pulls
-end
-
-
-# Helper functions of L-T3S
-function compute_observation(context::Array, theta::Array, sigma::Real=1)
-	obs = dot(context, theta) + rand(Normal(0, sigma^2))[1]
-end
-
-
-function update_design_inverse(matrix::Array, context::Array)
-	matrix = matrix - matrix * context * transpose(context) * matrix / (1 + transpose(context) * matrix * context)
-	return matrix
 end
