@@ -1,6 +1,6 @@
 function l_t3s(
     contexts::Array,
-    theta::Array,
+    true_theta::Array,
     delta::Real,
     rate::Function,
     dist::String,
@@ -20,7 +20,7 @@ function l_t3s(
     # Initialize the prior
     lambda = sigma^2 / kappa^2
     design_inverse = Matrix{Float64}(1 / lambda * I, dim, dim)
-    square_root_inverse = Matrix{Float64}(kappa / sigma * I, dim, dim)
+    #square_root_inverse = Matrix{Float64}(kappa / sigma * I, dim, dim)
     z_t = vec(zeros(1, dim))
     rls = vec(zeros(1, dim))
     var = Matrix{Float64}(kappa^2 * I, dim, dim)
@@ -28,12 +28,12 @@ function l_t3s(
     # Play each arm once
     for c = 1:num_contexts
         t += 1
-        new_reward = compute_observation(contexts[c], theta, sigma)
+        new_reward = compute_observation(contexts[c], true_theta, sigma)
         rewards[c] += new_reward
         num_pulls[c] = 1
 
         design_inverse = update_design_inverse(design_inverse, contexts[c])
-        square_root_inverse = update_square_root(square_root_inverse, contexts[c])
+        #square_root_inverse = update_square_root(square_root_inverse, contexts[c])
         z_t += new_reward * contexts[c]
         rls = design_inverse * z_t
         var = sigma^2 * design_inverse
@@ -41,6 +41,7 @@ function l_t3s(
 
     best = 1
     while (condition)
+        println(t)
         empirical_means = rewards ./ num_pulls
         # Empirical best arm
         best = randmax(empirical_means)
@@ -60,15 +61,16 @@ function l_t3s(
         elseif (t > 1e7)
             condition = false
             best = 0
-            print(num_pulls)
-            print(rewards)
+            println(num_pulls)
+            println(rewards)
             num_pulls = zeros(1, num_contexts)
         else
             ts = zeros(num_contexts)
             for a = 1:num_contexts
                 if dist == "Gaussian"
                     z = rand(MvNormal(dim, 1))
-                    theta = sigma * square_root_inverse * z + rls
+                    # theta = sigma * square_root_inverse * z + rls
+                    theta = sigma * design_inverse^0.5 * z + rls
                     ts[a] = sum(theta .* contexts[a])
                 end
             end
@@ -82,7 +84,8 @@ function l_t3s(
                     for a = 1:num_contexts
                         if dist == "Gaussian"
                             z = rand(MvNormal(dim, 1))
-                            theta = sigma * square_root_inverse * z + rls
+                            # theta = sigma * square_root_inverse * z + rls
+                            theta = sigma * design_inverse^0.5 * z + rls
                             ts[a] = sum(theta .* contexts[a])
                         end
                     end
@@ -90,21 +93,24 @@ function l_t3s(
                 end
                 new_sample = challenger
             end
+            println(rls)
             # Play the selected arm
             t += 1
-            new_reward = compute_observation(contexts[new_sample], theta, sigma)
+            new_reward = compute_observation(contexts[new_sample], true_theta, sigma)
             rewards[new_sample] += new_reward
             num_pulls[new_sample] += 1
 
             # Update the posterior
             design_inverse = update_design_inverse(design_inverse, contexts[new_sample])
-            square_root_inverse = update_square_root(
-                square_root_inverse,
-                contexts[new_sample],
-            )
+            #square_root_inverse = update_square_root(
+            #    square_root_inverse,
+            #    contexts[new_sample],
+            #)
             z_t += new_reward * contexts[new_sample]
             rls = design_inverse * z_t
             var = sigma^2 * design_inverse
+            #println(new_sample)
+            #println(design_inverse)
         end
     end
     recommendation = best
