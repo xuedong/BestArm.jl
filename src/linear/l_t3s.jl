@@ -42,15 +42,10 @@ function l_t3s(
     best = 1
     while (condition)
         println(t)
-        empirical_means = rewards ./ num_pulls
+        empirical_means = [dot(contexts[c], rls) for c in 1:num_contexts]
         # Empirical best arm
         best = randmax(empirical_means)
         # Compute the stopping statistic
-        num_pulls_best = num_pulls[best]
-        reward_best = rewards[best]
-        empirical_mean_best = reward_best / num_pulls_best
-        weighted_means = (reward_best .+ rewards) ./ (num_pulls_best .+ num_pulls)
-
         index = collect(1:num_contexts)
         deleteat!(index, best)
         # Compute the minimum GLR
@@ -93,7 +88,6 @@ function l_t3s(
                 end
                 new_sample = challenger
             end
-            println(rls)
             # Play the selected arm
             t += 1
             new_reward = compute_observation(contexts[new_sample], true_theta, sigma)
