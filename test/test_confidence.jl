@@ -15,10 +15,14 @@ typeExp = "NoSave"
 @everywhere distribution = "Gaussian"
 
 # CHANGE NAME (save mode)
-fname = "/home/xuedong/Downloads/t3c/results/xs"
+if Sys.KERNEL == :Darwin
+    fname = "/Users/xuedong/Programming/PhD/BestArm.jl/src/BestArm.jl/mics/linear")
+elseif Sys.KERNEL == :Linux
+    fname = "/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/src/BestArm.jl/misc/linear")
+end
 
 # BANDIT PROBLEM
-@everywhere mu = [1 0.8 0.75 0.7]
+@everywhere mu = [0.9 0.7 0.5 0.4 0.3]
 @everywhere best = findall(x -> x == maximum(mu), mu)[1][2]
 K = length(mu)
 
@@ -29,7 +33,7 @@ delta = 0.01
 #sigma=1
 
 # NUMBER OF SIMULATIONS
-N = 1
+N = 10
 
 # OPTIMAL SOLUTION
 @everywhere v, optWeights = BestArm.optimal_weights(mu, distribution)
@@ -40,35 +44,32 @@ print("Optimal weights: $(optWeights)\n\n")
 
 # POLICIES
 
-@everywhere ChernoffBCForcedExplo(mu, delta, explo) = ChernoffBC(mu, delta, explo, true)
-@everywhere ChernoffBCTS(mu, delta, explo) = ChernoffBC(mu, delta, explo, false, true)
-
-#@everywhere policies = [BestArm.best_challenger]
-#@everywhere namesPolicies = ["BC"]
-@everywhere policies = [
-    BestArm.best_challenger,
-    BestArm.kl_lucb,
-    BestArm.racing,
-    BestArm.t3c,
-    BestArm.target,
-    BestArm.d_tracking,
-    BestArm.ttei,
-    BestArm.ttts_c,
-    BestArm.ugape_c,
-    BestArm.uniform_c,
-]
-@everywhere namesPolicies = [
-    "BC",
-    "KL-LUCB",
-    "Racing",
-    "T3C",
-    "Target",
-    "D-Tracking",
-    "TTEI",
-    "TTTS",
-    "UGapE",
-    "Uniform",
-]
+@everywhere policies = [BestArm.ttts_c, BestArm.t3c]
+@everywhere namesPolicies = ["TTTS", "T3C"]
+# @everywhere policies = [
+#     BestArm.best_challenger,
+#     BestArm.kl_lucb,
+#     BestArm.racing,
+#     BestArm.t3c,
+#     BestArm.target,
+#     BestArm.d_tracking,
+#     BestArm.ttei,
+#     BestArm.ttts_c,
+#     BestArm.ugape_c,
+#     BestArm.uniform_c,
+# ]
+# @everywhere namesPolicies = [
+#     "BC",
+#     "KL-LUCB",
+#     "Racing",
+#     "T3C",
+#     "Target",
+#     "D-Tracking",
+#     "TTEI",
+#     "TTTS",
+#     "UGapE",
+#     "Uniform",
+# ]
 
 # EXPLORATION RATES
 @everywhere explo(t, delta) = log((log(t) + 1) / delta)

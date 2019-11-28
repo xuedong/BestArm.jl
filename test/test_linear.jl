@@ -16,7 +16,11 @@ typeExp = "NoSave"
 @everywhere distribution = "Gaussian"
 
 # CHANGE NAME (save mode)
-fname = "/home/xuedong/Downloads/t3c/results/xs"
+if Sys.KERNEL == :Darwin
+    fname = "/Users/xuedong/Programming/PhD/BestArm.jl/src/BestArm.jl/mics/linear")
+elseif Sys.KERNEL == :Linux
+    fname = "/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/src/BestArm.jl/misc/linear")
+end
 
 # BANDIT PROBLEM
 @everywhere c1 = [1, 0, 0, 0, 0]
