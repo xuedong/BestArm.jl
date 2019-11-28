@@ -1,4 +1,5 @@
 using HDF5
+using Statistics
 using Distributed
 
 if Sys.KERNEL == :Darwin
@@ -16,9 +17,9 @@ typeExp = "Save"
 
 # CHANGE NAME (save mode)
 if Sys.KERNEL == :Darwin
-    fname = "/Users/xuedong/Programming/PhD/BestArm.jl/src/BestArm.jl/misc/linear/xs"
+    fname = "/Users/xuedong/Programming/PhD/BestArm.jl/misc/linear/xs"
 elseif Sys.KERNEL == :Linux
-    fname = "/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/src/BestArm.jl/misc/linear/xs"
+    fname = "/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/linear/xs"
 end
 
 # BANDIT PROBLEM
