@@ -9,17 +9,17 @@ elseif Sys.KERNEL == :Linux
 end
 
 # DO YOU WANT TO SAVE RESULTS?
-#typeExp = "Save"
-typeExp = "NoSave"
+typeExp = "Save"
+#typeExp = "NoSave"
 
 # TYPE OF DISTRIBUTION
 @everywhere distribution = "Gaussian"
 
 # CHANGE NAME (save mode)
 if Sys.KERNEL == :Darwin
-    fname = "/Users/xuedong/Programming/PhD/BestArm.jl/src/BestArm.jl/mics/linear")
+    fname = "/Users/xuedong/Programming/PhD/BestArm.jl/src/BestArm.jl/mics/linear/xs"
 elseif Sys.KERNEL == :Linux
-    fname = "/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/src/BestArm.jl/misc/linear")
+    fname = "/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/src/BestArm.jl/misc/linear/xs"
 end
 
 # BANDIT PROBLEM
@@ -38,9 +38,6 @@ K = length(mu)
 
 # RISK LEVEL
 delta = 0.01
-
-# Variance for Gaussian Bandits
-#sigma=1
 
 # NUMBER OF SIMULATIONS
 N = 10
@@ -100,11 +97,11 @@ function SaveData(mu, delta, N)
     for imeth = 1:lP
         Draws = zeros(N, K)
         policy = policies[imeth]
-        beta = rates[imeth]
+        rate = rates[imeth]
         namePol = namesPolicies[imeth]
         startTime = time()
         Reco, Draws = @distributed ((x, y) -> (vcat(x[1], y[1]), vcat(x[2], y[2]))) for n = 1:N
-            reco, draws = policy(mu, delta, beta)
+            reco, draws = policy(contexts, true_theta, delta, rate, distribution)
             reco, draws
         end
         Error = collect([(r == best) ? 0 : 1 for r in Reco])

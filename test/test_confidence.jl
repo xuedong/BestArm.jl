@@ -16,9 +16,9 @@ typeExp = "NoSave"
 
 # CHANGE NAME (save mode)
 if Sys.KERNEL == :Darwin
-    fname = "/Users/xuedong/Programming/PhD/BestArm.jl/src/BestArm.jl/mics/linear")
+    fname = "/Users/xuedong/Programming/PhD/BestArm.jl/src/BestArm.jl/mics/linear/xs"
 elseif Sys.KERNEL == :Linux
-    fname = "/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/src/BestArm.jl/misc/linear")
+    fname = "/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/src/BestArm.jl/misc/linear/xs"
 end
 
 # BANDIT PROBLEM
