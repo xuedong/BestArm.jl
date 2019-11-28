@@ -20,7 +20,6 @@ function l_t3c(
     # Initialize the prior
     lambda = sigma^2 / kappa^2
     design_inverse = Matrix{Float64}(1 / lambda * I, dim, dim)
-    square_root_inverse = Matrix{Float64}(kappa / sigma * I, dim, dim)
     z_t = vec(zeros(1, dim))
     rls = vec(zeros(1, dim))
     var = Matrix{Float64}(kappa^2 * I, dim, dim)
@@ -33,7 +32,6 @@ function l_t3c(
         num_pulls[c] = 1
 
         design_inverse = update_design_inverse(design_inverse, contexts[c])
-        square_root_inverse = update_square_root(square_root_inverse, contexts[c])
         z_t += new_reward * contexts[c]
         rls = design_inverse * z_t
         var = sigma^2 * design_inverse
@@ -41,15 +39,10 @@ function l_t3c(
 
     best = 1
     while (condition)
-        empirical_means = rewards ./ num_pulls
+        empirical_means = [dot(contexts[c], rls) for c in 1:num_contexts]
         # Empirical best arm
         best = randmax(empirical_means)
         # Compute the stopping statistic
-        num_pulls_best = num_pulls[best]
-        reward_best = rewards[best]
-        empirical_mean_best = reward_best / num_pulls_best
-        weighted_means = (reward_best .+ rewards) ./ (num_pulls_best .+ num_pulls)
-
         index = collect(1:num_contexts)
         deleteat!(index, best)
         # Compute the minimum GLR
@@ -68,7 +61,8 @@ function l_t3c(
             for a = 1:num_contexts
                 if dist == "Gaussian"
                     z = rand(MvNormal(dim, 1))
-                    theta = sigma * square_root_inverse * z + rls
+                    # theta = sigma * square_root_inverse * z + rls
+                    theta = sigma * design_inverse^0.5 * z + rls
                     ts[a] = sum(theta .* contexts[a])
                 end
             end
@@ -99,7 +93,6 @@ function l_t3c(
 
             # Update the posterior
             design_inverse = update_design_inverse(design_inverse, contexts[new_sample])
-            square_root_inverse = update_square_root(square_root_inverse, contexts[new_sample])
             z_t += new_reward * contexts[new_sample]
             rls = design_inverse * z_t
             var = sigma^2 * design_inverse
