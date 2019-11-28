@@ -1,5 +1,6 @@
 using HDF5
 using Distributed
+using Statistics
 using LinearAlgebra
 
 if Sys.KERNEL == :Darwin
