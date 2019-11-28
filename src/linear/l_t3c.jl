@@ -1,6 +1,6 @@
 function l_t3c(
     contexts::Array,
-    theta::Array,
+    true_theta::Array,
     delta::Real,
     rate::Function,
     dist::String,
@@ -27,7 +27,7 @@ function l_t3c(
     # Play each arm once
     for c = 1:num_contexts
         t += 1
-        new_reward = compute_observation(contexts[c], theta, sigma)
+        new_reward = compute_observation(contexts[c], true_theta, sigma)
         rewards[c] += new_reward
         num_pulls[c] = 1
 
@@ -61,7 +61,6 @@ function l_t3c(
             for a = 1:num_contexts
                 if dist == "Gaussian"
                     z = rand(MvNormal(dim, 1))
-                    # theta = sigma * square_root_inverse * z + rls
                     theta = sigma * design_inverse^0.5 * z + rls
                     ts[a] = sum(theta .* contexts[a])
                 end
@@ -87,7 +86,7 @@ function l_t3c(
             end
             # Play the selected arm
             t += 1
-            new_reward = compute_observation(contexts[new_sample], theta, sigma)
+            new_reward = compute_observation(contexts[new_sample], true_theta, sigma)
             rewards[new_sample] += new_reward
             num_pulls[new_sample] += 1
 

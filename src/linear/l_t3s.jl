@@ -41,7 +41,6 @@ function l_t3s(
 
     best = 1
     while (condition)
-        println(t)
         empirical_means = [dot(contexts[c], rls) for c in 1:num_contexts]
         # Empirical best arm
         best = randmax(empirical_means)
@@ -103,8 +102,6 @@ function l_t3s(
             z_t += new_reward * contexts[new_sample]
             rls = design_inverse * z_t
             var = sigma^2 * design_inverse
-            #println(new_sample)
-            #println(design_inverse)
         end
     end
     recommendation = best
