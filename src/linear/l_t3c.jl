@@ -74,7 +74,7 @@ function l_t3c(
                     score_i = compute_transportation(contexts[best], contexts[i], rls, var)
                     if (score_i < new_score)
                         challenger = i
-                        new_score = score
+                        new_score = score_i
                     end
                 end
             end
