@@ -41,7 +41,7 @@ function l_t3s(
 
     best = 1
     while (condition)
-        empirical_means = [dot(contexts[c], rls) for c in 1:num_contexts]
+        empirical_means = [dot(contexts[c], rls) for c = 1:num_contexts]
         # Empirical best arm
         best = randmax(empirical_means)
         # Compute the stopping statistic

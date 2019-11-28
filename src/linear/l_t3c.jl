@@ -39,7 +39,7 @@ function l_t3c(
 
     best = 1
     while (condition)
-        empirical_means = [dot(contexts[c], rls) for c in 1:num_contexts]
+        empirical_means = [dot(contexts[c], rls) for c = 1:num_contexts]
         # Empirical best arm
         best = randmax(empirical_means)
         # Compute the stopping statistic
@@ -53,8 +53,8 @@ function l_t3c(
         elseif (t > 1e7)
             condition = false
             best = 0
-            print(num_pulls)
-            print(rewards)
+            println(num_pulls)
+            println(rewards)
             num_pulls = zeros(1, num_contexts)
         else
             ts = zeros(num_contexts)
@@ -68,16 +68,16 @@ function l_t3c(
             best = argmax(ts)
 
             challenger = 1
-          	new_score = Inf
-          	for i = 1:num_contexts
-    	      	if i != best
-                	score_i = compute_transportation(contexts[best], contexts[i], rls, var)
-    	         	if (score_i < new_score)
-    		         	challenger = i
-    		         	new_score = score
-    	         	end
-    	      	end
-          	end
+            new_score = Inf
+            for i = 1:num_contexts
+                if i != best
+                    score_i = compute_transportation(contexts[best], contexts[i], rls, var)
+                    if (score_i < new_score)
+                        challenger = i
+                        new_score = score
+                    end
+                end
+            end
 
             if (rand() > frac)
                 new_sample = best
