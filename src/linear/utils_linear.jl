@@ -14,6 +14,12 @@ function compute_transportation(context1::Array, context2::Array, mu::Array, cov
 end
 
 
+function update_design(matrix::Array, context::Array)
+    matrix = matrix + context * transpose(context)
+    return matrix
+end
+
+
 function update_design_inverse(matrix::Array, context::Array)
     matrix = matrix -
              matrix * context * transpose(context) * matrix /
