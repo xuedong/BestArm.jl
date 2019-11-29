@@ -10,8 +10,8 @@ elseif Sys.KERNEL == :Linux
 end
 
 # DO YOU WANT TO SAVE RESULTS?
-typeExp = "Save"
-#typeExp = "NoSave"
+#typeExp = "Save"
+typeExp = "NoSave"
 
 # TYPE OF DISTRIBUTION
 @everywhere distribution = "Gaussian"
@@ -41,14 +41,14 @@ K = length(mu)
 delta = 0.01
 
 # NUMBER OF SIMULATIONS
-N = 10
+N = 1
 
 print("mu = $(mu)\n")
 
 # POLICIES
 
-@everywhere policies = [BestArm.l_t3s, BestArm.l_t3c]
-@everywhere namesPolicies = ["L-T3S", "L-T3C"]
+@everywhere policies = [BestArm.lingape, BestArm.l_t3s, BestArm.l_t3c]
+@everywhere namesPolicies = ["LinGapE", "L-T3S", "L-T3C"]
 
 # EXPLORATION RATES
 @everywhere explo(t, delta) = log((log(t) + 1) / delta)
