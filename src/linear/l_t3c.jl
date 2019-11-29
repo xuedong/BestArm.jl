@@ -84,6 +84,7 @@ function l_t3c(
             else
                 new_sample = challenger
             end
+
             # Play the selected arm
             t += 1
             new_reward = compute_observation(contexts[new_sample], true_theta, sigma)

@@ -29,10 +29,10 @@ end
 @everywhere c3 = [0, 0, 1, 0, 0]
 @everywhere c4 = [0, 0, 0, 1, 0]
 @everywhere c5 = [0, 0, 0, 0, 1]
-#@everywhere c6 = [cos(0.01), sin(0.01), 0, 0, 0]
-@everywhere contexts = [c1, c2, c3, c4, c5]
-#@everywhere true_theta = [2, 0, 0, 0, 0]
-@everywhere true_theta = [0.9, 0.7, 0.5, 0.4, 0.3]
+@everywhere c6 = [cos(0.01), sin(0.01), 0, 0, 0]
+@everywhere contexts = [c1, c2, c3, c4, c5, c6]
+@everywhere true_theta = [2, 0, 0, 0, 0]
+#@everywhere true_theta = [0.9, 0.7, 0.5, 0.4, 0.3]
 @everywhere mu = [dot(c, true_theta) for c in contexts]
 @everywhere best = findall(x -> x == maximum(mu), mu)[1]
 K = length(mu)
@@ -41,17 +41,17 @@ K = length(mu)
 delta = 0.01
 
 # NUMBER OF SIMULATIONS
-N = 10
+N = 1
 
 print("mu = $(mu)\n")
 
 # POLICIES
 
-@everywhere policies = [BestArm.lingape, BestArm.l_t3s, BestArm.l_t3c]
-@everywhere namesPolicies = ["LinGapE", "L-T3S", "L-T3C"]
+@everywhere policies = [BestArm.l_t3c]
+@everywhere namesPolicies = ["L-T3C"]
 
 # EXPLORATION RATES
-@everywhere explo(t, delta) = log((log(t) + 1) / delta)
+@everywhere explo(t, delta) = log10((log10(t) + 1) / delta)
 
 lP = length(policies)
 rates = [explo for i = 1:lP]

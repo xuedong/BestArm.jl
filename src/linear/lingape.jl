@@ -72,6 +72,7 @@ function lingape(
                 contexts[ambiguous],
                 update_design_inverse(design_inverse, contexts[i]),
             ) for i = 1:num_contexts])
+
             # Play the selected arm
             t += 1
             new_reward = compute_observation(contexts[new_sample], true_theta, sigma)
