@@ -54,15 +54,20 @@ function lingape(
             num_pulls = zeros(1, num_contexts)
         else
             c_t = compute_error_width(design, true_theta, sigma, kappa, delta)
-            ambiguous = randmax([gaps(contexts[i], contexts[best], rls) +
-                                 confidence(contexts[i], contexts[best], design_inverse) * c_t for i = 1:num_contexts])
-            ucb = maximum([gaps(contexts[i], contexts[best], rls) +
-                           confidence(contexts[i], contexts[best], design_inverse) * c_t for i = 1:num_contexts])
+            ambiguous = randmax([compute_gap(contexts[i], contexts[best], rls) +
+                                 compute_confidence(
+                contexts[i],
+                contexts[best],
+                design_inverse,
+            ) * c_t for i = 1:num_contexts])
+            ucb = maximum([compute_gap(contexts[i], contexts[best], rls) +
+                           compute_confidence(contexts[i], contexts[best], design_inverse) *
+                           c_t for i = 1:num_contexts])
             if ucb <= epsilon
                 recommendation = best
                 return recommendation, num_pulls
             end
-            new_sample = randmin([confidence(
+            new_sample = randmin([compute_confidence(
                 contexts[best],
                 contexts[ambiguous],
                 update_design_inverse(design_inverse, contexts[i]),
@@ -82,4 +87,32 @@ function lingape(
     end
     recommendation = best
     return recommendation, num_pulls
+end
+
+
+# Helper functions
+function compute_error_width(
+    matrix::Array,
+    theta::Array,
+    sigma::Real,
+    kappa::Real,
+    delta::Real,
+)
+    dim = size(matrix)[1]
+    lambda_sqrt = sigma / kappa
+    c_t = sigma * sqrt(2 * log(sqrt(det(matrix)) / lambda_sqrt^dim)) +
+          lambda_sqrt * norm(theta)
+    return c_t
+end
+
+
+function compute_gap(context1::Array, context2::Array, theta::Array)
+    gap = dot(context1 - context2, theta)
+    return gap
+end
+
+
+function compute_confidence(context1::Array, context2::Array, cov::Matrix)
+    confidence = sqrt(transpose(context1 - context2) * cov * (context1 - context2))
+    return confidence
 end
