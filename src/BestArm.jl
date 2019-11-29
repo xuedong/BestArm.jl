@@ -39,7 +39,9 @@ module BestArm
 
     export siri
 
+    export l_t3c
     export l_t3s
+    export lingape
 
     include("arms.jl")
     include("utils.jl")

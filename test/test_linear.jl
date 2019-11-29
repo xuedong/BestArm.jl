@@ -41,7 +41,7 @@ K = length(mu)
 delta = 0.01
 
 # NUMBER OF SIMULATIONS
-N = 1
+N = 10
 
 print("mu = $(mu)\n")
 
