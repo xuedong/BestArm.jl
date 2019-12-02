@@ -69,24 +69,44 @@ function l_t3s(
                 end
             end
 
-            new_sample = argmax(ts)
-            if (rand() > frac)
-                challenger = new_sample
-                condition = true
-                while (new_sample == challenger)
-                    ts = zeros(num_contexts)
-                    for a = 1:num_contexts
-                        if dist == "Gaussian"
-                            z = rand(MvNormal(dim, 1))
-                            # theta = sigma * square_root_inverse * z + rls
-                            theta = sigma * design_inverse^0.5 * z + rls
-                            ts[a] = sum(theta .* contexts[a])
-                        end
+            # new_sample = argmax(ts)
+            # if (rand() > frac)
+            #     challenger = new_sample
+            #     condition = true
+            #     while (new_sample == challenger)
+            #         ts = zeros(num_contexts)
+            #         for a = 1:num_contexts
+            #             if dist == "Gaussian"
+            #                 z = rand(MvNormal(dim, 1))
+            #                 # theta = sigma * square_root_inverse * z + rls
+            #                 theta = sigma * design_inverse^0.5 * z + rls
+            #                 ts[a] = sum(theta .* contexts[a])
+            #             end
+            #         end
+            #         challenger = argmax(ts)
+            #     end
+            #     new_sample = challenger
+            # end
+            best = argmax(ts)
+            challenger = best
+            while (challenger == best)
+                ts = zeros(num_contexts)
+                for a = 1:num_contexts
+                    if dist == "Gaussian"
+                        z = rand(MvNormal(dim, 1))
+                        theta = sigma * design_inverse^0.5 * z + rls
+                        ts[a] = sum(theta .* contexts[a])
                     end
-                    challenger = argmax(ts)
                 end
-                new_sample = challenger
+                challenger = argmax(ts)
             end
+
+            new_sample = randmin([compute_confidence(
+                contexts[best],
+                contexts[challenger],
+                update_design_inverse(design_inverse, contexts[i]),
+            ) for i = 1:num_contexts])
+
             # Play the selected arm
             t += 1
             new_reward = compute_observation(contexts[new_sample], true_theta, sigma)
