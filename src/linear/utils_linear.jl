@@ -14,6 +14,12 @@ function compute_transportation(context1::Array, context2::Array, mu::Array, cov
 end
 
 
+function compute_confidence(context1::Array, context2::Array, cov::Matrix)
+    confidence = sqrt(transpose(context1 - context2) * cov * (context1 - context2))
+    return confidence
+end
+
+
 function update_design(matrix::Array, context::Array)
     matrix = matrix + context * transpose(context)
     return matrix

@@ -79,11 +79,16 @@ function l_t3c(
                 end
             end
 
-            if (rand() > frac)
-                new_sample = best
-            else
-                new_sample = challenger
-            end
+            # if (rand() > frac)
+            #     new_sample = best
+            # else
+            #     new_sample = challenger
+            # end
+            new_sample = randmin([compute_confidence(
+                contexts[best],
+                contexts[challenger],
+                update_design_inverse(design_inverse, contexts[i]),
+            ) for i = 1:num_contexts])
 
             # Play the selected arm
             t += 1

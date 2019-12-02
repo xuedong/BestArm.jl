@@ -111,9 +111,3 @@ function compute_gap(context1::Array, context2::Array, theta::Array)
     gap = dot(context1 - context2, theta)
     return gap
 end
-
-
-function compute_confidence(context1::Array, context2::Array, cov::Matrix)
-    confidence = sqrt(transpose(context1 - context2) * cov * (context1 - context2))
-    return confidence
-end

@@ -51,7 +51,7 @@ print("mu = $(mu)\n")
 @everywhere namesPolicies = ["L-T3C"]
 
 # EXPLORATION RATES
-@everywhere explo(t, delta) = log10((log10(t) + 1) / delta)
+@everywhere explo(t, delta) = log((log(t) + 1) / delta)
 
 lP = length(policies)
 rates = [explo for i = 1:lP]
