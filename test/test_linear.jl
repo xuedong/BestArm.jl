@@ -47,8 +47,8 @@ print("mu = $(mu)\n")
 
 # POLICIES
 
-@everywhere policies = [BestArm.l_t3c, BestArm.lingape]
-@everywhere namesPolicies = ["L-T3C", "LinGapE"]
+@everywhere policies = [BestArm.l_t3c, BestArm.l_t3s, BestArm.lingape]
+@everywhere namesPolicies = ["L-T3C", "L-T3S", "LinGapE"]
 
 # EXPLORATION RATES
 @everywhere explo(t, delta) = log((log(t) + 1) / delta)
