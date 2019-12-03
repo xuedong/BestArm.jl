@@ -10,8 +10,8 @@ elseif Sys.KERNEL == :Linux
 end
 
 # DO YOU WANT TO SAVE RESULTS?
-#typeExp = "Save"
-typeExp = "NoSave"
+typeExp = "Save"
+#typeExp = "NoSave"
 
 # TYPE OF DISTRIBUTION
 @everywhere distribution = "Gaussian"
@@ -41,7 +41,7 @@ K = length(mu)
 delta = 0.01
 
 # NUMBER OF SIMULATIONS
-N = 10
+N = 100
 
 print("mu = $(mu)\n")
 

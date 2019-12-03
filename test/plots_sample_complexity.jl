@@ -17,11 +17,11 @@ elseif Sys.KERNEL == :Linux
     fname = "/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/linear/xs"
 end
 #namesPolicies = ["T3C", "TTTS", "TTEI", "BC", "D-Tracking", "Uniform", "UGapE"]
-namesPolicies = ["TTTS", "L-T3S", "T3C", "L-T3C"]
+namesPolicies = ["L-T3S", "L-T3C", "LinGapE"]
 
 # PARAMETERS
 delta = 0.01
-N = 10
+N = 100
 
 clf()
 
