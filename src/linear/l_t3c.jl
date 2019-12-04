@@ -4,6 +4,7 @@ function l_t3c(
     delta::Real,
     rate::Function,
     dist::String,
+    variant::Bool = false,
     sigma::Real = 1,
     kappa::Real = 1,
     frac::Real = 0.5,
@@ -79,16 +80,19 @@ function l_t3c(
                 end
             end
 
-            # if (rand() > frac)
-            #     new_sample = best
-            # else
-            #     new_sample = challenger
-            # end
-            new_sample = randmin([compute_confidence(
-                contexts[best],
-                contexts[challenger],
-                update_design_inverse(design_inverse, contexts[i]),
-            ) for i = 1:num_contexts])
+            if variant
+                new_sample = randmin([compute_confidence(
+                    contexts[best],
+                    contexts[challenger],
+                    update_design_inverse(design_inverse, contexts[i]),
+                ) for i = 1:num_contexts])
+            else
+                if (rand() > frac)
+                    new_sample = best
+                else
+                    new_sample = challenger
+                end
+            end
 
             # Play the selected arm
             t += 1

@@ -10,8 +10,7 @@ elseif Sys.KERNEL == :Linux
 end
 
 # DO YOU WANT TO SAVE RESULTS?
-typeExp = "Save"
-#typeExp = "NoSave"
+typeExp = "NoSave"
 
 # TYPE OF DISTRIBUTION
 @everywhere distribution = "Gaussian"
@@ -24,31 +23,27 @@ elseif Sys.KERNEL == :Linux
 end
 
 # BANDIT PROBLEM
-@everywhere c1 = [1, 0, 0, 0, 0]
-@everywhere c2 = [0, 1, 0, 0, 0]
-@everywhere c3 = [0, 0, 1, 0, 0]
-@everywhere c4 = [0, 0, 0, 1, 0]
-@everywhere c5 = [0, 0, 0, 0, 1]
-@everywhere c6 = [cos(0.01), sin(0.01), 0, 0, 0]
-@everywhere contexts = [c1, c2, c3, c4, c5, c6]
-@everywhere true_theta = [2, 0, 0, 0, 0]
-#@everywhere true_theta = [0.9, 0.7, 0.5, 0.4, 0.3]
+@everywhere c1 = [1, 0]
+@everywhere c2 = [0, 1]
+@everywhere c3 = [cos(0.01), sin(0.01)]
+@everywhere contexts = [c1, c2, c3]
+@everywhere true_theta = [2, 0]
 @everywhere mu = [dot(c, true_theta) for c in contexts]
 @everywhere best = findall(x -> x == maximum(mu), mu)[1]
 K = length(mu)
 
 # RISK LEVEL
-delta = 0.01
+delta = 0.1
 
 # NUMBER OF SIMULATIONS
-N = 100
+N = 1
 
 print("mu = $(mu)\n")
 
 # POLICIES
 
-@everywhere policies = [BestArm.l_t3c, BestArm.l_t3s, BestArm.lingape]
-@everywhere namesPolicies = ["L-T3C", "L-T3S", "LinGapE"]
+@everywhere policies = [BestArm.l_t3c, BestArm.lingape]
+@everywhere namesPolicies = ["L-T3C", "LinGapE"]
 
 # EXPLORATION RATES
 @everywhere explo(t, delta) = log((log(t) + 1) / delta)
