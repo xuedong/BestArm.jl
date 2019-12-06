@@ -4,7 +4,7 @@ function l_t3c(
     delta::Real,
     rate::Function,
     dist::String,
-    variant::Bool = false,
+    variant::Bool = true,
     sigma::Real = 1,
     kappa::Real = 1,
     frac::Real = 0.5,
@@ -20,6 +20,7 @@ function l_t3c(
 
     # Initialize the prior
     lambda = sigma^2 / kappa^2
+    design = Matrix{Float64}(lambda * I, dim, dim)
     design_inverse = Matrix{Float64}(1 / lambda * I, dim, dim)
     z_t = vec(zeros(1, dim))
     rls = vec(zeros(1, dim))
@@ -32,6 +33,7 @@ function l_t3c(
         rewards[c] += new_reward
         num_pulls[c] = 1
 
+        design = update_design(design, contexts[c])
         design_inverse = update_design_inverse(design_inverse, contexts[c])
         z_t += new_reward * contexts[c]
         rls = design_inverse * z_t
@@ -48,7 +50,8 @@ function l_t3c(
         deleteat!(index, best)
         # Compute the minimum GLR
         score = minimum([compute_transportation(contexts[best], contexts[i], rls, var) for i in 1:num_contexts if i != best])
-        if (score > rate(t, delta))
+        c_t = compute_error_width(design, true_theta, sigma, kappa, delta)
+        if (score > c_t^2)
             # Stop
             condition = false
         elseif (t > 1e7)
@@ -101,6 +104,7 @@ function l_t3c(
             num_pulls[new_sample] += 1
 
             # Update the posterior
+            design = update_design(design, contexts[new_sample])
             design_inverse = update_design_inverse(design_inverse, contexts[new_sample])
             z_t += new_reward * contexts[new_sample]
             rls = design_inverse * z_t

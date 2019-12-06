@@ -80,6 +80,7 @@ function lingape(
             num_pulls[new_sample] += 1
 
             # Update the posterior
+            design = update_design(design, contexts[new_sample])
             design_inverse = update_design_inverse(design_inverse, contexts[new_sample])
             z_t += new_reward * contexts[new_sample]
             rls = design_inverse * z_t
@@ -92,21 +93,6 @@ end
 
 
 # Helper functions
-function compute_error_width(
-    matrix::Array,
-    theta::Array,
-    sigma::Real,
-    kappa::Real,
-    delta::Real,
-)
-    dim = size(matrix)[1]
-    lambda_sqrt = sigma / kappa
-    c_t = sigma * sqrt(2 * log(sqrt(det(matrix)) / lambda_sqrt^dim)) +
-          lambda_sqrt * norm(theta)
-    return c_t
-end
-
-
 function compute_gap(context1::Array, context2::Array, theta::Array)
     gap = dot(context1 - context2, theta)
     return gap

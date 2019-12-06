@@ -20,6 +20,21 @@ function compute_confidence(context1::Array, context2::Array, cov::Matrix)
 end
 
 
+function compute_error_width(
+    matrix::Array,
+    theta::Array,
+    sigma::Real,
+    kappa::Real,
+    delta::Real,
+)
+    dim = size(matrix)[1]
+    lambda_sqrt = sigma / kappa
+    c_t = sigma * sqrt(2 * log(sqrt(det(matrix)) / lambda_sqrt^dim)) +
+          lambda_sqrt * norm(theta)
+    return c_t
+end
+
+
 function update_design(matrix::Array, context::Array)
     matrix = matrix + context * transpose(context)
     return matrix
