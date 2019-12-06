@@ -1,57 +1,99 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import cm
-from mpl_toolkits.mplot3d import Axes3D
+from matplotlib.patches import Ellipse
+import matplotlib.transforms as transforms
+import seaborn as sns
 
 
-def multivariate_gaussian(pos, mu, sigma):
-    """Return the multivariate Gaussian distribution on array pos.
-
-    pos is an array constructed by packing the meshed arrays of variables
-    x_1, x_2, x_3, ..., x_k into its _last_ dimension.
-
+def confidence_ellipse(x, y, ax, n_std=3.0, facecolor='none', **kwargs):
     """
+    Create a plot of the covariance confidence ellipse of *x* and *y*.
 
-    n = mu.shape[0]
-    sigma_det = np.linalg.det(sigma)
-    sigma_inv = np.linalg.inv(sigma)
-    N = np.sqrt((2*np.pi)**n * sigma_det)
-    # This einsum call calculates (x-mu)T.Sigma-1.(x-mu) in a vectorized
-    # way across all the input variables.
-    fac = np.einsum('...k,kl,...l->...', pos-mu, sigma_inv, pos-mu)
+    Parameters
+    ----------
+    :param x, y: array-like, shape (n, )
+        Input data.
+    :param ax: matplotlib.axes.Axes
+        The axes object to draw the ellipse into.
+    :param n_std: float
+        The number of standard deviations to determine the ellipse's radiuses.
+    :param facecolor:
 
-    return np.exp(-fac / 2) / N
+    Returns
+    -------
+    matplotlib.patches.Ellipse
+
+    Other parameters
+    ----------------
+    kwargs : `~matplotlib.patches.Patch` properties
+    """
+    if x.size != y.size:
+        raise ValueError("x and y must be the same size")
+
+    cov = np.cov(x, y)
+    pearson = cov[0, 1]/np.sqrt(cov[0, 0] * cov[1, 1])
+    # Using a special case to obtain the eigenvalues of this
+    # two-dimensional dataset.
+    ell_radius_x = np.sqrt(1 + pearson)
+    ell_radius_y = np.sqrt(1 - pearson)
+    ellipse = Ellipse((0, 0),
+                      width=ell_radius_x * 2,
+                      height=ell_radius_y * 2,
+                      facecolor=facecolor,
+                      **kwargs)
+
+    # Calculating the standard deviation of x from
+    # the square root of the variance and multiplying
+    # with the given number of standard deviations.
+    scale_x = np.sqrt(cov[0, 0]) * n_std
+    mean_x = np.mean(x)
+
+    # calculating the standard deviation of y ...
+    scale_y = np.sqrt(cov[1, 1]) * n_std
+    mean_y = np.mean(y)
+
+    transf = transforms.Affine2D() \
+        .rotate_deg(45) \
+        .scale(scale_x, scale_y) \
+        .translate(mean_x, mean_y)
+
+    ellipse.set_transform(transf + ax.transData)
+    return ax.add_patch(ellipse)
 
 
-if __name__ == '__main__':
-    # Our 2-dimensional distribution will be over variables X and Y
-    N = 60
-    X = np.linspace(-3, 3, N)
-    Y = np.linspace(-3, 4, N)
-    X, Y = np.meshgrid(X, Y)
+def get_correlated_dataset(n, dependency, mu, scale):
+    latent = np.random.randn(n, 2)
+    dependent = latent.dot(dependency)
+    scaled = dependent * scale
+    scaled_with_offset = scaled + mu
+    # return x and y of the new, correlated dataset
+    return scaled_with_offset[:, 0], scaled_with_offset[:, 1]
 
-    # Mean vector and covariance matrix
-    mu = np.array([0., 1.])
-    sigma = np.array([[1., -0.5], [-0.5,  1.5]])
 
-    # Pack X and Y into a single 3-dimensional array
-    pos = np.empty(X.shape + (2,))
-    pos[:, :, 0] = X
-    pos[:, :, 1] = Y
+if __name__ == "__main__":
+    fig, ax_nstd = plt.subplots(figsize=(6, 6))
 
-    # The distribution on the variables X, Y packed into pos.
-    Z = multivariate_gaussian(pos, mu, sigma)
+    dependency_nstd = np.array([
+        [3.001738321260551e-5, -0.0010014905698102542],
+        [-0.0010014905698102542, 0.2000014203982155]
+    ])
+    mu = 2.0034260825126817, 0.19221341286927895
+    scale = 3, 3
 
-    # Create a surface plot and projected filled contour plot under it.
-    fig = plt.figure()
-    ax = fig.gca(projection='3d')
-    # ax.plot_surface(X, Y, Z, rstride=3, cstride=3, linewidth=1, antialiased=True, cmap=cm.viridis)
+    ax_nstd.axvline(c='grey', lw=1)
+    ax_nstd.axhline(c='grey', lw=1)
 
-    cset = ax.contourf(X, Y, Z, zdir='z', offset=-0.15, cmap=cm.viridis)
+    x, y = get_correlated_dataset(500, dependency_nstd, mu, scale)
+    # ax_nstd.scatter(x, y, s=0.5)
 
-    # Adjust the limits, ticks and view angle
-    ax.set_zlim(-0.15, 0.2)
-    ax.set_zticks(np.linspace(0, 0.2, 5))
-    ax.view_init(27, -21)
+    confidence_ellipse(x, y, ax_nstd, n_std=1,
+                       label=r'$1\sigma$', edgecolor='firebrick')
+    confidence_ellipse(x, y, ax_nstd, n_std=2,
+                       label=r'$2\sigma$', edgecolor='fuchsia', linestyle='--')
+    confidence_ellipse(x, y, ax_nstd, n_std=3,
+                       label=r'$3\sigma$', edgecolor='blue', linestyle=':')
 
+    ax_nstd.scatter(mu[0], mu[1], c='red', s=3)
+    # ax_nstd.set_title('Different standard deviations')
+    # ax_nstd.legend()
     plt.show()

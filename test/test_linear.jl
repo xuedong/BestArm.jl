@@ -37,7 +37,7 @@ delta = 0.1
 d = 2
 
 # NUMBER OF SIMULATIONS
-N = 10
+N = 100
 
 print("mu = $(mu)\n")
 
