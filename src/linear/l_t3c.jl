@@ -33,7 +33,7 @@ function l_t3c(
         rewards[c] += new_reward
         num_pulls[c] = 1
 
-        design = update_design(design, contexts[c])
+        #design = update_design(design, contexts[c])
         design_inverse = update_design_inverse(design_inverse, contexts[c])
         z_t += new_reward * contexts[c]
         rls = design_inverse * z_t
@@ -50,8 +50,8 @@ function l_t3c(
         deleteat!(index, best)
         # Compute the minimum GLR
         score = minimum([compute_transportation(contexts[best], contexts[i], rls, var) for i in 1:num_contexts if i != best])
-        c_t = compute_error_width(design, true_theta, sigma, kappa, delta)
-        if (score > c_t^2)
+        #c_t = compute_error_width(design, true_theta, sigma, kappa, delta)
+        if (score > rate(t, delta))
             # Stop
             condition = false
         elseif (t > 1e7)
@@ -104,7 +104,7 @@ function l_t3c(
             num_pulls[new_sample] += 1
 
             # Update the posterior
-            design = update_design(design, contexts[new_sample])
+            #design = update_design(design, contexts[new_sample])
             design_inverse = update_design_inverse(design_inverse, contexts[new_sample])
             z_t += new_reward * contexts[new_sample]
             rls = design_inverse * z_t

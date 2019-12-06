@@ -34,9 +34,10 @@ K = length(mu)
 
 # RISK LEVEL
 delta = 0.1
+d = 2
 
 # NUMBER OF SIMULATIONS
-N = 1
+N = 10
 
 print("mu = $(mu)\n")
 
@@ -46,7 +47,7 @@ print("mu = $(mu)\n")
 @everywhere namesPolicies = ["L-T3C", "LinGapE"]
 
 # EXPLORATION RATES
-@everywhere explo(t, delta) = log((log(t) + 1) / delta)
+@everywhere explo(t, delta) = log((log(t) + 1)^2 / delta)
 
 lP = length(policies)
 rates = [explo for i = 1:lP]
