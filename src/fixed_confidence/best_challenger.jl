@@ -81,8 +81,8 @@ function best_challenger(mu::Array, delta::Real, rate::Function, dist::String,
             # Stop and consider the trial as a fail
             condition = false
             true_best = 0
-            print(num_pulls)
-            print(rewards)
+            println(num_pulls)
+            println(rewards)
             num_pulls = zeros(1, num_arms)
         else
             # Continue and sample an arm
@@ -100,7 +100,7 @@ function best_challenger(mu::Array, delta::Real, rate::Function, dist::String,
      			end
             end
         end
-        # draw the arm
+        # Draw the arm
         t += 1
         rewards[new_sample] += sample_arm(mu[new_sample], dist)
         num_pulls[new_sample] += 1
