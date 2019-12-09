@@ -22,16 +22,16 @@ function t3c(
     TrueBest = 1
     while continuing
         Mu = S ./ N
-      # Empirical best arm
+        # Empirical best arm
         Best = randmax(Mu)
         TrueBest = randmax(Mu)
-      # Compute the stopping statistic
+        # Compute the stopping statistic
         NB = N[Best]
         SB = S[Best]
         MuB = SB / NB
         MuMid = (SB .+ S) ./ (NB .+ N)
         Score = minimum([NB * d(MuB, MuMid[i], dist) + N[i] * d(Mu[i], MuMid[i], dist) for i in 1:K if i != Best])
-      # compute the best arm and the challenger
+        # Compute the best arm and the challenger
         for a = 1:K
             if dist == "Gaussian"
                 Mu[a] = rand(Normal(S[a] / N[a], alpha / sqrt(N[a])), 1)[1]
@@ -129,32 +129,33 @@ function t3c_optimal(
                          num_pulls[i] * d(empirical_means[i], weighted_means[i], dist) for i in 1:num_arms if i != empirical_best])
 
         # Compute the best arm and the challenger
+        ts = zeros(num_arms)
         for a = 1:num_arms
             if dist == "Gaussian"
-                empirical_means[a] = rand(
+                ts[a] = rand(
                     Normal(rewards[a] / num_pulls[a], alpha / sqrt(num_pulls[a])),
                     1,
                 )[1]
             elseif dist == "Bernoulli"
-                empirical_means[a] = rand(
+                ts[a] = rand(
                     Beta(alpha + rewards[a], beta + num_pulls[a] - rewards[a]),
                     1,
                 )[1]
             end
         end
-        empirical_best = randmax(empirical_means)
-        num_pulls_best = num_pulls[empirical_best]
-        empirical_mean_best = empirical_means[empirical_best]
-        weighted_means = (num_pulls_best * empirical_mean_best .+
-                          num_pulls .* empirical_means) ./ (num_pulls_best .+ num_pulls)
+        ts_best = randmax(ts)
+        ts_pulls_best = num_pulls[ts_best]
+        ts_mean_best = empirical_means[ts_best]
+        ts_weighted_means = (ts_pulls_best * ts_mean_best .+
+                          num_pulls .* empirical_means) ./ (ts_pulls_best .+ num_pulls)
 
         # Compute the challenger
         challenger = 1
         new_score = Inf
         for i = 1:num_arms
             if i != empirical_best
-                score_i = num_pulls_best * d(empirical_mean_best, weighted_means[i], dist) +
-                          num_pulls[i] * d(empirical_means[i], weighted_means[i], dist)
+                score_i = ts_pulls_best * d(ts_mean_best, ts_weighted_means[i], dist) +
+                          num_pulls[i] * d(empirical_means[i], ts_weighted_means[i], dist)
                 if (score_i < new_score)
                     challenger = i
                     new_score = score_i
@@ -176,10 +177,10 @@ function t3c_optimal(
             num_pulls = zeros(1, num_arms)
         else
             # Continue and sample the arm less pulled
-            if (num_pulls[empirical_best] > num_pulls[challenger])
+            if (num_pulls[ts_best] > num_pulls[challenger])
                 new_sample = challenger
             else
-                new_sample = empirical_best
+                new_sample = ts_best
             end
         end
         # Draw the arm

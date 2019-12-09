@@ -51,10 +51,6 @@ function l_t3c(
         # Compute the minimum GLR
         score = minimum([compute_transportation(contexts[best], contexts[i], rls, var) for i in 1:num_contexts if i != best])
         #c_t = compute_error_width(design, true_theta, sigma, kappa, delta)
-        if t%10000 == 0
-            println(rls)
-            println(var)
-        end
         if (score > rate(t, delta))
             # Stop
             condition = false
