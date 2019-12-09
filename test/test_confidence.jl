@@ -22,7 +22,7 @@ elseif Sys.KERNEL == :Linux
 end
 
 # BANDIT PROBLEM
-@everywhere mu = [0.9 0.7 0.5 0.4]
+@everywhere mu = [0.9 0.5 0.5 0.5]
 @everywhere best = findall(x -> x == maximum(mu), mu)[1][2]
 K = length(mu)
 
