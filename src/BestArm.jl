@@ -29,7 +29,7 @@ module BestArm
     export best_challenger
     export kl_lucb
     export racing
-    export t3c
+    export t3c, t3c_optimal
     export target
     export d_tracking, c_tracking
     export ttei

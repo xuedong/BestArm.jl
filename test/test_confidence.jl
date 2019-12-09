@@ -9,11 +9,10 @@ elseif Sys.KERNEL == :Linux
 end
 
 # DO YOU WANT TO SAVE RESULTS?
-typeExp = "Save"
-#typeExp = "NoSave"
+typeExp = "NoSave"
 
 # TYPE OF DISTRIBUTION
-@everywhere distribution = "Gaussian"
+@everywhere distribution = "Bernoulli"
 
 # CHANGE NAME (save mode)
 if Sys.KERNEL == :Darwin
@@ -23,7 +22,7 @@ elseif Sys.KERNEL == :Linux
 end
 
 # BANDIT PROBLEM
-@everywhere mu = [0.9 0.7 0.5 0.4 0.3]
+@everywhere mu = [0.9 0.7 0.5 0.4]
 @everywhere best = findall(x -> x == maximum(mu), mu)[1][2]
 K = length(mu)
 
@@ -45,8 +44,8 @@ print("Optimal weights: $(optWeights)\n\n")
 
 # POLICIES
 
-@everywhere policies = [BestArm.ttts_c, BestArm.t3c]
-@everywhere namesPolicies = ["TTTS", "T3C"]
+@everywhere policies = [BestArm.t3c_optimal, BestArm.t3c, BestArm.best_challenger]
+@everywhere namesPolicies = ["T3C2", "T3C", "BC"]
 # @everywhere policies = [
 #     BestArm.best_challenger,
 #     BestArm.kl_lucb,
