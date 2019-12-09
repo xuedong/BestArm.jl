@@ -33,7 +33,7 @@ delta = 0.01
 #sigma=1
 
 # NUMBER OF SIMULATIONS
-N = 10
+N = 100
 
 # OPTIMAL SOLUTION
 @everywhere v, optWeights = BestArm.optimal_weights(mu, distribution)
