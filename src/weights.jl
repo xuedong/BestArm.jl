@@ -1,5 +1,5 @@
 function dico_solve(f, x_min, x_max, delta = 1e-11)
-# find m such that f(m)=0 using dichotomix search
+    # find m such that f(m)=0 using dichotomix search
     lower = x_min
     upper = x_max
     sgn = f(x_min)
@@ -16,7 +16,10 @@ function dico_solve(f, x_min, x_max, delta = 1e-11)
 end
 
 
-# Computing the optimal weights
+###############################
+# Compute the optimal weights #
+###############################
+
 function big_i(alpha, mu1, mu2, dist)
     if (alpha == 0) | (alpha == 1)
         return 0
@@ -106,7 +109,10 @@ function optimal_weights(mu, dist, delta::Real = 1e-11)
 end
 
 
-# Computing the parameterized optimal weights
+#############################################
+# Compute the parameterized optimal weights #
+#############################################
+
 function c_k(x, k, mu, dist, beta::Real = 0.5)
     average = mu[1] * beta / (beta + x) + mu[k] * x / (beta + x)
     return beta * d(mu[1], average, dist) + x * d(mu[k], average, dist)
