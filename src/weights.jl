@@ -43,16 +43,16 @@ end
 function xkofy(y, k, mu, dist, delta = 1e-11)
 # return x_k(y), i.e. finds x such that g_k(x)=y
     g(x) = (1 + x) * cost(mu[1], mu[k], 1 / (1 + x), x / (1 + x), dist) - y
-    xMax = 1
-    while g(xMax) < 0
-        xMax = 2 * xMax
+    x_max = 1
+    while g(x_max) < 0
+        x_max = 2 * x_max
     end
-    return dico_solve(x -> g(x), 0, xMax, 1e-11)
+    return dico_solve(x -> g(x), 0, x_max, 1e-11)
 end
 
 
 function aux(y, mu, dist)
-# returns F_mu(y) - 1
+    # returns F_mu(y) - 1
     K = length(mu)
     x = [xkofy(y, k, mu, dist) for k = 2:K]
     m = [muddle(mu[1], mu[k], 1, x[k-1]) for k = 2:K]
@@ -61,47 +61,47 @@ end
 
 
 function one_step_opt(mu, dist, delta::Real = 1e-11)
-    yMax = 0.5
+    y_max = 0.5
     if d(mu[1], mu[2], dist) == Inf
-# find yMax such that aux(yMax, mu) > 0
-        while aux(yMax, mu, dist) < 0
-            yMax = yMax * 2
+        # find y_max such that aux(y_max, mu) > 0
+        while aux(y_max, mu, dist) < 0
+            y_max = y_max * 2
         end
     else
-        yMax = d(mu[1], mu[2], dist)
+        y_max = d(mu[1], mu[2], dist)
     end
-    y = dico_solve(y -> aux(y, mu, dist), 0, yMax, delta)
+    y = dico_solve(y -> aux(y, mu, dist), 0, y_max, delta)
     x = [xkofy(y, k, mu, dist, delta) for k = 2:length(mu)]
     pushfirst!(x, 1)
-    nuOpt = x / sum(x)
-    return nuOpt[1] * y, nuOpt
+    nu_optimal = x / sum(x)
+    return nu_optimal[1] * y, nu_optimal
 end
 
 
 function optimal_weights(mu, dist, delta::Real = 1e-11)
 # returns T*(mu) and w*(mu)
-    K = length(mu)
-    IndMax = (LinearIndices(mu .== maximum(mu)))[findall(mu .== maximum(mu))]
-    L = length(IndMax)
-    if (L > 1)
-# multiple optimal arms
-        vOpt = zeros(1, K)
-        vOpt[IndMax] = 1 / L
-        return 0, vOpt
+    num_arms = length(mu)
+    maxs = (LinearIndices(mu .== maximum(mu)))[findall(mu .== maximum(mu))]
+    num_maxs = length(maxs)
+    if (num_maxs > 1)
+        # multiple optimal arms
+        v_optimal = zeros(1, num_arms)
+        v_optimal[maxs] = 1 / num_maxs
+        return 0, v_optimal
     else
         mu = vec(mu)
         index = sortperm(mu, rev = true)
         mu = mu[index]
-        unsorted = vec(collect(1:K))
-        invindex = zeros(Int, K)
+        unsorted = vec(collect(1:num_arms))
+        invindex = zeros(Int, num_arms)
         invindex[index] = unsorted
-# one-step optim
-        vOpt, NuOpt = one_step_opt(mu, dist, delta)
-# back to good ordering
-        nuOpt = NuOpt[invindex]
-        NuOpt = zeros(1, K)
-        NuOpt[1, :] = nuOpt
-        return vOpt, NuOpt
+        # one-step optimization
+        v_optimal, nu_optimal = one_step_opt(mu, dist, delta)
+        # back to good ordering
+        nu = nu_optimal[invindex]
+        nu_optimal = zeros(1, num_arms)
+        nu_optimal[1, :] = nu
+        return v_optimal, nu_optimal
     end
 end
 
