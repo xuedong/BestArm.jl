@@ -33,7 +33,7 @@ module BestArm
     export target
     export d_tracking, c_tracking
     export ttei
-    export ttts_c
+    export ttts_c, ttts_optimal
     export ugape_c
     export uniform_c
 

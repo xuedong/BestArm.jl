@@ -28,13 +28,13 @@ end
 K = length(mu)
 
 # RISK LEVEL
-delta = 0.00000001
+delta = 1e-11
 
 # Variance for Gaussian Bandits
 #sigma=1
 
 # NUMBER OF SIMULATIONS
-N = 100
+N = 10
 
 # OPTIMAL SOLUTION
 @everywhere v, optimal_weights = BestArm.optimal_weights(mu, distribution)
@@ -45,6 +45,7 @@ println("mu = $(mu)")
 println("Theoretical number of samples: $(v*log(1/delta))")
 println("Optimal weights: $(optimal_weights)")
 println("Beta-optimal weights: $(beta_weights)")
+println()
 
 # POLICIES
 
