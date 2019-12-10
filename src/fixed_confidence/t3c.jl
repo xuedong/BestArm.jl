@@ -3,9 +3,9 @@ function t3c(
     delta::Real,
     rate::Function,
     dist::String,
-    frac::Real = 0.5,
     alpha::Real = 1,
     beta::Real = 1,
+    frac::Real = 0.5,
     stopping::String = "chernoff",
 )
 condition = true

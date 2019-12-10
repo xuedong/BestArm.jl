@@ -23,18 +23,18 @@ end
 
 # BANDIT PROBLEM
 # make sure that the first element of the array is the maximum
-@everywhere mu = [0.9 0.51 0.5 0.49]
+@everywhere mu = [0.9 0.5 0.4999]
 @everywhere best = findall(x -> x == maximum(mu), mu)[1][2]
 K = length(mu)
 
 # RISK LEVEL
-delta = 1e-11
+delta = 0.001
 
 # Variance for Gaussian Bandits
 #sigma=1
 
 # NUMBER OF SIMULATIONS
-N = 10
+N = 100
 
 # OPTIMAL SOLUTION
 @everywhere v, optimal_weights = BestArm.optimal_weights(mu, distribution)
@@ -42,7 +42,7 @@ N = 10
 @everywhere gamma_beta = BestArm.gamma_beta(mu, distribution)
 @everywhere beta_weights = BestArm.beta_weights(mu, distribution, gamma_beta)
 println("mu = $(mu)")
-println("Theoretical number of samples: $(v*log(1/delta))")
+#println("Theoretical number of samples: $(v*log(1/delta))")
 println("Optimal weights: $(optimal_weights)")
 println("Beta-optimal weights: $(beta_weights)")
 println()
