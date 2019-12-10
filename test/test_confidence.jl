@@ -22,6 +22,7 @@ elseif Sys.KERNEL == :Linux
 end
 
 # BANDIT PROBLEM
+# make sure that the first element of the array is the maximum
 @everywhere mu = [0.9 0.51 0.5 0.49]
 @everywhere best = findall(x -> x == maximum(mu), mu)[1][2]
 K = length(mu)
@@ -36,11 +37,14 @@ delta = 0.00000001
 N = 100
 
 # OPTIMAL SOLUTION
-@everywhere v, optWeights = BestArm.optimal_weights(mu, distribution)
-@everywhere gammaOpt = optWeights[best]
-print("mu=$(mu)\n")
-print("Theoretical number of samples: $(v*log(1/delta))\n")
-print("Optimal weights: $(optWeights)\n\n")
+@everywhere v, optimal_weights = BestArm.optimal_weights(mu, distribution)
+@everywhere gamma_optimal = optimal_weights[best]
+@everywhere gamma_beta = BestArm.gamma_beta(mu, distribution)
+@everywhere beta_weights = BestArm.beta_weights(mu, distribution, gamma_beta)
+println("mu = $(mu)")
+println("Theoretical number of samples: $(v*log(1/delta))")
+println("Optimal weights: $(optimal_weights)")
+println("Beta-optimal weights: $(beta_weights)")
 
 # POLICIES
 

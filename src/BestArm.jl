@@ -13,7 +13,7 @@ module BestArm
     export update_design_inverse, update_square_root
 
     export optimal_weights
-    export gamma_beta
+    export gamma_beta, beta_weights
 
     export at_lucb
     export ts

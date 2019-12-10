@@ -44,7 +44,7 @@ end
 
 
 function xkofy(y, k, mu, dist, delta = 1e-11)
-# return x_k(y), i.e. finds x such that g_k(x)=y
+    # return x_k(y), i.e. finds x such that g_k(x)=y
     g(x) = (1 + x) * cost(mu[1], mu[k], 1 / (1 + x), x / (1 + x), dist) - y
     x_max = 1
     while g(x_max) < 0
@@ -82,7 +82,7 @@ end
 
 
 function optimal_weights(mu, dist, delta::Real = 1e-11)
-# returns T*(mu) and w*(mu)
+    # returns T*(mu) and w*(mu)
     num_arms = length(mu)
     maxs = (LinearIndices(mu .== maximum(mu)))[findall(mu .== maximum(mu))]
     num_maxs = length(maxs)
@@ -120,7 +120,7 @@ end
 
 
 function inverse(y, k, mu, dist, beta::Real = 0.5, delta::Real = 1e-11)
-# return x_k(y), i.e. finds x such that g_k(x)=y
+    # return x_k(y), i.e. finds x such that g_k(x)=y
     g(x) = c_k(x, k, mu, dist, beta) - y
     x_max = 1
     while g(x_max) < 0
@@ -140,7 +140,7 @@ end
 function gamma_beta(mu, dist, beta::Real = 0.5, delta::Real = 1e-11)
     y_max = 0.5
     if beta * d(mu[1], mu[2], dist) == Inf
-# find yMax such that aux(yMax, mu) > 0
+        # find y_max such that aux(y_max, mu) > 0
         while target(y_max, mu, dist, beta, delta) < 0
             y_max = y_max * 2
         end
@@ -149,4 +149,15 @@ function gamma_beta(mu, dist, beta::Real = 0.5, delta::Real = 1e-11)
     end
     gamma = dico_solve(y -> target(y, mu, dist, beta, delta), 0, y_max, delta)
     return gamma
+end
+
+
+function beta_weights(mu, dist, gamma, beta::Real = 0.5, delta::Real = 1e-11)
+    num_arms = length(mu)
+    weights = zeros(1, num_arms)
+    weights[1] = beta
+    for i in 2:num_arms
+        weights[i] = inverse(gamma, i, mu, dist, beta, delta)
+    end
+    return weights
 end
