@@ -25,9 +25,12 @@ end
 # BANDIT PROBLEM
 @everywhere c1 = [1, 0]
 @everywhere c2 = [0, 1]
-@everywhere c3 = [cos(0.01), sin(0.01)]
+@everywhere c3 = [cos(0.01), cos(0.01)]
+#@everywhere c3 = [0.5, 0.49]
+#@everywhere c4 = [0.4999, 0.5]
 @everywhere contexts = [c1, c2, c3]
-@everywhere true_theta = [2, 0]
+@everywhere true_theta = [1, 0]
+#@everywhere true_theta = [1, 0]
 @everywhere mu = [dot(c, true_theta) for c in contexts]
 @everywhere best = findall(x -> x == maximum(mu), mu)[1]
 K = length(mu)
@@ -37,7 +40,7 @@ delta = 0.1
 d = 2
 
 # NUMBER OF SIMULATIONS
-N = 100
+N = 10
 
 print("mu = $(mu)\n")
 
@@ -47,7 +50,7 @@ print("mu = $(mu)\n")
 @everywhere namesPolicies = ["L-T3C", "LinGapE"]
 
 # EXPLORATION RATES
-@everywhere explo(t, delta) = log((log(t) + 1)^2 / delta)
+@everywhere explo(t, delta) = log((log(t) + 1) / delta)
 
 lP = length(policies)
 rates = [explo for i = 1:lP]

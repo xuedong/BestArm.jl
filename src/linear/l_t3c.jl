@@ -4,7 +4,7 @@ function l_t3c(
     delta::Real,
     rate::Function,
     dist::String,
-    variant::Bool = false,
+    variant::Bool = true,
     sigma::Real = 1,
     kappa::Real = 1,
     frac::Real = 0.5,
