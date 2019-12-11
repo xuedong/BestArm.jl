@@ -28,7 +28,7 @@ end
 K = length(mu)
 
 # RISK LEVEL
-delta = 1e-10
+delta = 1e-11
 
 # Variance for Gaussian Bandits
 #sigma=1

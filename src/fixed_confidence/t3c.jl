@@ -59,11 +59,10 @@ function t3c(
                              num_pulls .* empirical_means) ./ (ts_pulls_best .+ num_pulls)
 
         # Compute the challenger
-        challenger = 1
-        new_score = Inf
+        scores = zeros(num_arms)
         for i = 1:num_arms
             if i != ts_best
-                score_i = compute_transportation_general(
+                scores[i] = compute_transportation_general(
                     empirical_means,
                     ts_weighted_means,
                     num_pulls,
@@ -71,13 +70,11 @@ function t3c(
                     i,
                     dist,
                 )
-
-                if (score_i < new_score)
-                    challenger = i
-                    new_score = score_i
-                end
+            else
+                scores[i] = Inf
             end
         end
+        challenger = randmin(scores)
 
         # Choose the next arm to sample
         new_sample = 1
@@ -173,11 +170,10 @@ function t3c_optimal(
                              num_pulls .* empirical_means) ./ (ts_pulls_best .+ num_pulls)
 
         # Compute the challenger
-        challenger = 1
-        new_score = Inf
+        scores = zeros(num_arms)
         for i = 1:num_arms
             if i != ts_best
-                score_i = compute_transportation_general(
+                scores[i] = compute_transportation_general(
                     empirical_means,
                     ts_weighted_means,
                     num_pulls,
@@ -185,12 +181,11 @@ function t3c_optimal(
                     i,
                     dist,
                 )
-                if (score_i < new_score)
-                    challenger = i
-                    new_score = score_i
-                end
+            else
+                scores[i] = Inf
             end
         end
+        challenger = randmin(scores)
 
         # Choose the next arm to sample
         new_sample = 1
