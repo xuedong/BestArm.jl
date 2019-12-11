@@ -79,7 +79,7 @@ function ttts_c(
 end
 
 
-function ttts_optimal(
+function ttts_greedy(
     mu::Array,
     delta::Real,
     rate::Function,

@@ -29,11 +29,11 @@ module BestArm
     export best_challenger
     export kl_lucb
     export racing
-    export t3c, t3c_optimal
+    export t3c, t3c_greedy
     export target
     export d_tracking, c_tracking
     export ttei
-    export ttts_c, ttts_optimal
+    export ttts_c, ttts_greedy
     export ugape_c
     export uniform_c
 

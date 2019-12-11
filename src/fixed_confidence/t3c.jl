@@ -110,7 +110,7 @@ end
 
 Optimal version of T3C?
 """
-function t3c_optimal(
+function t3c_greedy(
     mu::Array,
     delta::Real,
     rate::Function,
