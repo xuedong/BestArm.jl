@@ -71,17 +71,15 @@ function l_t3c(
             end
             best = argmax(ts)
 
-            challenger = 1
-            new_score = Inf
+            scores = zeros(num_contexts)
             for i = 1:num_contexts
                 if i != best
-                    score_i = compute_transportation(contexts[best], contexts[i], rls, var)
-                    if (score_i < new_score)
-                        challenger = i
-                        new_score = score_i
-                    end
+                    scores[i] = compute_transportation(contexts[best], contexts[i], rls, var)
+                else
+                    scores[i] = Inf
                 end
             end
+            challenger = randmin(scores)
 
             if variant
                 new_sample = randmin([compute_confidence(
