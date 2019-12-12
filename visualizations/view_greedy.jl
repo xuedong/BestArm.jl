@@ -2,6 +2,7 @@ using HDF5
 using Statistics
 using Distributed
 using Plots
+using Seaborn
 
 if Sys.KERNEL == :Darwin
     @everywhere include("/Users/xuedong/Programming/PhD/BestArm.jl/src/BestArm.jl")
@@ -21,7 +22,7 @@ end
 
 # BANDIT PROBLEM
 # make sure that the first element of the array is the maximum
-@everywhere mu = [0.9 0.5 0.4999]
+@everywhere mu = [0.8 0.4 0.39 0.38]
 @everywhere best = findall(x -> x == maximum(mu), mu)[1][2]
 K = length(mu)
 
@@ -102,8 +103,9 @@ end
 
 f(x) = v*x
 
+Seaborn.set()
 Plots.default(overwrite_figure=false)
-Plots.scatter([log(1/delta) for delta in deltas], draws, label="Real")
+Plots.scatter([log(1/delta) for delta in deltas], draws, label="T3C Greedy", title="$mu")
 Plots.plot!(f, 0, 30, label="Theoretical: 1/Gamma*", leg=:topleft)
 Plots.xlabel!("log(1/delta)")
 Plots.ylabel!("Empirical stopping time")
