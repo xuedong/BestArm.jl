@@ -22,7 +22,7 @@ end
 
 # BANDIT PROBLEM
 # make sure that the first element of the array is the maximum
-@everywhere mu = [0.8 0.4 0.39 0.38]
+@everywhere mu = [0.9 0.89 0.88]
 @everywhere best = findall(x -> x == maximum(mu), mu)[1][2]
 K = length(mu)
 
@@ -33,7 +33,7 @@ deltas = [1/10^k for k in 1:12]
 #sigma=1
 
 # NUMBER OF SIMULATIONS
-N = 100
+N = 10
 
 # OPTIMAL SOLUTION
 @everywhere v, optimal_weights = BestArm.optimal_weights(mu, distribution)
@@ -50,6 +50,8 @@ println()
 
 @everywhere policies = [BestArm.t3c_greedy]
 @everywhere namesPolicies = ["T3C Greedy"]
+#@everywhere policies = [BestArm.d_tracking]
+#@everywhere namesPolicies = ["D-Tracking"]
 
 # EXPLORATION RATES
 @everywhere explo(t, delta) = log((log(t) + 1) / delta)
@@ -101,7 +103,7 @@ for k in 1:length(deltas)
 end
 
 
-f(x) = v*x
+f(x) = 1/v*x
 
 Seaborn.set()
 Plots.default(overwrite_figure=false)

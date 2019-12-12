@@ -34,7 +34,7 @@ delta = 1e-11
 #sigma=1
 
 # NUMBER OF SIMULATIONS
-N = 1000
+N = 100
 
 # OPTIMAL SOLUTION
 @everywhere v, optimal_weights = BestArm.optimal_weights(mu, distribution)
@@ -42,7 +42,7 @@ N = 1000
 @everywhere gamma_beta = BestArm.gamma_beta(mu, distribution)
 @everywhere beta_weights = BestArm.beta_weights(mu, distribution, gamma_beta)
 println("mu = $(mu)")
-#println("Theoretical number of samples: $(v*log(1/delta))")
+println("Theoretical number of samples: $(1/v*log(1/delta))")
 println("Optimal weights: $(optimal_weights)")
 println("Beta-optimal weights: $(beta_weights)")
 println()
