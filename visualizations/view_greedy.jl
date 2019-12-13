@@ -34,7 +34,7 @@ deltas = [1 / 10^k for k = 1:12]
 #sigma=1
 
 # NUMBER OF SIMULATIONS
-N = 1
+N = 100
 
 # OPTIMAL SOLUTION
 @everywhere v, optimal_weights = BestArm.optimal_weights(mu, distribution)
@@ -49,10 +49,10 @@ println()
 
 # POLICIES
 
-@everywhere policies = [BestArm.t3c_greedy, BestArm.d_tracking, BestArm.t3c]
-@everywhere namesPolicies = ["T3C Greedy", "D-Tracking", "T3C"]
+@everywhere policies = [BestArm.t3c_greedy, BestArm.d_tracking]
+@everywhere names = ["T3C Greedy", "D-Tracking"]
 #@everywhere policies = [BestArm.d_tracking]
-#@everywhere namesPolicies = ["D-Tracking"]
+#@everywhere names = ["D-Tracking"]
 
 # EXPLORATION RATES
 @everywhere explo(t, delta) = log((log(t) + 1) / delta)
@@ -96,7 +96,7 @@ end
 
 
 draws = zeros(3, length(deltas))
-for imeth = 1:3
+for imeth = 1:length(policies)
     for k = 1:length(deltas)
         draws[imeth, k] = MCexp(mu, deltas[k], N, imeth)
     end
@@ -110,11 +110,11 @@ Plots.default(overwrite_figure = false)
 Plots.plot(f, 0, 30, label = L"$\texttt{Oracle}: 1/\Gamma^{\star}$", leg = :topleft, title = "$mu")
 Plots.plot!(g, 0, 30, label = L"$\beta\texttt{-Oracle}: 1/\Gamma_{0.5}^{\star}$", linestyle = :dot)
 shapes = [:diamond, :circle, :hexagon]
-for imeth in 1:3
+for imeth in 1:length(policies)
     Plots.scatter!(
         [log(1 / delta) for delta in deltas],
         draws[imeth, :],
-        label = L"\texttt{namePolices[imeth]}",
+        label = latexstring("\$\\texttt{$(names[imeth])}\$"),
         markershape = shapes[imeth],
         markersize = 2,
     )
