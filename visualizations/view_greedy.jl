@@ -107,7 +107,7 @@ g(x) = 1 / gamma_beta * x
 
 Seaborn.set()
 Plots.default(overwrite_figure = false)
-Plots.plot(f, 0, 30, label = L"$\texttt{Oracle}: 1/\Gamma^{\star}$", leg = :topleft, title = "$mu")
+Plots.plot(f, 0, 30, label = L"$\texttt{Oracle}: 1/\Gamma^{\star}$", leg = :topleft, title = latexstring("\\texttt{$(mu)}"))
 Plots.plot!(g, 0, 30, label = L"$\beta\texttt{-Oracle}: 1/\Gamma_{0.5}^{\star}$", linestyle = :dot)
 shapes = [:diamond, :circle, :hexagon]
 for imeth in 1:length(policies)
