@@ -4,7 +4,7 @@ function l_t3c(
     delta::Real,
     rate::Function,
     dist::String,
-    variant::Bool = true,
+    greedy::Bool = true,
     sigma::Real = 1,
     kappa::Real = 1,
     frac::Real = 0.5,
@@ -81,7 +81,7 @@ function l_t3c(
             end
             challenger = randmin(scores)
 
-            if variant
+            if greedy
                 new_sample = randmin([compute_confidence(
                     contexts[best],
                     contexts[challenger],

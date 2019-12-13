@@ -25,7 +25,7 @@ end
 # BANDIT PROBLEM
 @everywhere c1 = [1, 0]
 @everywhere c2 = [0, 1]
-@everywhere c3 = [cos(0.01), cos(0.01)]
+@everywhere c3 = [cos(0.01), sin(0.01)]
 #@everywhere c3 = [0.5, 0.49]
 #@everywhere c4 = [0.4999, 0.5]
 @everywhere contexts = [c1, c2, c3]
@@ -84,6 +84,7 @@ function MCexp(mu, delta, N)
         print("Results for $(policy), average on $(N) runs\n")
         print("proportion of runs that did not terminate: $(FracNT)\n")
         print("average number of draws: $(sum(Draws)/(N*(1-FracNT)))\n")
+        print("average number of draws per arm: $(sum(Draws, dims=1)/N)\n")
         print("average proportions of draws: $(proportion)\n")
         print("proportion of errors: $(sum(Error)/(float(N*(1-FracNT))))\n")
         print("proportion of recommendation made when termination: $(FracReco)\n")

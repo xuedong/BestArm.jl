@@ -4,7 +4,7 @@ function l_t3s(
     delta::Real,
     rate::Function,
     dist::String,
-    variant::Bool = true,
+    greedy::Bool = true,
     sigma::Real = 1,
     kappa::Real = 1,
     frac::Real = 0.5,
@@ -70,7 +70,7 @@ function l_t3s(
                 end
             end
 
-            if variant
+            if greedy
                 best = argmax(ts)
                 challenger = best
                 while (challenger == best)
