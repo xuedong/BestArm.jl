@@ -22,18 +22,18 @@ end
 
 # BANDIT PROBLEM
 # make sure that the first element of the array is the maximum
-@everywhere mu = [0.9 0.89 0.88]
+@everywhere mu = [0.9 0.5 0.4999]
 @everywhere best = findall(x -> x == maximum(mu), mu)[1][2]
 K = length(mu)
 
 # RISK LEVEL
-deltas = [1/10^k for k in 1:12]
+deltas = [1 / 10^k for k = 1:12]
 
 # Variance for Gaussian Bandits
 #sigma=1
 
 # NUMBER OF SIMULATIONS
-N = 10
+N = 100
 
 # OPTIMAL SOLUTION
 @everywhere v, optimal_weights = BestArm.optimal_weights(mu, distribution)
@@ -48,8 +48,8 @@ println()
 
 # POLICIES
 
-@everywhere policies = [BestArm.t3c_greedy]
-@everywhere namesPolicies = ["T3C Greedy"]
+@everywhere policies = [BestArm.t3c_greedy, BestArm.d_tracking]
+@everywhere namesPolicies = ["T3C Greedy", "D-Tracking"]
 #@everywhere policies = [BestArm.d_tracking]
 #@everywhere namesPolicies = ["D-Tracking"]
 
@@ -62,53 +62,67 @@ rates = [explo for i = 1:lP]
 
 # RUN EXPERIMENTS
 
-function MCexp(mu, delta, N)
-    for imeth = 1:lP
-        Draws = zeros(N, K)
-        policy = policies[imeth]
-        rate = rates[imeth]
-        startTime = time()
-        Reco, Draws = @distributed ((x, y) -> (vcat(x[1], y[1]), vcat(x[2], y[2]))) for n = 1:N
-            rec, dra = policy(mu, delta, rate, distribution)
-            rec, dra
-        end
-        Error = collect([(r == best) ? 0 : 1 for r in Reco])
-        FracNT = sum([r == 0 for r in Reco]) / N
-        FracReco = zeros(K)
-        proportion = zeros(K)
-        for k = 1:K
-            FracReco[k] = sum([(r == k) ? 1 : 0 for r in Reco]) / (N * (1 - FracNT))
-        end
-        for n = 1:N
-            if (Reco[n] != 0)
-                proportion += Draws[n, :] / sum(Draws[n, :])
-            end
-        end
-        proportion = proportion / (N * (1 - FracNT))
-        print("Results for $(policy), average on $(N) runs\n")
-        print("proportion of runs that did not terminate: $(FracNT)\n")
-        print("average number of draws: $(sum(Draws)/(N*(1-FracNT)))\n")
-        print("average proportions of draws: $(proportion)\n")
-        print("proportion of errors: $(sum(Error)/(float(N*(1-FracNT))))\n")
-        print("proportion of recommendation made when termination: $(FracReco)\n")
-        print("elapsed time: $(time()-startTime)\n\n")
-        return sum(Draws)/(N*(1-FracNT))
+function MCexp(mu, delta, N, imeth)
+    Draws = zeros(N, K)
+    policy = policies[imeth]
+    rate = rates[imeth]
+    startTime = time()
+    Reco, Draws = @distributed ((x, y) -> (vcat(x[1], y[1]), vcat(x[2], y[2]))) for n = 1:N
+        rec, dra = policy(mu, delta, rate, distribution)
+        rec, dra
     end
+    Error = collect([(r == best) ? 0 : 1 for r in Reco])
+    FracNT = sum([r == 0 for r in Reco]) / N
+    FracReco = zeros(K)
+    proportion = zeros(K)
+    for k = 1:K
+        FracReco[k] = sum([(r == k) ? 1 : 0 for r in Reco]) / (N * (1 - FracNT))
+    end
+    for n = 1:N
+        if (Reco[n] != 0)
+            proportion += Draws[n, :] / sum(Draws[n, :])
+        end
+    end
+    proportion = proportion / (N * (1 - FracNT))
+    print("Results for $(policy), average on $(N) runs\n")
+    print("proportion of runs that did not terminate: $(FracNT)\n")
+    print("average number of draws: $(sum(Draws)/(N*(1-FracNT)))\n")
+    print("average proportions of draws: $(proportion)\n")
+    print("proportion of errors: $(sum(Error)/(float(N*(1-FracNT))))\n")
+    print("proportion of recommendation made when termination: $(FracReco)\n")
+    print("elapsed time: $(time()-startTime)\n\n")
+    return sum(Draws) / (N * (1 - FracNT))
 end
 
 
-draws = zeros(length(deltas))
-for k in 1:length(deltas)
-    draws[k] = MCexp(mu, deltas[k], N)
+draws1 = zeros(length(deltas))
+for k = 1:length(deltas)
+    draws1[k] = MCexp(mu, deltas[k], N, 1)
 end
 
+draws2 = zeros(length(deltas))
+for k = 1:length(deltas)
+    draws2[k] = MCexp(mu, deltas[k], N, 2)
+end
 
-f(x) = 1/v*x
+f(x) = 1 / v * x
 
 Seaborn.set()
-Plots.default(overwrite_figure=false)
-Plots.scatter([log(1/delta) for delta in deltas], draws, label="T3C Greedy", title="$mu")
-Plots.plot!(f, 0, 30, label="Theoretical: 1/Gamma*", leg=:topleft)
+Plots.default(overwrite_figure = false)
+Plots.scatter(
+    [log(1 / delta) for delta in deltas],
+    draws1,
+    label = "T3C Greedy",
+    markershape = :diamond,
+    title = "$mu",
+)
+Plots.scatter!(
+    [log(1 / delta) for delta in deltas],
+    draws2,
+    label = "D-Tracking",
+    markershape = :hexagon,
+)
+Plots.plot!(f, 0, 30, label = "Theoretical: 1/Gamma*", leg = :topleft)
 Plots.xlabel!("log(1/delta)")
 Plots.ylabel!("Empirical stopping time")
 Plots.savefig("test2.pdf")

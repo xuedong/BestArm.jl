@@ -4,7 +4,7 @@ function l_t3c(
     delta::Real,
     rate::Function,
     dist::String,
-    greedy::Bool = true,
+    greedy::Bool = false,
     sigma::Real = 1,
     kappa::Real = 1,
     frac::Real = 0.5,

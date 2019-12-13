@@ -25,7 +25,7 @@ end
 # BANDIT PROBLEM
 @everywhere c1 = [1, 0]
 @everywhere c2 = [0, 1]
-@everywhere c3 = [cos(0.01), sin(0.01)]
+@everywhere c3 = [cos(pi/4), sin(pi/4)]
 #@everywhere c3 = [0.5, 0.49]
 #@everywhere c4 = [0.4999, 0.5]
 @everywhere contexts = [c1, c2, c3]
@@ -40,7 +40,7 @@ delta = 0.1
 d = 2
 
 # NUMBER OF SIMULATIONS
-N = 10
+N = 100
 
 print("mu = $(mu)\n")
 
