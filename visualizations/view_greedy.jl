@@ -34,7 +34,7 @@ deltas = [1 / 10^k for k = 1:12]
 #sigma=1
 
 # NUMBER OF SIMULATIONS
-N = 100
+N = 10
 
 # OPTIMAL SOLUTION
 @everywhere v, optimal_weights = BestArm.optimal_weights(mu, distribution)
