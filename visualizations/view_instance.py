@@ -12,7 +12,7 @@ def plot_vector(vectors):
     # This is optional
     maxes = 3 * np.amax(abs(vectors), axis=0)
     colors = ['b', 'r', 'k']
-    fig = plt.figure(figsize=(7, 7))
+    fig = plt.figure(figsize=(10, 10))
 
     ax = fig.add_subplot(111)
     fig.subplots_adjust(top=0.85)

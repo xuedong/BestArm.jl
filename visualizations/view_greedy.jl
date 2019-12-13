@@ -3,6 +3,7 @@ using Statistics
 using Distributed
 using Plots
 using Seaborn
+using LaTeXStrings
 
 if Sys.KERNEL == :Darwin
     @everywhere include("/Users/xuedong/Programming/PhD/BestArm.jl/src/BestArm.jl")
@@ -33,7 +34,7 @@ deltas = [1 / 10^k for k = 1:12]
 #sigma=1
 
 # NUMBER OF SIMULATIONS
-N = 100
+N = 1
 
 # OPTIMAL SOLUTION
 @everywhere v, optimal_weights = BestArm.optimal_weights(mu, distribution)
@@ -48,15 +49,14 @@ println()
 
 # POLICIES
 
-@everywhere policies = [BestArm.t3c_greedy, BestArm.d_tracking]
-@everywhere namesPolicies = ["T3C Greedy", "D-Tracking"]
+@everywhere policies = [BestArm.t3c_greedy, BestArm.d_tracking, BestArm.t3c]
+@everywhere namesPolicies = ["T3C Greedy", "D-Tracking", "T3C"]
 #@everywhere policies = [BestArm.d_tracking]
 #@everywhere namesPolicies = ["D-Tracking"]
 
 # EXPLORATION RATES
 @everywhere explo(t, delta) = log((log(t) + 1) / delta)
 
-lP = length(policies)
 rates = [explo for i = 1:lP]
 
 
@@ -95,34 +95,30 @@ function MCexp(mu, delta, N, imeth)
 end
 
 
-draws1 = zeros(length(deltas))
-for k = 1:length(deltas)
-    draws1[k] = MCexp(mu, deltas[k], N, 1)
-end
-
-draws2 = zeros(length(deltas))
-for k = 1:length(deltas)
-    draws2[k] = MCexp(mu, deltas[k], N, 2)
+draws = zeros(3, length(deltas))
+for imeth = 1:3
+    for k = 1:length(deltas)
+        draws[imeth, k] = MCexp(mu, deltas[k], N, imeth)
+    end
 end
 
 f(x) = 1 / v * x
+g(x) = 1 / gamma_beta * x
 
 Seaborn.set()
 Plots.default(overwrite_figure = false)
-Plots.scatter(
-    [log(1 / delta) for delta in deltas],
-    draws1,
-    label = "T3C Greedy",
-    markershape = :diamond,
-    title = "$mu",
-)
-Plots.scatter!(
-    [log(1 / delta) for delta in deltas],
-    draws2,
-    label = "D-Tracking",
-    markershape = :hexagon,
-)
-Plots.plot!(f, 0, 30, label = "Theoretical: 1/Gamma*", leg = :topleft)
-Plots.xlabel!("log(1/delta)")
-Plots.ylabel!("Empirical stopping time")
+Plots.plot(f, 0, 30, label = L"$\texttt{Oracle}: 1/\Gamma^{\star}$", leg = :topleft, title = "$mu")
+Plots.plot!(g, 0, 30, label = L"$\beta\texttt{-Oracle}: 1/\Gamma_{0.5}^{\star}$", linestyle = :dot)
+shapes = [:diamond, :circle, :hexagon]
+for imeth in 1:3
+    Plots.scatter!(
+        [log(1 / delta) for delta in deltas],
+        draws[imeth, :],
+        label = L"\texttt{namePolices[imeth]}",
+        markershape = shapes[imeth],
+        markersize = 2,
+    )
+end
+Plots.xlabel!(L"$\log(1/\delta)$")
+Plots.ylabel!(L"\texttt{Empirical stopping time}")
 Plots.savefig("test2.pdf")
