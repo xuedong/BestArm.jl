@@ -12,14 +12,14 @@ def plot_vector(vectors):
     # This is optional
     maxes = 3 * np.amax(abs(vectors), axis=0)
     colors = ['b', 'r', 'k']
-    fig = plt.figure()
+    fig = plt.figure(figsize=(7, 7))
 
     ax = fig.add_subplot(111)
     fig.subplots_adjust(top=0.85)
     ax.set_title('Pathological instance')
 
-    ax.set_xlabel('x')
-    ax.set_ylabel('y')
+    # ax.set_xlabel('x')
+    # ax.set_ylabel('y')
     colors = ['b', 'r', 'k']
 
     for i, l in enumerate(range(0, cols)):
