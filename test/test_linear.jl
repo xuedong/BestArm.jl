@@ -23,13 +23,17 @@ elseif Sys.KERNEL == :Linux
 end
 
 # BANDIT PROBLEM
-@everywhere c1 = [1, 0]
-@everywhere c2 = [0, 1]
-@everywhere c3 = [cos(pi/4), sin(pi/4)]
+@everywhere c1 = [1, 0, 0]
+@everywhere c2 = [0, 1, 0]
+@everywhere c3 = [0, 0, 1]
+@everywhere c4 = [0, 0, 0, 1]
+@everywhere c5 = [0, 0, 0, 0, 1]
+@everywhere c6 = [0, 0, 0, 0, 0, 1]
+@everywhere c7 = [cos(0.1), sin(0.1), 0]
 #@everywhere c3 = [0.5, 0.49]
 #@everywhere c4 = [0.4999, 0.5]
-@everywhere contexts = [c1, c2, c3]
-@everywhere true_theta = [1, 0]
+@everywhere contexts = [c1, c2, c3, c7]
+@everywhere true_theta = [1, 0, 0]
 #@everywhere true_theta = [1, 0]
 @everywhere mu = [dot(c, true_theta) for c in contexts]
 @everywhere best = findall(x -> x == maximum(mu), mu)[1]
@@ -46,8 +50,8 @@ print("mu = $(mu)\n")
 
 # POLICIES
 
-@everywhere policies = [BestArm.l_t3c, BestArm.lingape]
-@everywhere namesPolicies = ["L-T3C", "LinGapE"]
+@everywhere policies = [BestArm.lingape]
+@everywhere namesPolicies = ["LinGapE"]
 
 # EXPLORATION RATES
 @everywhere explo(t, delta) = log((log(t) + 1) / delta)
