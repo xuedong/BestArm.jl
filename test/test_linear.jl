@@ -23,25 +23,31 @@ elseif Sys.KERNEL == :Linux
 end
 
 # BANDIT PROBLEM
+# @everywhere c1 = [1, 0]
+# @everywhere c2 = [cos(3/4*pi), sin(3/4*pi)]
+# @everywhere c3 = [cos(pi/4+randn()/0.3), sin(pi/4+randn()/0.3)]
+# @everywhere c4 = [cos(pi/4+randn()/0.3), sin(pi/4+randn()/0.3)]
+# @everywhere c5 = [cos(pi/4+randn()/0.3), sin(pi/4+randn()/0.3)]
+# @everywhere c6 = [cos(pi/4+randn()/0.3), sin(pi/4+randn()/0.3)]
+# @everywhere contexts = [c1, c2, c3, c4, c5, c6]
+# @everywhere true_theta = [1, 0]
+# println(c3)
+# println(c4)
+# println(c5)
+# println(c6)
 @everywhere c1 = [1, 0, 0]
 @everywhere c2 = [0, 1, 0]
 @everywhere c3 = [0, 0, 1]
-@everywhere c4 = [0, 0, 0, 1]
-@everywhere c5 = [0, 0, 0, 0, 1]
-@everywhere c6 = [0, 0, 0, 0, 0, 1]
-@everywhere c7 = [cos(0.1), sin(0.1), 0]
-#@everywhere c3 = [0.5, 0.49]
-#@everywhere c4 = [0.4999, 0.5]
-@everywhere contexts = [c1, c2, c3, c7]
+@everywhere c4 = [cos(pi/6), sin(pi/6), 0]
+@everywhere contexts = [c1, c2, c3, c4]
 @everywhere true_theta = [1, 0, 0]
-#@everywhere true_theta = [1, 0]
 @everywhere mu = [dot(c, true_theta) for c in contexts]
 @everywhere best = findall(x -> x == maximum(mu), mu)[1]
 K = length(mu)
 
 # RISK LEVEL
 delta = 0.1
-d = 2
+d = 3
 
 # NUMBER OF SIMULATIONS
 N = 100
@@ -49,9 +55,11 @@ N = 100
 print("mu = $(mu)\n")
 
 # POLICIES
+@everywhere l_t3c_greedy(contexts, true_theta, delta, rate, dist) = BestArm.l_t3c(contexts, true_theta, delta, rate, dist, true)
+@everywhere l_t3c_original(contexts, true_theta, delta, rate, dist) = BestArm.l_t3c(contexts, true_theta, delta, rate, dist, false)
 
-@everywhere policies = [BestArm.lingape]
-@everywhere namesPolicies = ["LinGapE"]
+@everywhere policies = [BestArm.lingape, l_t3c_greedy]
+@everywhere namesPolicies = ["LinGapE", "L-T3C-Greedy"]
 
 # EXPLORATION RATES
 @everywhere explo(t, delta) = log((log(t) + 1) / delta)

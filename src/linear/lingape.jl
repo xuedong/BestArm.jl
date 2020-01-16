@@ -53,8 +53,8 @@ function lingape(
             println(rewards)
             num_pulls = zeros(1, num_contexts)
         else
-            #c_t = compute_error_width(design, true_theta, sigma, kappa, delta)
-            c_t = sqrt(rate(t, delta))
+            c_t = compute_error_width(design, true_theta, sigma, kappa, delta)
+            #c_t = sqrt(rate(t, delta))
             ambiguous = randmax([compute_gap(contexts[i], contexts[best], rls) +
                                  compute_confidence(
                 contexts[i],
