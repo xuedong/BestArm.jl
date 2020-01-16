@@ -46,7 +46,7 @@ end
 K = length(mu)
 
 # RISK LEVEL
-delta = 0.1
+delta = 0.01
 d = 3
 
 # NUMBER OF SIMULATIONS
