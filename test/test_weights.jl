@@ -14,7 +14,7 @@ end
 # 		[0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.43, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38]]
 random_lengths = rand(3:6, 100)
 mus = [sort(rand(random_lengths[i]), rev=true) for i in 1:length(random_lengths)]
-dist = "Bernoulli"
+dist = "Gaussian"
 len = length(mus)
 
 # x = BestArm.inverse(0.01, 2, mu, dist, 0.5, 1e-11)

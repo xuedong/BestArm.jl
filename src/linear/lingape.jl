@@ -4,7 +4,7 @@ function lingape(
     delta::Real,
     rate::Function,
     dist::String,
-    sigma::Real = 1,
+    sigma::Real = 0,
     kappa::Real = 1,
     epsilon::Real = 0.0,
 )
@@ -19,7 +19,7 @@ function lingape(
     # Initialize the prior
     lambda = sigma^2 / kappa^2
     design = Matrix{Float64}(lambda * I, dim, dim)
-    design_inverse = Matrix{Float64}(1 / lambda * I, dim, dim)
+    design_inverse = Matrix{Float64}(I, dim, dim)
     #square_root_inverse = Matrix{Float64}(kappa / sigma * I, dim, dim)
     z_t = vec(zeros(1, dim))
     rls = vec(zeros(1, dim))
@@ -41,7 +41,7 @@ function lingape(
     end
 
     best = 1
-    while (condition)
+    while condition
         empirical_means = [dot(contexts[c], rls) for c = 1:num_contexts]
         # Empirical best arm
         best = randmax(empirical_means)
@@ -54,7 +54,7 @@ function lingape(
             num_pulls = zeros(1, num_contexts)
         else
             #c_t = compute_error_width(design, true_theta, sigma, kappa, delta)
-            c_t = sqrt(rate(t, delta))
+            c_t = sqrt(2*rate(t, delta))
             ambiguous = randmax([compute_gap(contexts[i], contexts[best], rls) +
                                  compute_confidence(
                 contexts[i],

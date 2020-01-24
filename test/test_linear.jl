@@ -35,14 +35,17 @@ end
 # println(c4)
 # println(c5)
 # println(c6)
-@everywhere c1 = [1, 0, 0]
-@everywhere c2 = [0, 1, 0]
-@everywhere c3 = [0, 0, 1]
-@everywhere c4 = [cos(pi/6), sin(pi/6), 0]
+@everywhere c1 = [1, 0, 0, 0]
+@everywhere c2 = [0, 1, 0, 0]
+@everywhere c3 = [0, 0, 1, 0]
+@everywhere c4 = [0, 0, 0, 1]
+#@everywhere c4 = [cos(pi/6), sin(pi/6), 0]
 @everywhere contexts = [c1, c2, c3, c4]
-@everywhere true_theta = [1, 0, 0]
+@everywhere true_theta = [0.9, 0.64, 0.62, 0.6]
 @everywhere mu = [dot(c, true_theta) for c in contexts]
 @everywhere best = findall(x -> x == maximum(mu), mu)[1]
+w = BestArm.optimal_weights(mu, distribution)
+@show w
 K = length(mu)
 
 # RISK LEVEL
@@ -50,7 +53,7 @@ delta = 0.01
 d = 3
 
 # NUMBER OF SIMULATIONS
-N = 100
+N = 1
 
 print("mu = $(mu)\n")
 
@@ -58,8 +61,8 @@ print("mu = $(mu)\n")
 @everywhere l_t3c_greedy(contexts, true_theta, delta, rate, dist) = BestArm.l_t3c(contexts, true_theta, delta, rate, dist, true)
 @everywhere l_t3c_original(contexts, true_theta, delta, rate, dist) = BestArm.l_t3c(contexts, true_theta, delta, rate, dist, false)
 
-@everywhere policies = [BestArm.lingape, l_t3c_greedy]
-@everywhere namesPolicies = ["LinGapE", "L-T3C-Greedy"]
+@everywhere policies = [BestArm.lingape]
+@everywhere namesPolicies = ["LinGapE"]
 
 # EXPLORATION RATES
 @everywhere explo(t, delta) = log((log(t) + 1) / delta)
