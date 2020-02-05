@@ -35,13 +35,14 @@ end
 # println(c4)
 # println(c5)
 # println(c6)
-@everywhere c1 = [1, 0, 0, 0]
-@everywhere c2 = [0, 1, 0, 0]
-@everywhere c3 = [0, 0, 1, 0]
-@everywhere c4 = [0, 0, 0, 1]
+@everywhere c1 = [1, 0, 0, 0, 0]
+@everywhere c2 = [0, 1, 0, 0, 0]
+@everywhere c3 = [0, 0, 1, 0, 0]
+@everywhere c4 = [0, 0, 0, 1, 0]
+@everywhere c5 = [0, 0, 0, 0, 1]
 #@everywhere c4 = [cos(pi/6), sin(pi/6), 0]
-@everywhere contexts = [c1, c2, c3, c4]
-@everywhere true_theta = [0.5, 0.45, 0.43, 0.4]
+@everywhere contexts = [c1, c2, c3, c4, c5]
+@everywhere true_theta = [0.3, 0.21, 0.2, 0.19, 0.18]
 @everywhere mu = [dot(c, true_theta) for c in contexts]
 @everywhere best = findall(x -> x == maximum(mu), mu)[1]
 w = BestArm.optimal_weights(mu, distribution)
@@ -50,7 +51,7 @@ K = length(mu)
 
 # RISK LEVEL
 delta = 0.01
-d = 4
+d = 5
 
 # NUMBER OF SIMULATIONS
 N = 1
