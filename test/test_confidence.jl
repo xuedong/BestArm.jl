@@ -23,7 +23,7 @@ end
 
 # BANDIT PROBLEM
 # make sure that the first element of the array is the maximum
-@everywhere mu = [0.9 0.5 0.4 0.45 0.44999]
+@everywhere mu = [1 0.8 0.75 0.7]
 @everywhere best = findall(x -> x == maximum(mu), mu)[1][2]
 K = length(mu)
 
