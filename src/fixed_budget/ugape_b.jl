@@ -130,3 +130,47 @@ function ugape_b_adaptive(mu::Array, budget::Integer, dist::String, c::Real = 1)
 
 	return (recommendation, N, means, recommendations)
 end
+
+
+# Helper functions for UGapE
+function compute_beta(s, n, K, a, b=1, H=1, automatic=false)
+	if automatic
+		alpha = b * (n-K)/(4*H)
+		return sqrt(alpha/s)
+	else
+		return sqrt(a*(n-K)/s)
+	end
+end
+
+
+# function compute_ucb(i, rewards, n, a)
+# 	K = length(rewards)
+# 	s = length(rewards[i])
+# 	ucb = mean(rewards[i]) + beta(s, n, K, a)
+# 	return ucb
+# end
+
+
+# function compute_lcb(i, rewards, n, a)
+# 	K = length(rewards)
+# 	s = length(rewards[i])
+# 	lcb = mean(rewards[i]) - beta(s, n, K, a)
+# 	return lcb
+# end
+
+
+# function b_value(k, K, rewards, n, a)
+# 	indices_without_k = deleteat!([i for i in 1:K], k)
+# 	ucb_list = [compute_ucb(i, rewards, n, a) for i in indices_without_k]
+# 	maxval, maxindx = findmax(ucb_list)
+# 	return maxval - compute_lcb(k, rewards, n, a)
+# end
+
+
+function compute_b_value(k, lcbs, maxindx, maxucb, maxucbk)
+	if k == maxindx
+		return maxucbk - lcbs[k]
+	else
+		return maxucb - lcbs[k]
+	end
+end

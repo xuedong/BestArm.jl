@@ -2,72 +2,96 @@
 
 using PyPlot
 using HDF5
+using Statistics
+using Seaborn
+using LaTeXStrings
+# using Plots
 
-# NAME AND POLICIES NAMES
-fname="results/Experiment4arms"
-names=["TrackAndStop","ChernoffBC","ChernoffPTS","ChernoffPTSOpt","KLLUCB","UGapEC"]
+Seaborn.set()
+
+ϵ_bai = false
+
+# NAME AND POLICIES NAMES (should match saved data)
+fname = "/home/xuedong/Downloads/t3c/results/xs"
+names = ["T3C", "TTTS", "TTEI", "BC", "D-Tracking", "Uniform", "UGapE"]
+#names = ["BC2", "T3C"]
 
 # PARAMETERS
-delta=0.1
-N=5
+delta = 0.01
+N = 1000
 
 clf()
 
-# personalize bins
-xdim=3
-ydim=2
+# CHANGE xmax DEPENDING ON THE MAXIMAL RANGE!
+xmax = 1000
+NBins = 30
 
-NBins=30
-xmax=10000
+# position of the text on the graphs
+xtxt = 0.6 * xmax
+Bins = round.(Int, range(1, stop = xmax, length = NBins))
+# arranging the graphs
+xdim = length(names)
+ydim = 1
 
 
-xtxt=0.6*xmax
-Bins=round(Int,linspace(1,xmax,NBins))
-
-mu=h5read("$(fname)_$(names[1])_delta_$(delta)_N_$(N).h5","mu")
-K=length(mu)
+mu = h5read("$(fname)_$(names[1])_delta_$(delta)_N_$(N).h5", "mu")
+K = length(mu)
+if ϵ_bai == "True"
+  ϵ = h5read("$(fname)_$(names[1])_delta_$(delta)_N_$(N).h5", "epsilon")
+end
 
 clf()
 title("mu = $(mu)")
+Means = zeros(length(names), 1)
+Stds = zeros(length(names), 1)
 
-for j in 1:length(names)
-    name="$(fname)_$(names[j])_delta_$(delta)_N_$(N).h5"
-    FracNT=h5read(name,"FracNT")
-    Draws=h5read(name,"Draws")
-    Error=h5read(name,"Error")
-    subplot(xdim,ydim,j)
-    NbDraws=sum(Draws,2)'
-    proportion=zeros(N,K)
-    for k in 1:N
-        proportion[k,:]=Draws[k,:]/sum(Draws[k,:])
-    end
-    prop=mean(proportion,1)
-    MeanDraws=mean(NbDraws)
-    StdDraws=std(NbDraws)
-    histo=plt[:hist](vec(NbDraws),Bins)
-    Mhisto=maximum(histo[1])
-    PyPlot.axis([0,xmax,0,Mhisto])
-    ytxt1=0.75*Mhisto
-    ytxt2=0.6*Mhisto
-    ytxt3=0.5*Mhisto
-    ytxt4=0.4*Mhisto
-    EmpError=round.(Int,10000*mean(Error))/10000
-    FracReco=round.(Int,1000*prop)/1000
-    axvline(MeanDraws,color="black",linewidth=2.5)
-    PyPlot.text(xtxt,ytxt1,"mean = $(round(Int,MeanDraws)) (std=$(round(Int,StdDraws)))")
-    PyPlot.text(xtxt,ytxt2,"delta = $(delta)")
-    PyPlot.text(xtxt,ytxt3,"emp. error = $(EmpError)")
-    PyPlot.text(xtxt,ytxt4,"emp. proportions = $(FracReco)")
-    if (j==1)
-       title("mu=$(mu), $(names[j])")
-    else
-       title("$(names[j])")
-    end
-    print("Results for $(names[j]), average on $(N) runs\n")
-    print("proportion of runs that did not terminate: $(FracNT)\n")
-    print("average number of draws: $(MeanDraws)\n")
-    print("average proportion of draws: \n $(prop)\n")
-    print("proportion of errors: $(EmpError)\n")
-    print("proportion of recommendation made when termination: $(FracReco)\n\n")
-
+results = Array{Any}(undef, length(names))
+for imeth = 1:length(names)
+  namePol = names[imeth]
+  name = "$(fname)_$(names[imeth])_delta_$(delta)_N_$(N).h5"
+  draws = h5read(name, "Draws")
+  results[imeth] = vec(sum(draws, dims = 2))
 end
+
+meanpointprops = Dict(
+  "marker" => :o,
+  "markersize" => 6,
+  "markeredgecolor" => :black,
+  "markerfacecolor" => :black,
+)
+fig, ax = subplots()#figure("pyplot_boxplot",figsize=(10,10))
+ax[:boxplot](
+  results,
+  labels = names,
+  showfliers = false,
+  showmeans = true,
+  meanprops = meanpointprops,
+  patch_artist = true,
+  notch = true,
+)
+ax[:axhline](422.37, ls = "--", color = "r", label = L"$N^\star=422.37$")
+ax[:axhline](466.38, ls = "-.", color = "g", label = L"$N_{0.5}^\star=466.38$")
+# labels = [L"$N^\star$", L"$N_{0.5}^\star$"]
+# handles, _ = ax[:get_legend_handles_labels]()
+# ax[:legend](handles, labels = labels)
+ax[:legend]()
+ax[:set_title]("Problem 1, Gaussian bandits, " * L"$\delta=0.01, \sigma=1$")
+ax[:tick_params]()
+ax[:yaxis][:grid](true)
+
+savefig("test.pdf")
+
+
+# fig = subplots()
+# x_pos = 1:length(names)
+# Means = reshape(Means, length(names))
+# Stds = reshape(Stds, length(names))
+# bar(x_pos, Means, yerr = Stds, tick_label=names, align = "center", alpha = 0.5, ecolor = "black", capsize = 5)
+# ylabel("Number of draws")
+# #xticks(x_pos)
+# title("$(mu), delta = 0.01")
+#
+# # Save the figure and show
+# tight_layout()
+# savefig("test2.pdf")
+# show()

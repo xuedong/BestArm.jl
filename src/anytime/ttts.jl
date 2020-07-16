@@ -288,8 +288,9 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
 		                    end
 		                    return prod
 		                end
-		                val, _ = hquadrature(f, 0.0, 1.0)
-		                probs[a] = val
+		                # val, _ = hquadrature(f, 0.0, 1.0)
+						val, _ = hquadrature(f, 0.0, shift)
+						probs[a] = val
 		            end
 				end
 
@@ -304,12 +305,15 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
             if dist == "Bernoulli"
                 alpha = 1
                 beta = 1
-                TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1]
+            	# TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1]
+				u = rand(1)[1] * betacdf(alpha + S[a], beta + N[a] - S[a], shift)
+				TS[a] = betainvcdf(alpha + S[a], beta + N[a] - S[a], u)
 			elseif dist == "Gaussian"
 				TS[a] = rand(Normal(S[a] / N[a], sqrt(1.0 / N[a])), 1)[1]
 			end
         end
 		TS_0 = rand(Beta(S_0, 1.0), 1)[1] * shift
+		# TS_0 = betainvcdf(S_0, 1.0, rand(1)[1]*betacdf(S_0, 1.0, shift))
         I = argmax(vcat(TS, TS_0))
         if (rand() > frac)
             J = I
@@ -320,7 +324,9 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
                     alpha = 1
                     beta = 1
                     for a = 1:dynamic_num
-                        TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1]
+                        # TS[a] = rand(Beta(alpha + S[a], beta + N[a] - S[a]), 1)[1]
+						u = rand(1)[1] * betacdf(alpha + S[a], beta + N[a] - S[a], shift)
+						TS[a] = betainvcdf(alpha + S[a], beta + N[a] - S[a], u)
 					end
 				elseif dist == "Gaussian"
 					for a = 0:dynamic_num
@@ -328,6 +334,7 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
 					end
                 end
 				TS_0 = rand(Beta(S_0, 1.0), 1)[1] * shift
+				# TS_0 = betainvcdf(S_0, 1.0, rand(1)[1]*betacdf(S_0, 1.0, shift))
 		        J = argmax(vcat(TS, TS_0))
 				count += 1
             end
@@ -377,7 +384,8 @@ function ttts_dynamic(reservoir::String, num::Integer, limit::Integer,
 						end
 						return prod
 					end
-					val, _ = hquadrature(f, 0.0, 1.0)
+					# val, _ = hquadrature(f, 0.0, 1.0)
+					val, _ = hquadrature(f, 0.0, shift)
 					probs[a] = val
 				end
 			end

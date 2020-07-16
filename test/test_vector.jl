@@ -9,12 +9,7 @@ elseif Sys.KERNEL == :Linux
 end
 
 # DO YOU WANT TO SAVE RESULTS?
-<<<<<<< HEAD
-type_exp = "NoSave"
-#type_exp = "Save"
-=======
 typeExp = "NoSave"
->>>>>>> c112ea36939fdbf2db179d660246aa79391eac97
 
 # TYPE OF DISTRIBUTION
 @everywhere distribution = "Bernoulli"
@@ -27,14 +22,19 @@ elseif Sys.KERNEL == :Linux
 end
 
 # BANDIT PROBLEM
-<<<<<<< HEAD
-mu = vec([0.3 0.21 0.2 0.19 0.18])
-best = (LinearIndices(mu .== maximum(mu)))[findall(mu .== maximum(mu))]
-=======
 # make sure that the first element of the array is the maximum
-@everywhere mu = [1 0.8 0.75 0.7]
+@everywhere mu1 = [0 1 0.5]
+@everywhere mu2 = [1 0 0.5]
+@everywhere mu = zeros(1, 27)
+for i = 1:3
+    for j = 1:3
+        for k = 1:3
+            mu[(i-1)*j*k+(i-1)*j+i] = max(mu1[j]-mu1[i], mu2[k]-mu2[i])
+        end
+    end
+end
+
 @everywhere best = findall(x -> x == maximum(mu), mu)[1][2]
->>>>>>> c112ea36939fdbf2db179d660246aa79391eac97
 K = length(mu)
 
 # RISK LEVEL
@@ -47,16 +47,15 @@ delta = 0.01
 N = 100
 
 # OPTIMAL SOLUTION
-@everywhere v, optimal_weights = BestArm.optimal_weights(mu, distribution)
-@everywhere gamma_optimal = optimal_weights[best]
-@everywhere gamma_beta = BestArm.gamma_beta(mu, distribution)
-@everywhere beta_weights = BestArm.beta_weights(mu, distribution, gamma_beta)
-println("mu = $(mu)")
-println("Theoretical number of samples: $(1/v*log(1/delta))")
-println("Theoretical number of beta samples: $(1/gamma_beta*log(1/delta))")
-println("Optimal weights: $(optimal_weights)")
-println("Beta-optimal weights: $(beta_weights)")
-println()
+# @everywhere v, optimal_weights = BestArm.optimal_weights(mu, distribution)
+# @everywhere gamma_optimal = optimal_weights[best]
+# @everywhere gamma_beta = BestArm.gamma_beta(mu, distribution)
+# @everywhere beta_weights = BestArm.beta_weights(mu, distribution, gamma_beta)
+# println("mu = $(mu)")
+# println("Theoretical number of samples: $(1/v*log(1/delta))")
+# println("Optimal weights: $(optimal_weights)")
+# println("Beta-optimal weights: $(beta_weights)")
+# println()
 
 # POLICIES
 

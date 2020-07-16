@@ -1,6 +1,7 @@
 using HDF5
-using Statistics
 using Distributed
+using Statistics
+using LinearAlgebra
 
 if Sys.KERNEL == :Darwin
     @everywhere include("/Users/xuedong/Programming/PhD/BestArm.jl/src/BestArm.jl")
@@ -9,15 +10,10 @@ elseif Sys.KERNEL == :Linux
 end
 
 # DO YOU WANT TO SAVE RESULTS?
-<<<<<<< HEAD
-type_exp = "NoSave"
-#type_exp = "Save"
-=======
 typeExp = "NoSave"
->>>>>>> c112ea36939fdbf2db179d660246aa79391eac97
 
 # TYPE OF DISTRIBUTION
-@everywhere distribution = "Bernoulli"
+@everywhere distribution = "Gaussian"
 
 # CHANGE NAME (save mode)
 if Sys.KERNEL == :Darwin
@@ -27,65 +23,47 @@ elseif Sys.KERNEL == :Linux
 end
 
 # BANDIT PROBLEM
-<<<<<<< HEAD
-mu = vec([0.3 0.21 0.2 0.19 0.18])
-best = (LinearIndices(mu .== maximum(mu)))[findall(mu .== maximum(mu))]
-=======
-# make sure that the first element of the array is the maximum
-@everywhere mu = [1 0.8 0.75 0.7]
-@everywhere best = findall(x -> x == maximum(mu), mu)[1][2]
->>>>>>> c112ea36939fdbf2db179d660246aa79391eac97
+# @everywhere c1 = [1, 0]
+# @everywhere c2 = [cos(3/4*pi), sin(3/4*pi)]
+# @everywhere c3 = [cos(pi/4+randn()/0.3), sin(pi/4+randn()/0.3)]
+# @everywhere c4 = [cos(pi/4+randn()/0.3), sin(pi/4+randn()/0.3)]
+# @everywhere c5 = [cos(pi/4+randn()/0.3), sin(pi/4+randn()/0.3)]
+# @everywhere c6 = [cos(pi/4+randn()/0.3), sin(pi/4+randn()/0.3)]
+# @everywhere contexts = [c1, c2, c3, c4, c5, c6]
+# @everywhere true_theta = [1, 0]
+# println(c3)
+# println(c4)
+# println(c5)
+# println(c6)
+@everywhere c1 = [1, 0, 0, 0, 0]
+@everywhere c2 = [0, 1, 0, 0, 0]
+@everywhere c3 = [0, 0, 1, 0, 0]
+@everywhere c4 = [0, 0, 0, 1, 0]
+@everywhere c5 = [0, 0, 0, 0, 1]
+#@everywhere c4 = [cos(pi/6), sin(pi/6), 0]
+@everywhere contexts = [c1, c2, c3, c4, c5]
+@everywhere true_theta = [0.3, 0.21, 0.2, 0.19, 0.18]
+@everywhere mu = [dot(c, true_theta) for c in contexts]
+@everywhere best = findall(x -> x == maximum(mu), mu)[1]
+w = BestArm.optimal_weights(mu, distribution)
+@show w
 K = length(mu)
 
 # RISK LEVEL
 delta = 0.01
-
-# Variance for Gaussian Bandits
-#sigma=1
+d = 5
 
 # NUMBER OF SIMULATIONS
-N = 100
+N = 1
 
-# OPTIMAL SOLUTION
-@everywhere v, optimal_weights = BestArm.optimal_weights(mu, distribution)
-@everywhere gamma_optimal = optimal_weights[best]
-@everywhere gamma_beta = BestArm.gamma_beta(mu, distribution)
-@everywhere beta_weights = BestArm.beta_weights(mu, distribution, gamma_beta)
-println("mu = $(mu)")
-println("Theoretical number of samples: $(1/v*log(1/delta))")
-println("Theoretical number of beta samples: $(1/gamma_beta*log(1/delta))")
-println("Optimal weights: $(optimal_weights)")
-println("Beta-optimal weights: $(beta_weights)")
-println()
+print("mu = $(mu)\n")
 
 # POLICIES
+@everywhere l_t3c_greedy(contexts, true_theta, delta, rate, dist) = BestArm.l_t3c(contexts, true_theta, delta, rate, dist, true)
+@everywhere l_t3c_original(contexts, true_theta, delta, rate, dist) = BestArm.l_t3c(contexts, true_theta, delta, rate, dist, false)
 
-@everywhere policies = [BestArm.t3c_greedy]
-@everywhere namesPolicies = ["T3C Greedy"]
-# @everywhere policies = [
-#     BestArm.best_challenger,
-#     BestArm.kl_lucb,
-#     BestArm.racing,
-#     BestArm.t3c,
-#     BestArm.target,
-#     BestArm.d_tracking,
-#     BestArm.ttei,
-#     BestArm.ttts_c,
-#     BestArm.ugape_c,
-#     BestArm.uniform_c,
-# ]
-# @everywhere namesPolicies = [
-#     "BC",
-#     "KL-LUCB",
-#     "Racing",
-#     "T3C",
-#     "Target",
-#     "D-Tracking",
-#     "TTEI",
-#     "TTTS",
-#     "UGapE",
-#     "Uniform",
-# ]
+@everywhere policies = [BestArm.lingape]
+@everywhere namesPolicies = ["LinGapE"]
 
 # EXPLORATION RATES
 @everywhere explo(t, delta) = log((log(t) + 1) / delta)
@@ -103,7 +81,7 @@ function MCexp(mu, delta, N)
         rate = rates[imeth]
         startTime = time()
         Reco, Draws = @distributed ((x, y) -> (vcat(x[1], y[1]), vcat(x[2], y[2]))) for n = 1:N
-            rec, dra = policy(mu, delta, rate, distribution)
+            rec, dra = policy(contexts, true_theta, delta, rate, distribution)
             rec, dra
         end
         Error = collect([(r == best) ? 0 : 1 for r in Reco])
@@ -122,6 +100,7 @@ function MCexp(mu, delta, N)
         print("Results for $(policy), average on $(N) runs\n")
         print("proportion of runs that did not terminate: $(FracNT)\n")
         print("average number of draws: $(sum(Draws)/(N*(1-FracNT)))\n")
+        print("average number of draws per arm: $(sum(Draws, dims=1)/N)\n")
         print("average proportions of draws: $(proportion)\n")
         print("proportion of errors: $(sum(Error)/(float(N*(1-FracNT))))\n")
         print("proportion of recommendation made when termination: $(FracReco)\n")
@@ -139,7 +118,7 @@ function SaveData(mu, delta, N)
         namePol = namesPolicies[imeth]
         startTime = time()
         Reco, Draws = @distributed ((x, y) -> (vcat(x[1], y[1]), vcat(x[2], y[2]))) for n = 1:N
-            reco, draws = policy(mu, delta, rate, distribution)
+            reco, draws = policy(contexts, true_theta, delta, rate, distribution)
             reco, draws
         end
         Error = collect([(r == best) ? 0 : 1 for r in Reco])

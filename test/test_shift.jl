@@ -41,7 +41,7 @@ for iparam in 1:len
 	for i in 1:length(shifts)
 		arms = zeros(1, 10)
 		@showprogress 1 string("Computing ", policy_name, "...") for k in 1:mcmc
-			rec, N, recs, mu = policy(reservoir, 1, limit, budget, dist, 0.5, false, alphas[iparam], betas[iparam], true, shifts[i])
+			rec, N, recs, mu = policy(reservoir, 1, limit, budget, dist, 0.5, false, alphas[iparam], betas[iparam], true, 1.0)
 			# regrets_current = BestArm.compute_regrets_reservoir(mu, recs, budget, maxmu)
 			# regrets += regrets_current
 			for j in 1:9
@@ -51,11 +51,11 @@ for iparam in 1:len
 		end
 		# plot(X, reshape(regrets/mcmc, budget, 1), linestyle="-.", label=policy_name)
 		if Sys.KERNEL == :Darwin
-			h5open(string("/Users/xuedong/Programming/PhD/BestArm.jl/misc/log/shift/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrev, "_", shifts[i], ".h5"), "w") do file
+			h5open(string("/Users/xuedong/Programming/PhD/BestArm.jl/misc/log/shift_fix/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrev, "_", shifts[i], ".h5"), "w") do file
 				write(file, abrev, arms)
 			end
 		elseif Sys.KERNEL == :Linux
-			h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/shift/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrev, "_", shifts[i], ".h5"), "w") do file
+			h5open(string("/home/xuedong/Documents/xuedong/phd/work/code/BestArm.jl/misc/log/shift_fix/", reservoir, "(", alphas[iparam], ",", betas[iparam], ")", "_", abrev, "_", shifts[i], ".h5"), "w") do file
 				write(file, abrev, arms)
 			end
 		end
