@@ -9,8 +9,8 @@ elseif Sys.KERNEL == :Linux
 end
 
 # DO YOU WANT TO SAVE RESULTS?
-type_exp = "Save"
-#type_exp = "NoSave"
+type_exp = "NoSave"
+#type_exp = "Save"
 
 # TYPE OF DISTRIBUTION
 dist = "Bernoulli"
@@ -19,7 +19,7 @@ dist = "Bernoulli"
 fname = "results/Experiment4arms"
 
 # BANDIT PROBLEM
-mu = vec([0.3 0.25 0.2 0.1])
+mu = vec([0.3 0.21 0.2 0.19 0.18])
 best = (LinearIndices(mu .== maximum(mu)))[findall(mu .== maximum(mu))]
 K = length(mu)
 
