@@ -165,7 +165,7 @@ function SaveData(mu, delta, N)
 end
 
 
-if (typeExp == "Save")
+if (type_exp == "Save")
     SaveData(mu, delta, N)
 else
     MCexp(mu, delta, N)
