@@ -9,12 +9,8 @@ elseif Sys.KERNEL == :Linux
 end
 
 # DO YOU WANT TO SAVE RESULTS?
-<<<<<<< HEAD
 type_exp = "NoSave"
 #type_exp = "Save"
-=======
-typeExp = "NoSave"
->>>>>>> c112ea36939fdbf2db179d660246aa79391eac97
 
 # TYPE OF DISTRIBUTION
 @everywhere distribution = "Bernoulli"
@@ -27,14 +23,9 @@ elseif Sys.KERNEL == :Linux
 end
 
 # BANDIT PROBLEM
-<<<<<<< HEAD
-mu = vec([0.3 0.21 0.2 0.19 0.18])
-best = (LinearIndices(mu .== maximum(mu)))[findall(mu .== maximum(mu))]
-=======
 # make sure that the first element of the array is the maximum
-@everywhere mu = [1 0.8 0.75 0.7]
+@everywhere mu = [0.3 0.21 0.2 0.19 0.18]
 @everywhere best = findall(x -> x == maximum(mu), mu)[1][2]
->>>>>>> c112ea36939fdbf2db179d660246aa79391eac97
 K = length(mu)
 
 # RISK LEVEL
@@ -44,7 +35,7 @@ delta = 0.01
 #sigma=1
 
 # NUMBER OF SIMULATIONS
-N = 100
+N = 1
 
 # OPTIMAL SOLUTION
 @everywhere v, optimal_weights = BestArm.optimal_weights(mu, distribution)
